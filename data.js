@@ -178,7 +178,6 @@ let countries = [
 {name: ["Ruanda"], code: "RW"},
 {name: ["Rumänien"], code: "RO"},
 {name: ["Russische Föderation", "russland"], code: "RU"},
-{name: ["Saint-Martin", "Saint Martin"], code: "MF"},
 {name: ["Salomonen"], code: "SB"},
 {name: ["Sambia"], code: "ZM"},
 {name: ["Samoa"], code: "WS"},
