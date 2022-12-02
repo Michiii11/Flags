@@ -14,7 +14,7 @@ document.querySelector('#content').innerHTML =
 <input id="input" type="text" autocomplete="off" autofocus>`;
 
 let flag = document.querySelector("#input");
-flag.addEventListener("keyup", (event) => {
+flag.addEventListener("keydown", (event) => {
     if (event.keyCode == 191) { // # --> Skip
         event.preventDefault();
         skip(false, true);
@@ -102,6 +102,7 @@ function skipped(){
 }
 
 function getCountry() {
+    document.querySelectorAll('#content h2')[0].innerHTML = `${index+1}/${newCountryList.length}`
     document.querySelector('#content img[data-position="hidden"]').setAttribute("src", `https://flagcdn.com/h120/${newCountryList[index].code.toLowerCase()}.png`);
     document.querySelector('#input').value = "";
     document.querySelector('#input').placeholder = "";

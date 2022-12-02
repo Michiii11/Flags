@@ -33,6 +33,11 @@ main{
     box-shadow: 0rem 0rem 1rem 0.5rem var(--shadow);
 }
 
+/*---------- Menü ----------*/
+#menu{
+
+}
+
 /*---------- Content ----------*/
 #content{
     display: flex;
@@ -81,7 +86,7 @@ section{
     display: flex;
     justify-content: center;
     overflow: hidden;
-    width: 25vw;
+    width: 23vw;
     height: 25vh;
 }
 
