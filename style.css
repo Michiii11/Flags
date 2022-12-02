@@ -4,6 +4,7 @@
     padding: 0;
     font-family: sans-serif;
     user-select: none;
+    font-family: 'Montserrat', sans-serif;
 }
 
 img{
@@ -37,7 +38,7 @@ main{
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 50%;
+    height: 60%;
     margin-top: 6rem;
 }
 #content #input{
@@ -55,9 +56,33 @@ main{
     border: .2rem solid var(--gray-5);
 }
 #content img{
-    width: 40%;
+    position: absolute;
+    width: auto;
+    height: 20vh;
     margin-block: 2vh;
     box-shadow: 0.3rem 0.3rem 0.2rem 0.2rem var(--gray-1-5);
+    transition: all 1s ease;
+}
+#content img[data-position="show"]{
+    animation: in 1s forwards;
+    z-index: 2;
+}
+#content img[data-position="hidden"]{
+    animation: out 1s forwards;
+    z-index: 1;
+}
+#content h2{
+    font-family: 'Bebas Neue', cursive;
+    font-size: 2rem;
+    letter-spacing: 0.1rem;
+}
+section{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    width: 25vw;
+    height: 25vh;
 }
 
 /*---------- Button ----------*/
@@ -72,7 +97,7 @@ main{
     margin: 1rem;
     margin-bottom: 2rem;
     border: 0.2rem solid var(--gray-4);
-    width: 3vw;
+    width: 4vw;
     text-align: center;
     border-radius: 1rem;
     transition: 0.2s all ease;
@@ -88,6 +113,8 @@ main{
 }
 
 /************ Imports ************/
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100&display=swap');
 
 /************ Keyframes ************/
 @keyframes shake {
@@ -102,6 +129,28 @@ main{
     80% { transform: translate(-1px, -1px) rotate(1deg); }
     90% { transform: translate(1px, 2px) rotate(0deg); }
     100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+@keyframes in {
+    from{
+        transform: translateX(200%);
+        opacity: 1;
+    }
+    to{
+        transform: translateX(0%);
+        opacity: 1;
+    }
+}
+
+@keyframes out {
+    from{
+        transform: translateX(0%);
+        opacity: 1;
+    }
+    to{
+        transform: translateX(-200%);
+        opacity: 1;
+    }
 }
 
 /************ Responsive ************/
