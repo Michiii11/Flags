@@ -5,7 +5,7 @@ let wrongI = 0;
 let wrongCountrys = new Array();
 let hintCount = 0;
 
-let type = "H"  // L = Country | H = Capital | C = Competitive
+let type  // L = Country | H = Capital | C = Competitive
 
 loadMenu();
 
@@ -17,18 +17,19 @@ function loadMenu(){
         `<div id="content">
             <h2>Menü</h2>
             <div class="buttons">
-                <p onclick="loadGame()">Country</p>
-                <p onclick="loadGame(true)">Capital</p>
-                <p onclick="loadGame()">Comp</p>
+                <p onclick="loadGame('L');">Country</p>
+                <p onclick="loadGame('H');">Capital</p>
+                <p onclick="loadGame('C');">Comp</p>
             </div>
         </div>`
 }
 
 /**
  * Loads the Game Template into the HTML
- * @param {*} type is the Gamemode
+ * @param {*} t is the Gamemode
  */
-function loadGame(type){
+function loadGame(t){
+    type = t;
     let content = ""
     content = 
         `<div id="content"><h2>${index+1}/${newCountryList.length}</h2>
@@ -37,7 +38,7 @@ function loadGame(type){
             <img data-position='hidden' src="https://flagcdn.com/h120/${newCountryList[index].code.toLowerCase()}.png">
         </section>`
 
-    if(type){
+    if(type == "H"){
         console.log()
         content += `<h3></h3>`
     }
@@ -113,7 +114,7 @@ function skip(ind, type){
         if(type){ // Geskippte Eingabe
             wrongCountrys[wrongI++] = newCountryList[index];
             document.querySelector('#input').style.color = "rgb(110, 110, 110)";
-            
+
             if(type == "H"){
                 document.querySelector('#input').value = newCountryList[index].capital[0];
             } else{
