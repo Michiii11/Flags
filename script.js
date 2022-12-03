@@ -61,7 +61,9 @@ function checkCountry(i){
 
 function loadHint(){
     hintCount++;
-    wrongCountrys[wrongI++] = newCountryList[index];
+    if(hintCount == 1){
+        wrongCountrys[wrongI++] = newCountryList[index];
+    }
     document.querySelector('#input').value = ""
     document.querySelector('#input').placeholder = newCountryList[index].name[0].substring(0,hintCount)
 
@@ -74,7 +76,7 @@ function skip(ind, type){
         if(type){ // Geskippte Eingabe
             wrongCountrys[wrongI++] = newCountryList[index];
             document.querySelector('#input').style.color = "rgb(110, 110, 110)";
-            document.querySelector('#input').value = newCountryList[index].name;
+            document.querySelector('#input').value = newCountryList[index].name[0];
             document.querySelector('#input').disabled = true;
             skipped();
 
@@ -91,14 +93,10 @@ function skip(ind, type){
         // Fail Animation
         document.querySelector('#input').style.color = "red";
         document.querySelector('#input').style.animation = "shake 0.5s"
-        document.querySelectorAll('img')[0].style.color = "red"
-        document.querySelectorAll('img')[0].style.animation = "shake 0.5s 0.2s"
 
         setTimeout(function(){
             document.querySelector('#input').style.color = "white";
             document.querySelector('#input').style.animation = "none"
-            document.querySelectorAll('img')[0].style.color = "none"
-            document.querySelectorAll('img')[0].style.animation = "none"
         },500);
         return;
 
@@ -106,10 +104,8 @@ function skip(ind, type){
 
         // Accept Animation
         document.querySelector('#input').style.color = "green";
-        document.querySelector('.fa-check').style.color = "green";
         setTimeout(function(){
             document.querySelector('#input').style.color = "white";
-            document.querySelector('.fa-check').style.color = "white";
             index++;
             getCountry();
         },500);
