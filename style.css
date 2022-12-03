@@ -43,7 +43,7 @@ main{
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 55%;
+    height:60%;
     margin-top: 6rem;
 }
 #content #input{
@@ -92,12 +92,11 @@ section{
 }
 
 /*---------- Button ----------*/
-#buttons{
+.buttons{
     display: flex;
     justify-content: center;
 }
-
-#buttons i{
+.buttons i, .buttons p{
     font-size: 1.5rem;
     background-color: var(--gray-1-5);
     color: var(gray-5);
@@ -111,23 +110,38 @@ section{
     transition: 0.2s all ease;
     position: relative;
 }
-#buttons i:hover{
+.buttons p{
+    width: 6.5vw;
+}
+.buttons i:hover, .buttons p:hover{
     cursor: pointer;
     background-color: var(--gray-2);
 }
-#buttons i::after{
+.buttons i::after{
     position: absolute;
     text-align: center;
     transform: translateX(-50%);
     color: rgb(148, 148, 148);
     font-size: .8rem;
 }
-#buttons i:nth-of-type(1)::after{
+.buttons i:nth-of-type(1)::after{
     content: "(+)";
 }
 
 #score{
     text-align: center;
+}
+
+#back{
+    position: absolute;
+    top: 17vh;
+    left: 65vw;
+    font-size: 1.5rem;
+    transition: 0.2s all ease;
+}
+#back:hover{
+    cursor: pointer;
+    color: grey;
 }
 
 /************ Imports ************/
