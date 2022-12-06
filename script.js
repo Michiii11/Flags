@@ -1,12 +1,15 @@
 
 let newCountryList = countries.sort(() => {return Math.random() - 0.5});
+let countryList = new Array();
 let index = 0;
 let wrongI = 0;
 let wrongCountrys = new Array();
 let hintCount = 0;
 
 let type  // L = Country | H = Capital | C = Competitive
+let continent = "all"
 
+setCountryList();
 loadMenu();
 
 /**
@@ -15,11 +18,19 @@ loadMenu();
 function loadMenu(){
     document.querySelector('main').innerHTML =
         `<div id="content">
-            <h2>Menü</h2>
             <div class="buttons">
                 <p onclick="loadGame('L');">Country</p>
                 <p onclick="loadGame('H');">Capital</p>
                 <p onclick="loadGame('C');">Comp</p>
+            </div>
+            <div class="selector">
+                <p class="all selected" onclick="selectContinent(this)">Alle Länder</p>
+                <p class="Europa" onclick="selectContinent(this)">Europa</p>
+                <p class="Afrika" onclick="selectContinent(this)">Afrika</p>
+                <p class="Nordamerika" onclick="selectContinent(this)">Nordamerika</p>
+                <p class="Südamerika" onclick="selectContinent(this)">Südamerika</p>
+                <p class="Ozeanien" onclick="selectContinent(this)">Ozeanien</p>
+                <p class="Asien" onclick="selectContinent(this)">Asien</p>
             </div>
         </div>`
 }
@@ -32,10 +43,10 @@ function loadGame(t){
     type = t;
     let content = ""
     content = 
-        `<div id="content"><h2>${index+1}/${newCountryList.length}</h2>
+        `<div id="content"><h2>${index+1}/${countryList.length}</h2>
         <section>
             <img data-position='show' src="">
-            <img data-position='hidden' src="https://flagcdn.com/h120/${newCountryList[index].code.toLowerCase()}.png">
+            <img data-position='hidden' src="https://flagcdn.com/h120/${countryList[index].code.toLowerCase()}.png">
         </section>`
 
     if(type == "H"){
@@ -76,9 +87,9 @@ function loadGame(t){
 function checkCountry(i){
     let guess = document.querySelector('#input').value.toLowerCase();
     
-    let answer = newCountryList[index].name;
+    let answer = countryList[index].name;
     if(type == "H"){
-        answer = newCountryList[index].capital;
+        answer = countryList[index].capital;
     }
 
     for (let i = 0; i < answer.length; i++) {
@@ -96,13 +107,13 @@ function checkCountry(i){
 function loadHint(){
     hintCount++;
     if(hintCount == 1){
-        wrongCountrys[wrongI++] = newCountryList[index];
+        wrongCountrys[wrongI++] = countryList[index];
     }
     document.querySelector('#input').value = ""
     if(type == "H"){
-        document.querySelector('#input').placeholder = newCountryList[index].capital[0].substring(0,hintCount)
+        document.querySelector('#input').placeholder = countryList[index].capital[0].substring(0,hintCount)
     } else{
-        document.querySelector('#input').placeholder = newCountryList[index].name[0].substring(0,hintCount)
+        document.querySelector('#input').placeholder = countryList[index].name[0].substring(0,hintCount)
     }
 
     let flag = document.querySelector("#input");
@@ -112,13 +123,13 @@ function loadHint(){
 function skip(ind, type){
     if(!ind){ // Falsche Eingabe
         if(type){ // Geskippte Eingabe
-            wrongCountrys[wrongI++] = newCountryList[index];
+            wrongCountrys[wrongI++] = countryList[index];
             document.querySelector('#input').style.color = "rgb(110, 110, 110)";
 
             if(type == "H"){
-                document.querySelector('#input').value = newCountryList[index].capital[0];
+                document.querySelector('#input').value = countryList[index].capital[0];
             } else{
-                document.querySelector('#input').value = newCountryList[index].name[0];
+                document.querySelector('#input').value = countryList[index].name[0];
             }
 
             document.querySelector('#input').disabled = true;
@@ -165,22 +176,22 @@ function swap(){
 
 function skipped(){    
     if(type == "H"){
-        document.querySelector('#input').placeholder = newCountryList[index].capital[0];
+        document.querySelector('#input').placeholder = countryList[index].capital[0];
     } else{
-        document.querySelector('#input').placeholder = newCountryList[index].name[0];
+        document.querySelector('#input').placeholder = countryList[index].name[0];
     }
 }
 
 function getCountry() {
-    document.querySelectorAll('#content h2')[0].innerHTML = `${index+1}/${newCountryList.length}`
-    document.querySelector('#content img[data-position="hidden"]').setAttribute("src", `https://flagcdn.com/h120/${newCountryList[index].code.toLowerCase()}.png`);
+    document.querySelectorAll('#content h2')[0].innerHTML = `${index+1}/${countryList.length}`
+    document.querySelector('#content img[data-position="hidden"]').setAttribute("src", `https://flagcdn.com/h120/${countryList[index].code.toLowerCase()}.png`);
     document.querySelector('#input').value = "";
     document.querySelector('#input').placeholder = "";
     if(type == "H"){
-        document.querySelectorAll('#content h3')[0].innerHTML = newCountryList[index].name[0]
-        console.log(newCountryList[index].capital)
+        document.querySelectorAll('#content h3')[0].innerHTML = countryList[index].name[0]
+        console.log(countryList[index].capital)
     } else{
-        console.log(newCountryList[index].name)
+        console.log(countryList[index].name)
     }
 
     swap();
@@ -191,4 +202,35 @@ function getCountry() {
     let flag = document.querySelector("#input");
     flag.focus();
 
+}
+
+function selectContinent(elem){
+    document.querySelector('.selected').classList.remove("selected")
+    elem.classList.add("selected")
+    continent = elem.classList[0]
+    setCountryList();
+}
+
+/**
+ * Set the List depend on the Type of Continent
+ * @param {*} type true = next round with false answers
+ */
+function setCountryList(type){
+    countryList = new Array();
+    if(type){
+        countryList = [...wrongCountrys];
+        countryList = countryList.sort(() => {return Math.random() - 0.5})
+        wrongCountrys = new Array();
+    } else{
+        if(continent == "all"){
+            countryList = [...newCountryList];
+        } else{
+            let j = 0;
+            for (let i = 0; i < newCountryList.length; i++) {
+                if(newCountryList[i].continent == continent){
+                    countryList[j++] = newCountryList[i];
+                }
+            }
+        }
+    }
 }
