@@ -19,9 +19,8 @@ function loadMenu(){
     document.querySelector('main').innerHTML =
         `<div id="content">
             <div class="buttons">
-                <p onclick="loadGame('L');">Country</p>
-                <p onclick="loadGame('H');">Capital</p>
-                <p onclick="loadGame('C');">Comp</p>
+                <p onclick="loadGame('L');">Länder</p>
+                <p onclick="loadGame('H');">Hauptstädte</p>
             </div>
             <div class="selector">
                 <p class="all selected" onclick="selectContinent(this)">Alle Länder</p>
@@ -122,6 +121,12 @@ function loadHint(){
     flag.focus();
 }
 
+/**
+ * Skips the current flag
+ * @param {*} ind is the indicator if the guess was right or false
+ * @param {*} typ is the indicator if the guess was completly skipped or not
+ * @returns 
+ */
 function skip(ind, typ){
     if(!ind){ // Falsche Eingabe
         if(typ){ // Geskippte Eingabe
@@ -169,6 +174,9 @@ function skip(ind, typ){
     }
 }
 
+/**
+ * Swaps the images for the animation
+ */
 function swap(){
     let hid = document.querySelector('#content img[data-position="hidden"]')
     let show = document.querySelector('#content img[data-position="show"]')
@@ -176,6 +184,9 @@ function swap(){
     show.setAttribute("data-position", "hidden");
 }
 
+/**
+ * Skipped guess
+ */
 function skipped(){    
     if(type == "H"){
         document.querySelector('#input').placeholder = countryList[index].capital[0];
@@ -184,6 +195,10 @@ function skipped(){
     }
 }
 
+/**
+ * Get the next flag from the api
+ * updates the html
+ */
 function getCountry() {
     if(index >= countryList.length){
         if(wrongCountrys.length == 0){
@@ -211,6 +226,9 @@ function getCountry() {
 
 }
 
+/**
+ * @param {*} elem continent
+ */
 function selectContinent(elem){
     document.querySelector('.selected').classList.remove("selected")
     elem.classList.add("selected")
@@ -226,7 +244,6 @@ function setCountryList(type){
     countryList = new Array();
     if(type){
         countryList = [...wrongCountrys];
-        countryList = countryList.sort(() => {return Math.random() - 0.5})
     } else{
         if(continent == "all"){
             countryList = [...newCountryList];
@@ -239,6 +256,8 @@ function setCountryList(type){
             }
         }
     }
+    countryList = countryList.sort(() => {return Math.random() - 0.5})
+
     index = 0;
     wrongI = 0;
     wrongCountrys = new Array();

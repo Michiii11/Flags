@@ -30,11 +30,6 @@ main{
     box-shadow: 0rem 0rem 1rem 0.5rem var(--shadow);
 }
 
-/*---------- Menu ----------*/
-#menu{
-
-}
-
 /*---------- Content ----------*/
 #content{
     display: flex;
