@@ -25,15 +25,12 @@ body{
 /************ Main Style ************/
 main{
     background-color:var(--gray-2);
-    width: 35vw;
-    height: 35vw;
     border-radius: 1rem;
-    padding: 1rem;
-    box-sizing: border-box;
+    padding: 6rem;
     box-shadow: 0rem 0rem 1rem 0.5rem var(--shadow);
 }
 
-/*---------- Menü ----------*/
+/*---------- Menu ----------*/
 #menu{
 
 }
@@ -44,7 +41,8 @@ main{
     flex-direction: column;
     align-items: center;
     height:60%;
-    margin-top: 6rem;
+    width: fit-content;
+    transition: 0.4s all ease;
 }
 #content #input{
     font-size: 2rem;
@@ -95,15 +93,17 @@ section{
 .buttons{
     display: flex;
     justify-content: center;
+    width: 100%;
 }
 .buttons i, .buttons p{
     font-size: 1.5rem;
-    background-color: var(--gray-3);
-    color: var(gray-5);
+    background-color: var(--color-accent);
+    color: var(--gray-2);
+    font-weight: bold;
     padding: 1rem;
     margin: 1rem;
     margin-bottom: 2rem;
-    border: 0.2rem solid var(--gray-3);
+    border: 0.2rem solid var(--color-accent);
     width: 4vw;
     text-align: center;
     border-radius: 1rem;
@@ -115,18 +115,28 @@ section{
 }
 .buttons i:hover, .buttons p:hover{
     cursor: pointer;
+    color: var(--color-accent);
     background-color: var(--gray-2);
 }
-.buttons i::after{
-    position: absolute;
-    text-align: center;
-    transform: translateX(-50%);
-    color: rgb(148, 148, 148);
-    font-size: .8rem;
+.buttons i{
+    background-color: var(--gray-3);
+    color: white;
+    border: 0.2rem solid var(--gray-3);
 }
-.buttons i:nth-of-type(1)::after{
-    content: "(+)";
+.buttons p{
+    width: 6.5vw;
+    flex-grow: 1;
 }
+.buttons i:hover, .buttons p:hover{
+    cursor: pointer;
+    background-color: var(--gray-2);
+
+}
+.buttons i:hover{
+    cursor: pointer;
+    
+}
+
 
 #score{
     text-align: center;
@@ -135,13 +145,13 @@ section{
 #back{
     position: absolute;
     top: 17vh;
-    left: 65vw;
+    left: 63vw;
     font-size: 1.5rem;
     transition: 0.2s all ease;
 }
 #back:hover{
     cursor: pointer;
-    color: grey;
+    color: var(--color-accent);
 }
 
 /*---------- Selector ----------*/
@@ -150,36 +160,37 @@ section{
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
     text-align: center;
-    grid-gap: 1rem;
-    margin-top: 5vh;
+    padding-top: 5vh;
     font-size: 1.2rem;
+    gap: 1.5rem;
 }
 .selector p:first-of-type{
     grid-area: 1/1/1/4;
 }
 .selector p{
     font-size: 1.5rem;
-    background-color: var(--gray-2);
+    background-color: rgb(46 46 46);
     color: var(--gray-5);
-    padding: 1rem;
-    border: 0.2rem solid var(--gray-3);
+    padding: 1rem 2rem;
     text-align: center;
     border-radius: 1rem;
-    transition: 0.2s all ease;
+    transition: 0.4s all ease;
     position: relative;
 }
 .selector p.selected{
-    color: white;
-    background-color: var(--gray-3);
+    color: #d5d5d5;
+    background-color: rgb(32 32 32);
+    outline: .1rem solid var(--color-accent);
+    color: var(--color-accent);
 }
 .selector p:hover{
     cursor: pointer;
-    color: rgb(224, 224, 224);
-    background-color: var(--gray-2);
+    color: #cecece;
+    background-color: hsl(0, 0%, 15%);
 }
 .selector p.selected:hover{
-    color: white;
-    background-color: var(--gray-3);
+    color: var(--color-accent);
+    background-color: rgb(32 32 32);
 }
 
 /************ Imports ************/
@@ -237,7 +248,7 @@ section{
 }
 /************ Variables ************/
 :root {
-    --color-accent: red;
+    --color-accent: tomato;
     --color-contrast: white;
     --gray-1:rgb(30, 30, 30);
     --gray-1-5:rgb(40, 40, 40);

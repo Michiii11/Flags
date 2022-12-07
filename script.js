@@ -27,10 +27,10 @@ function loadMenu(){
                 <p class="all selected" onclick="selectContinent(this)">Alle Länder</p>
                 <p class="Europa" onclick="selectContinent(this)">Europa</p>
                 <p class="Afrika" onclick="selectContinent(this)">Afrika</p>
+                <p class="Asien" onclick="selectContinent(this)">Asien</p>
                 <p class="Nordamerika" onclick="selectContinent(this)">Nordamerika</p>
                 <p class="Südamerika" onclick="selectContinent(this)">Südamerika</p>
                 <p class="Ozeanien" onclick="selectContinent(this)">Ozeanien</p>
-                <p class="Asien" onclick="selectContinent(this)">Asien</p>
             </div>
         </div>`
 }
@@ -50,15 +50,17 @@ function loadGame(t){
         </section>`
 
     if(type == "H"){
-        console.log()
         content += `<h3></h3>`
     }
 
     content += `
         <input id="input" type="text" autocomplete="off" autofocus></div>
-        <div class="buttons"><i class="fa-solid fa-lightbulb"></i><i class="fa-solid fa-check"></i><i class="fa-solid fa-forward"></i></div>
+        <div class="buttons">
+            <i title="+" class="fa-solid fa-lightbulb"></i>
+            <i title="Enter" class="fa-solid fa-check"></i>
+            <i title="#" class="fa-solid fa-forward"></i></div>
         <div id="score"></div>
-        <div id="back" onclick="loadMenu()"><i class="fa-solid fa-house"></i></div>`;
+        <div id="back" onclick=" loadMenu()"><i class="fa-solid fa-house"></i></div>`;
 
     document.querySelector('main').innerHTML = content;
 
@@ -120,9 +122,9 @@ function loadHint(){
     flag.focus();
 }
 
-function skip(ind, type){
+function skip(ind, typ){
     if(!ind){ // Falsche Eingabe
-        if(type){ // Geskippte Eingabe
+        if(typ){ // Geskippte Eingabe
             wrongCountrys[wrongI++] = countryList[index];
             document.querySelector('#input').style.color = "rgb(110, 110, 110)";
 
@@ -183,15 +185,20 @@ function skipped(){
 }
 
 function getCountry() {
+    if(index >= countryList.length){
+        if(wrongCountrys.length == 0){
+            loadMenu();
+        }else{
+            setCountryList(true);
+        }
+    }
+
     document.querySelectorAll('#content h2')[0].innerHTML = `${index+1}/${countryList.length}`
     document.querySelector('#content img[data-position="hidden"]').setAttribute("src", `https://flagcdn.com/h120/${countryList[index].code.toLowerCase()}.png`);
     document.querySelector('#input').value = "";
     document.querySelector('#input').placeholder = "";
     if(type == "H"){
         document.querySelectorAll('#content h3')[0].innerHTML = countryList[index].name[0]
-        console.log(countryList[index].capital)
-    } else{
-        console.log(countryList[index].name)
     }
 
     swap();
@@ -220,7 +227,6 @@ function setCountryList(type){
     if(type){
         countryList = [...wrongCountrys];
         countryList = countryList.sort(() => {return Math.random() - 0.5})
-        wrongCountrys = new Array();
     } else{
         if(continent == "all"){
             countryList = [...newCountryList];
@@ -233,4 +239,7 @@ function setCountryList(type){
             }
         }
     }
+    index = 0;
+    wrongI = 0;
+    wrongCountrys = new Array();
 }
