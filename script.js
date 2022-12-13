@@ -6,7 +6,7 @@ let wrongI = 0;
 let wrongCountrys = new Array();
 let hintCount = 0;
 
-let type  // L = Country | H = Capital | C = Competitive
+let type  // L = Country | H = Capital
 let continent = "all"
 
 setCountryList();
@@ -77,6 +77,7 @@ function loadGame(t){
             checkCountry(index);
         }
     });
+
     getCountry();
 }
 
@@ -178,10 +179,16 @@ function skip(ind, typ){
  * Swaps the images for the animation
  */
 function swap(){
+    debugger;
+
     let hid = document.querySelector('#content img[data-position="hidden"]')
     let show = document.querySelector('#content img[data-position="show"]')
+    hid.style.display = "block"
+
     hid.setAttribute("data-position", "show");
     show.setAttribute("data-position", "hidden");
+    
+    /////////////////////document.querySelectorAll('#content img').forEach((item)=> {item.style.display = "block"})
 }
 
 /**

@@ -55,6 +55,7 @@ main{
     border: .2rem solid var(--gray-5);
 }
 #content img{
+    display: none;
     position: absolute;
     width: auto;
     height: 20vh;
