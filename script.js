@@ -16,7 +16,6 @@ setCountryList()
 loadMenu();
 
 
-
 /**
  * Loads the Menu into the HTML
  */
@@ -39,7 +38,6 @@ function loadMenu(){
         </div>`
     if(continent != "all"){
         selectContinent(document.querySelector(`.${continent}`))
-
     }
 }
 
