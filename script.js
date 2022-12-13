@@ -6,7 +6,7 @@ let wrongI = 0;
 let wrongCountrys = new Array();
 let hintCount = 0;
 
-let type  // L = Country | H = Capital | C = Competitive
+let type  // L = Country | H = Capital
 let continent = "all"
 
 setCountryList();
@@ -77,6 +77,7 @@ function loadGame(t){
             checkCountry(index);
         }
     });
+
     getCountry();
 }
 
@@ -105,9 +106,12 @@ function checkCountry(i){
 /**
  * Loads an hint for the flag
  */
+let temp = 0;
 function loadHint(){
     hintCount++;
     if(hintCount == 1){
+
+        temp++;
         wrongCountrys[wrongI++] = countryList[index];
     }
     document.querySelector('#input').value = ""
@@ -130,7 +134,12 @@ function loadHint(){
 function skip(ind, typ){
     if(!ind){ // Falsche Eingabe
         if(typ){ // Geskippte Eingabe
-            wrongCountrys[wrongI++] = countryList[index];
+            if(temp == 0){
+                wrongCountrys[wrongI++] = countryList[index];
+            } else{
+                temp = 0;
+            }
+
             document.querySelector('#input').style.color = "rgb(110, 110, 110)";
 
             if(type == "H"){
@@ -178,10 +187,16 @@ function skip(ind, typ){
  * Swaps the images for the animation
  */
 function swap(){
+    debugger;
+
     let hid = document.querySelector('#content img[data-position="hidden"]')
     let show = document.querySelector('#content img[data-position="show"]')
+    hid.style.display = "block"
+
     hid.setAttribute("data-position", "show");
     show.setAttribute("data-position", "hidden");
+    
+    /////////////////////document.querySelectorAll('#content img').forEach((item)=> {item.style.display = "block"})
 }
 
 /**
