@@ -7,10 +7,15 @@ let wrongCountrys = new Array();
 let hintCount = 0;
 
 let type  // L = Country | H = Capital
-let continent = "all"
+let continent
 
-setCountryList();
+if(localStorage.getItem("flagContinent")){
+    continent = localStorage.getItem("flagContinent")
+}
+setCountryList()
 loadMenu();
+
+
 
 /**
  * Loads the Menu into the HTML
@@ -32,6 +37,10 @@ function loadMenu(){
                 <p class="Ozeanien" onclick="selectContinent(this)">Ozeanien</p>
             </div>
         </div>`
+    if(continent != "all"){
+        selectContinent(document.querySelector(`.${continent}`))
+
+    }
 }
 
 /**
@@ -187,8 +196,6 @@ function skip(ind, typ){
  * Swaps the images for the animation
  */
 function swap(){
-    debugger;
-
     let hid = document.querySelector('#content img[data-position="hidden"]')
     let show = document.querySelector('#content img[data-position="show"]')
     hid.style.display = "block"
@@ -248,6 +255,8 @@ function selectContinent(elem){
     document.querySelector('.selected').classList.remove("selected")
     elem.classList.add("selected")
     continent = elem.classList[0]
+
+    localStorage.setItem('flagContinent', continent);
     setCountryList();
 }
 
