@@ -106,9 +106,12 @@ function checkCountry(i){
 /**
  * Loads an hint for the flag
  */
+let temp = 0;
 function loadHint(){
     hintCount++;
     if(hintCount == 1){
+
+        temp++;
         wrongCountrys[wrongI++] = countryList[index];
     }
     document.querySelector('#input').value = ""
@@ -131,7 +134,12 @@ function loadHint(){
 function skip(ind, typ){
     if(!ind){ // Falsche Eingabe
         if(typ){ // Geskippte Eingabe
-            wrongCountrys[wrongI++] = countryList[index];
+            if(temp == 0){
+                wrongCountrys[wrongI++] = countryList[index];
+            } else{
+                temp = 0;
+            }
+
             document.querySelector('#input').style.color = "rgb(110, 110, 110)";
 
             if(type == "H"){
