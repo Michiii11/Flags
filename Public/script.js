@@ -1,4 +1,3 @@
-
 let newCountryList = countries.sort(() => {return Math.random() - 0.5});
 let countryList = new Array();
 let index = 0;
@@ -7,35 +6,31 @@ let wrongCountrys = new Array();
 let hintCount = 0;
 
 let type  // L = Country | H = Capital
-let continent
+let continent = "all"
 
-if(localStorage.getItem("flagContinent")){
+// Set or load the Localstorage
+if(localStorage.getItem("flagContinent") != undefined){
     continent = localStorage.getItem("flagContinent")
+} else{
+    continent = localStorage.setItem("flagContinent", continent);
 }
 setCountryList()
-loadMenu();
+loadStart();
 
+
+function loadStart(){
+    document.querySelector('#start').style.display = "flex"
+    document.querySelector('#mode').style.display = "none"
+    document.querySelector('#game').style.display = "none"
+}
 
 /**
- * Loads the Menu into the HTML
+ * Loads the menu
  */
 function loadMenu(){
-    document.querySelector('main').innerHTML =
-        `<div id="content">
-            <div class="buttons">
-                <p onclick="loadGame('L');">Länder</p>
-                <p onclick="loadGame('H');">Hauptstädte</p>
-            </div>
-            <div class="selector">
-                <p class="all selected" onclick="selectContinent(this)">Alle Länder</p>
-                <p class="Europa" onclick="selectContinent(this)">Europa</p>
-                <p class="Afrika" onclick="selectContinent(this)">Afrika</p>
-                <p class="Asien" onclick="selectContinent(this)">Asien</p>
-                <p class="Nordamerika" onclick="selectContinent(this)">Nordamerika</p>
-                <p class="Südamerika" onclick="selectContinent(this)">Südamerika</p>
-                <p class="Ozeanien" onclick="selectContinent(this)">Ozeanien</p>
-            </div>
-        </div>`
+    document.querySelector('#start').style.display = "none"
+    document.querySelector('#mode').style.display = "flex"
+    document.querySelector('#game').style.display = "none"
     if(continent != "all"){
         selectContinent(document.querySelector(`.${continent}`))
     }
@@ -46,29 +41,16 @@ function loadMenu(){
  * @param {*} t is the Gamemode
  */
 function loadGame(t){
+    document.querySelector('#start').style.display = "none"
+    document.querySelector('#mode').style.display = "none"
+    document.querySelector('#game').style.display = "block"
     type = t;
-    let content = ""
-    content = 
-        `<div id="content"><h2>${index+1}/${countryList.length}</h2>
-        <section>
-            <img data-position='show' src="">
-            <img data-position='hidden' src="https://flagcdn.com/h120/${countryList[index].code.toLowerCase()}.png">
-        </section>`
 
-    if(type == "H"){
-        content += `<h3></h3>`
-    }
-
-    content += `
-        <input id="input" type="text" autocomplete="off" autofocus></div>
-        <div class="buttons">
-            <i title="+" class="fa-solid fa-lightbulb"></i>
-            <i title="Enter" class="fa-solid fa-check"></i>
-            <i title="#" class="fa-solid fa-forward"></i></div>
-        <div id="score"></div>
-        <div id="back" onclick=" loadMenu()"><i class="fa-solid fa-house"></i></div>`;
-
-    document.querySelector('main').innerHTML = content;
+    document.querySelector('#game h2').innerHTML = `${index+1}/${countryList.length}`
+    document.querySelector('section').innerHTML = 
+        `<img data-position='show' src="">
+        <img data-position='hidden' src="https://flagcdn.com/h120/${countryList[index].code.toLowerCase()}.png">`
+    
 
     let flag = document.querySelector("#input");
     flag.addEventListener("keydown", (event) => {
@@ -194,14 +176,12 @@ function skip(ind, typ){
  * Swaps the images for the animation
  */
 function swap(){
-    let hid = document.querySelector('#content img[data-position="hidden"]')
-    let show = document.querySelector('#content img[data-position="show"]')
+    let hid = document.querySelector('#game img[data-position="hidden"]')
+    let show = document.querySelector('#game img[data-position="show"]')
     hid.style.display = "block"
 
     hid.setAttribute("data-position", "show");
     show.setAttribute("data-position", "hidden");
-    
-    /////////////////////document.querySelectorAll('#content img').forEach((item)=> {item.style.display = "block"})
 }
 
 /**
@@ -228,12 +208,12 @@ function getCountry() {
         }
     }
 
-    document.querySelectorAll('#content h2')[0].innerHTML = `${index+1}/${countryList.length}`
-    document.querySelector('#content img[data-position="hidden"]').setAttribute("src", `https://flagcdn.com/h120/${countryList[index].code.toLowerCase()}.png`);
+    document.querySelectorAll('#game h2')[0].innerHTML = `${index+1}/${countryList.length}`
+    document.querySelector('#game img[data-position="hidden"]').setAttribute("src", `https://flagcdn.com/h120/${countryList[index].code.toLowerCase()}.png`);
     document.querySelector('#input').value = "";
     document.querySelector('#input').placeholder = "";
     if(type == "H"){
-        document.querySelectorAll('#content h3')[0].innerHTML = countryList[index].name[0]
+        document.querySelectorAll('#game h3')[0].innerHTML = countryList[index].name[0]
     }
 
     swap();
@@ -250,6 +230,7 @@ function getCountry() {
  * @param {*} elem continent
  */
 function selectContinent(elem){
+    console.log(elem)
     document.querySelector('.selected').classList.remove("selected")
     elem.classList.add("selected")
     continent = elem.classList[0]

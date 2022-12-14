@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Flag Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="./Files/logo.png">
+    <link rel="stylesheet" href="./style.css">
+    <script src="./Files/countries.js"></script>
+    <script src='./script.js' defer></script>
+    <script src="https://kit.fontawesome.com/557f0c19d3.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <main>
+        <div id="start">
+            <div class="buttons">
+                <p onclick="loadMenu('');">Singleplayer</p>
+                <p onclick="loadMenu('');">Multiplayer</p>
+            </div>
+        </div>
+
+        <div id="mode">
+            <div class="buttons">
+                <p onclick="loadGame('L');">Länder</p>
+                <p onclick="loadGame('H');">Hauptstädte</p>
+            </div>
+            <div class="selector">
+                <p class="all selected" onclick="selectContinent(this)">Alle Länder</p>
+                <p class="Europa" onclick="selectContinent(this)">Europa</p>
+                <p class="Afrika" onclick="selectContinent(this)">Afrika</p>
+                <p class="Asien" onclick="selectContinent(this)">Asien</p>
+                <p class="Nordamerika" onclick="selectContinent(this)">Nordamerika</p>
+                <p class="Südamerika" onclick="selectContinent(this)">Südamerika</p>
+                <p class="Ozeanien" onclick="selectContinent(this)">Ozeanien</p>
+            </div>
+        </div>
+
+        <div id="game">
+            <h2></h2>
+            <section></section>
+            <input id="input" type="text" autocomplete="off" autofocus>
+
+            <div class="buttons">
+                <i title="+" class="fa-solid fa-lightbulb"></i>
+                <i title="Enter" class="fa-solid fa-check"></i>
+                <i title="#" class="fa-solid fa-forward"></i></div>
+            <div id="score"></div>
+            <div id="back" onclick="loadMenu()"><i class="fa-solid fa-house"></i></div>
+        </div>
+    </main>
+</body>
+
+</html>

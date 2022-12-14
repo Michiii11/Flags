@@ -24,33 +24,43 @@ main{
     border-radius: 1rem;
     padding: 6rem;
     box-shadow: 0rem 0rem 1rem 0.5rem var(--shadow);
+    transition: all 0.2s ease;
 }
-
-/*---------- Content ----------*/
-#content{
-    display: flex;
+#start, #mode, #game{
+    display: none;
     flex-direction: column;
     align-items: center;
     height:60%;
     width: fit-content;
     transition: 0.4s all ease;
 }
-#content #input{
+
+/*---------- Start ----------*/
+#start .buttons p{
+    width: 10vw;
+}
+
+/*---------- Mode ----------*/
+
+/*---------- Game ----------*/
+#game #input{
     font-size: 2rem;
     text-align: center;
     transition: 0.2s ease all;
     margin-block: 1rem;
     border: none;
     color: white;
-    border-bottom:var(--gray-4) .3rem solid;
+    outline: .1rem solid var(--gray-5);
     background: var(--gray-1-5);
     border-radius: .2rem;
+    box-shadow: 0 0 .2rem .2rem rgba(200, 200, 200, 0.1) inset;
+    margin-inline: 10%;
+    width: 80%;
 }
-#content #input:focus{
-    outline: none;
-    border: .2rem solid var(--gray-5);
+#game #input:focus{
+    outline: .2rem solid var(--gray-5);
 }
-#content img{
+#game img{
     display: none;
     position: absolute;
     width: auto;
@@ -59,20 +69,21 @@ main{
     box-shadow: 0.3rem 0.3rem 0.2rem 0.2rem var(--gray-1-5);
     transition: all 1s ease;
 }
-#content img[data-position="show"]{
+#game img[data-position="show"]{
     animation: in 1s forwards;
     z-index: 2;
 }
-#content img[data-position="hidden"]{
+#game img[data-position="hidden"]{
     animation: out 1s forwards;
     z-index: 1;
 }
-#content h2{
+#game h2{
     font-family: 'Bebas Neue', cursive;
     font-size: 2rem;
+    text-align: center;
     letter-spacing: 0.1rem;
 }
-section{
+#game section{
     position: relative;
     display: flex;
     justify-content: center;
@@ -81,7 +92,24 @@ section{
     height: 25vh;
 }
 
-/*---------- Button ----------*/
+#game #score{
+    text-align: center;
+}
+
+#game #back{
+    position: absolute;
+    top: 17vh;
+    left: 63vw;
+    font-size: 1.5rem;
+    transition: 0.2s all ease;
+}
+#game #back:hover{
+    cursor: pointer;
+    color: var(--color-accent);
+}
+
+/*---------- Buttons ----------*/
+
 .buttons{
     display: flex;
     justify-content: center;
@@ -119,7 +147,7 @@ section{
     width: 6.5vw;
     flex-grow: 1;
 }
-.buttons i:hover, .buttons p:hover{
+.buttons i:hover, #game .buttons p:hover{
     cursor: pointer;
     background-color: var(--gray-2);
 
@@ -127,23 +155,6 @@ section{
 .buttons i:hover{
     cursor: pointer;
     
-}
-
-
-#score{
-    text-align: center;
-}
-
-#back{
-    position: absolute;
-    top: 17vh;
-    left: 63vw;
-    font-size: 1.5rem;
-    transition: 0.2s all ease;
-}
-#back:hover{
-    cursor: pointer;
-    color: var(--color-accent);
 }
 
 /*---------- Selector ----------*/
