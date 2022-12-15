@@ -14,34 +14,17 @@
 
 <body>
     <main>
-<<<<<<< HEAD
         <div id="start">
-            <nav>
-                <i onclick="back()" class="fa-solid fa-arrow-left"></i>
-            </nav>
             <div class="buttons">
-                <p onclick="loadSide('M');">Singleplayer</p>
-                <p onclick="loadSide('M');">Multiplayer</p>
-=======
-        <section id="start">
-            <div class="buttons">
-                <div onclick="loadSide('M');"><p>Singleplayer</p></div>
-                <div onclick="loadSide('M');"><p>Multiplayer</p></div>
->>>>>>> 859ea0407df815191117d7f8ca01fa55789d85a9
+                <p onclick="loadMenu('');">Singleplayer</p>
+                <p onclick="loadMenu('');">Multiplayer</p>
             </div>
-        </section>
+        </div>
 
-<<<<<<< HEAD
         <div id="mode">
-            <nav>
-                <i onclick="loadSide('S')" class="fa-solid fa-arrow-left"></i>
-            </nav>
-=======
-        <section id="mode">
->>>>>>> 859ea0407df815191117d7f8ca01fa55789d85a9
             <div class="buttons">
-                <p onclick="loadSide('G', 'L');">Länder</p>
-                <p onclick="loadSide('G', 'H');">Hauptstädte</p>
+                <p onclick="loadGame('L');">Länder</p>
+                <p onclick="loadGame('H');">Hauptstädte</p>
             </div>
             <div class="selector">
                 <p class="all selected" onclick="selectContinent(this)">Alle Länder</p>
@@ -52,22 +35,11 @@
                 <p class="Südamerika" onclick="selectContinent(this)">Südamerika</p>
                 <p class="Ozeanien" onclick="selectContinent(this)">Ozeanien</p>
             </div>
-            <div id="back" onclick="loadSide('S')"><i class="fa-solid fa-arrow-left"></i></div>
-        </section>
+        </div>
 
-<<<<<<< HEAD
         <div id="game">
-            <nav>
-                <i onclick="loadSide('M')" class="fa-solid fa-arrow-left"></i>
-            </nav>
-=======
-        <section id="game">
->>>>>>> 859ea0407df815191117d7f8ca01fa55789d85a9
             <h2></h2>
-            <div id="content">
-                <div data-position='show'></div>
-                <div data-position='hidden'></div>
-            </div>
+            <section></section>
             <input id="input" type="text" autocomplete="off" autofocus>
 
             <div class="buttons">
@@ -75,12 +47,9 @@
                 <i title="Enter" class="fa-solid fa-check"></i>
                 <i title="#" class="fa-solid fa-forward"></i></div>
             <div id="score"></div>
-<<<<<<< HEAD
+            <div id="back" onclick="loadMenu()"><i class="fa-solid fa-house"></i></div>
         </div>
-=======
-            <div id="back" onclick="loadSide('M')"><i class="fa-solid fa-arrow-left"></i></div>
-        </section>
->>>>>>> 859ea0407df815191117d7f8ca01fa55789d85a9
     </main>
 </body>
+
 </html>

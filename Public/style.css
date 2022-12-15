@@ -35,17 +35,9 @@ main{
     transition: 0.4s all ease;
 }
 
-/*---------- Nav ----------*/
-nav{
-    display: none;
-}
-nav i:hover{
-    cursor: pointer;
-}
-
 /*---------- Start ----------*/
 #start .buttons p{
-    width: fit-content;
+    width: 10vw;
 }
 
 /*---------- Mode ----------*/
@@ -69,6 +61,7 @@ nav i:hover{
     outline: .2rem solid var(--gray-5);
 }
 #game img{
+    display: none;
     position: absolute;
     width: auto;
     height: 20vh;
@@ -90,17 +83,13 @@ nav i:hover{
     text-align: center;
     letter-spacing: 0.1rem;
 }
-#game #content{
+#game section{
     position: relative;
     display: flex;
     justify-content: center;
     overflow: hidden;
-    width: 25vw;
+    width: 23vw;
     height: 25vh;
-}
-#game #content h3{
-    height: fit-content;
-    margin-top: auto;
 }
 
 #game #score{
@@ -120,21 +109,13 @@ nav i:hover{
 }
 
 /*---------- Buttons ----------*/
-#start .buttons div{
-    padding-block: 3.9rem;
-    display: grid;
-    place-content: center;
-    width: 12vw;
-    text-transform: uppercase;
-    font-family: 'Six Caps', sans-serif;
-}
 
 .buttons{
     display: flex;
     justify-content: center;
     width: 100%;
 }
-.buttons i, .buttons > p, .buttons div{
+.buttons i, .buttons p{
     font-size: 1.5rem;
     background-color: var(--color-accent);
     color: var(--gray-2);
@@ -152,10 +133,10 @@ nav i:hover{
 .buttons p{
     width: 6.5vw;
 }
-.buttons i:hover, .buttons > p:hover, .buttons div:hover{
+.buttons i:hover, .buttons p:hover{
     cursor: pointer;
     color: var(--color-accent);
-    background: var(--gray-2) !important;
+    background-color: var(--gray-2);
 }
 .buttons i{
     background-color: var(--gray-3);
@@ -218,7 +199,6 @@ nav i:hover{
 /************ Imports ************/
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Six+Caps&display=swap');
 
 /************ Keyframes ************/
 @keyframes shake {
