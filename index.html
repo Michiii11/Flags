@@ -14,17 +14,17 @@
 
 <body>
     <main>
-        <div id="start">
+        <section id="start">
             <div class="buttons">
-                <p onclick="loadMenu('');">Singleplayer</p>
-                <p onclick="loadMenu('');">Multiplayer</p>
+                <div onclick="loadSide('M');"><p>Singleplayer</p></div>
+                <div onclick="loadSide('M');"><p>Multiplayer</p></div>
             </div>
-        </div>
+        </section>
 
-        <div id="mode">
+        <section id="mode">
             <div class="buttons">
-                <p onclick="loadGame('L');">Länder</p>
-                <p onclick="loadGame('H');">Hauptstädte</p>
+                <p onclick="loadSide('G', 'L');">Länder</p>
+                <p onclick="loadSide('G', 'H');">Hauptstädte</p>
             </div>
             <div class="selector">
                 <p class="all selected" onclick="selectContinent(this)">Alle Länder</p>
@@ -35,11 +35,15 @@
                 <p class="Südamerika" onclick="selectContinent(this)">Südamerika</p>
                 <p class="Ozeanien" onclick="selectContinent(this)">Ozeanien</p>
             </div>
-        </div>
+            <div id="back" onclick="loadSide('S')"><i class="fa-solid fa-arrow-left"></i></div>
+        </section>
 
-        <div id="game">
+        <section id="game">
             <h2></h2>
-            <section></section>
+            <div id="content">
+                <div data-position='show'></div>
+                <div data-position='hidden'></div>
+            </div>
             <input id="input" type="text" autocomplete="off" autofocus>
 
             <div class="buttons">
@@ -47,8 +51,8 @@
                 <i title="Enter" class="fa-solid fa-check"></i>
                 <i title="#" class="fa-solid fa-forward"></i></div>
             <div id="score"></div>
-            <div id="back" onclick="loadMenu()"><i class="fa-solid fa-house"></i></div>
-        </div>
+            <div id="back" onclick="loadSide('M')"><i class="fa-solid fa-arrow-left"></i></div>
+        </section>
     </main>
 </body>
 
