@@ -20,11 +20,15 @@ body{
 
 /************ Main Style ************/
 main{
+    width: 35vw;
+    display: grid;
+    place-content: center;
     background-color:var(--gray-2);
     border-radius: 1rem;
     padding: 6rem;
     box-shadow: 0rem 0rem 1rem 0.5rem var(--shadow);
     transition: all 0.2s ease;
+    position: relative;
 }
 #start, #mode, #game{
     display: none;
@@ -34,7 +38,6 @@ main{
     width: fit-content;
     transition: 0.4s all ease;
 }
-
 /*---------- Start ----------*/
 #start .buttons p{
     width: fit-content;
@@ -60,20 +63,21 @@ main{
 #game #input:focus{
     outline: .2rem solid var(--gray-5);
 }
-#game img{
-    display: none;
+#game #content div img{
+    height: 20vh;
+    box-shadow: 0.3rem 0.3rem 0.2rem 0.2rem var(--gray-1-5);
+}
+#game #content div{
     position: absolute;
     width: auto;
-    height: 20vh;
     margin-block: 2vh;
-    box-shadow: 0.3rem 0.3rem 0.2rem 0.2rem var(--gray-1-5);
     transition: all 1s ease;
 }
-#game img[data-position="show"]{
+#game div[data-position="show"]{
     animation: in 1s forwards;
-    z-index: 2;
+    z-index: 2; 
 }
-#game img[data-position="hidden"]{
+#game div[data-position="hidden"]{
     animation: out 1s forwards;
     z-index: 1;
 }
@@ -82,6 +86,9 @@ main{
     font-size: 2rem;
     text-align: center;
     letter-spacing: 0.1rem;
+}
+#game h3{
+    text-align: center;
 }
 #game #content{
     position: relative;
@@ -100,14 +107,18 @@ main{
     text-align: center;
 }
 
-#game #back{
+.back{
     position: absolute;
-    top: 17vh;
-    left: 63vw;
+    top: 1.5vw;
+    left: 2vw;
     font-size: 1.5rem;
     transition: 0.2s all ease;
+    padding: 1rem;
+    cursor: pointer;
+    border-radius: 50%;
+    color: var(--gray-5);
 }
-#game #back:hover{
+.back:hover{
     cursor: pointer;
     color: var(--color-accent);
 }

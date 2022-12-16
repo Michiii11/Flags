@@ -23,8 +23,8 @@
 
         <section id="mode">
             <div class="buttons">
-                <p onclick="loadSide('G', 'L');">Länder</p>
-                <p onclick="loadSide('G', 'H');">Hauptstädte</p>
+                <p onclick="loadSide('G', 'Country');">Länder</p>
+                <p onclick="loadSide('G', 'Capital');">Hauptstädte</p>
             </div>
             <div class="selector">
                 <p class="all selected" onclick="selectContinent(this)">Alle Länder</p>
@@ -35,11 +35,11 @@
                 <p class="Südamerika" onclick="selectContinent(this)">Südamerika</p>
                 <p class="Ozeanien" onclick="selectContinent(this)">Ozeanien</p>
             </div>
-            <div id="back" onclick="loadSide('S')"><i class="fa-solid fa-arrow-left"></i></div>
+            <div class="back" onclick="loadSide('S')"><i class="fa-solid fa-arrow-left"></i></div>
         </section>
 
         <section id="game">
-            <h2></h2>
+            <h2>her könnte ihre werbung stehen</h2>
             <div id="content">
                 <div data-position='show'></div>
                 <div data-position='hidden'></div>
@@ -51,7 +51,7 @@
                 <i title="Enter" class="fa-solid fa-check"></i>
                 <i title="#" class="fa-solid fa-forward"></i></div>
             <div id="score"></div>
-            <div id="back" onclick="loadSide('M')"><i class="fa-solid fa-arrow-left"></i></div>
+            <div class="back" onclick="loadSide('M')"><i class="fa-solid fa-arrow-left"></i></div>
         </section>
     </main>
 </body>
