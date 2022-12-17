@@ -77,6 +77,16 @@ function startGame() {
     getCountry();
 }
 
+function toggleSidebar(elem){
+    elem = elem.parentNode;
+    if(elem.dataset.state == "open"){
+        elem.dataset.state = "close"
+    }
+    else{
+        elem.dataset.state = "open"
+    }
+}
+
 
 //#endregion
 

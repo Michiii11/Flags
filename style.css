@@ -43,8 +43,6 @@ main{
     width: fit-content;
 }
 
-/*---------- Mode ----------*/
-
 /*---------- Game ----------*/
 #game #input{
     font-size: 2rem;
@@ -107,22 +105,6 @@ main{
     text-align: center;
 }
 
-.back{
-    position: absolute;
-    top: 1.5vw;
-    left: 2vw;
-    font-size: 1.5rem;
-    transition: 0.2s all ease;
-    padding: 1rem;
-    cursor: pointer;
-    border-radius: 50%;
-    color: var(--gray-5);
-}
-.back:hover{
-    cursor: pointer;
-    color: var(--color-accent);
-}
-
 /*---------- Buttons ----------*/
 #start .buttons div{
     padding-block: 3.9rem;
@@ -180,6 +162,22 @@ main{
     
 }
 
+.back{
+    position: absolute;
+    top: 1.5vw;
+    left: 2vw;
+    font-size: 1.5rem;
+    transition: 0.2s all ease;
+    padding: 1rem;
+    cursor: pointer;
+    border-radius: 50%;
+    color: var(--gray-5);
+}
+.back:hover{
+    cursor: pointer;
+    color: var(--color-accent);
+}
+
 /*---------- Selector ----------*/
 .selector{
     display: grid;
@@ -218,6 +216,44 @@ main{
     color: var(--color-accent);
     background-color: rgb(32 32 32);
 }
+
+/*---------- Setting ----------*/
+#settings{
+    position: absolute;
+    left: 0;
+    border-top-right-radius: 2rem;
+    border-bottom-right-radius: 2rem;
+    background-color: var(--gray-2);
+    height: 50vh;
+    transition: all .5s;
+}
+#settings .heading{
+    text-align: center;
+    font-weight: bold;
+    font-size: 2rem;
+    margin-block: auto;
+    cursor: pointer;
+}
+#settings[data-state="close"] .heading{
+    rotate: -90deg;
+}
+#settings[data-state="close"]{
+    width: 3vw;
+    display: flex;
+    justify-content: center;
+}
+#settings[data-state="open"]{
+    width: 15vw;
+}
+
+#settings[data-state="close"] .hidden{
+    display: none;
+}
+#settings[data-state="open"] .hidden{
+    display: flex;
+    flex-direction: column;
+}
+
 
 /************ Imports ************/
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');

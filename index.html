@@ -39,7 +39,7 @@
         </section>
 
         <section id="game">
-            <h2>her könnte ihre werbung stehen</h2>
+            <h2></h2>
             <div id="content">
                 <div data-position='show'></div>
                 <div data-position='hidden'></div>
@@ -54,6 +54,15 @@
             <div class="back" onclick="loadSide('M')"><i class="fa-solid fa-arrow-left"></i></div>
         </section>
     </main>
-</body>
 
+    <aside id="settings" data-state="close">
+        <p class="heading" onclick="toggleSidebar(this)">SETTINGS</p>
+
+        <div class="hidden">
+            <label for="hint">Tipp: </label><input id="hint" type="text">
+            <label for="skip">Überspringen</label><input id="skip" type="text">
+            <label for="guess">Eingabe</label><input id="guess" type="text">
+        </div>
+    </aside>
+</body>
 </html>
