@@ -233,6 +233,8 @@ main{
     font-size: 2rem;
     margin-block: auto;
     cursor: pointer;
+    transition: all .3s;
+    transition-delay: .5s;
 }
 #settings[data-state="close"] .heading{
     rotate: -90deg;
@@ -247,12 +249,18 @@ main{
     width: 15vw;
 }
 
+#settings .hidden{
+    transition: all 1s;
+    transition-delay: .5s;
+    display: flex;
+}
 #settings[data-state="close"] .hidden{
     display: none;
+    opacity: 0;
 }
 #settings[data-state="open"] .hidden{
-    display: flex;
     flex-direction: column;
+    opacity: 1;
 }
 
 
@@ -306,9 +314,22 @@ main{
 }
 
 @media screen and (max-width: 800px) { /*phone*/
-    main{
-        
+    .buttons{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
     }
+    #start .buttons div{
+        width: 40vw;
+    }
+
+    #mode{
+        display: flex;
+    }
+    #mode .buttons p{
+        width: 40vw;
+    }
+    #mode 
 }
 /************ Variables ************/
 :root {
