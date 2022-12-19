@@ -312,7 +312,7 @@ main{
     }
 }
 
-@media screen and (max-width: 800px) { /*phone*/
+@media screen and (max-width: 1200px) { /*phone*/
     #start .buttons, #mode .buttons{
         display: flex;
         flex-direction: column;
@@ -328,14 +328,17 @@ main{
         width: 40vw;
     }
     #mode .selector{
+        width: 50vw;
         display: flex;
         flex-direction: column;
+        align-items: center;
         overflow: auto;
-        height: 50vh;
-        width: 100%;
-        padding: 1rem;
     }
-
+    #mode .selector p{
+        width: 50%;
+        padding: .4rem;
+        margin: .1rem;
+    }
 }
 /************ Variables ************/
 :root {
