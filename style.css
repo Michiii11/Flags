@@ -93,7 +93,6 @@ main{
     display: flex;
     justify-content: center;
     overflow: hidden;
-    width: 23vw;
     height: 25vh;
 }
 #game #content h3{
@@ -314,7 +313,7 @@ main{
 }
 
 @media screen and (max-width: 800px) { /*phone*/
-    .buttons{
+    #start .buttons, #mode .buttons{
         display: flex;
         flex-direction: column;
         width: 100%;
@@ -322,14 +321,21 @@ main{
     #start .buttons div{
         width: 40vw;
     }
-
     #mode{
-        display: flex;
+        height: 60vh;
     }
     #mode .buttons p{
         width: 40vw;
     }
-    #mode 
+    #mode .selector{
+        display: flex;
+        flex-direction: column;
+        overflow: auto;
+        height: 50vh;
+        width: 100%;
+        padding: 1rem;
+    }
+
 }
 /************ Variables ************/
 :root {
