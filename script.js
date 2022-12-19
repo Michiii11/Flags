@@ -78,12 +78,22 @@ function startGame() {
 }
 
 function toggleSidebar(elem){
-    elem = elem.parentNode;
     if(elem.dataset.state == "open"){
+        console.log(elem);
         elem.dataset.state = "close"
-    }
+
+        setTimeout(function(){     
+            elem.querySelector(".heading").setAttribute("onclick", "")
+            elem.setAttribute("onclick", "toggleSidebar(this)")
+        },10)
+
+    } 
     else{
         elem.dataset.state = "open"
+
+        elem.querySelector(".heading").setAttribute("onclick", "toggleSidebar(this.parentNode)")
+        elem.setAttribute("onclick", "")
+
     }
 }
 

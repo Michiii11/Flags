@@ -241,6 +241,7 @@ main{
     width: 3vw;
     display: flex;
     justify-content: center;
+    cursor: pointer;
 }
 #settings[data-state="open"]{
     width: 15vw;
