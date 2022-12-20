@@ -20,7 +20,7 @@ body{
 
 /************ Main Style ************/
 main{
-    width: 35vw;
+    width: 40vw;
     display: grid;
     place-content: center;
     background-color:var(--gray-2);
@@ -312,7 +312,7 @@ main{
     }
 }
 
-@media screen and (max-width: 1200px) { /*phone*/
+@media screen and (max-width: 800px) { /*phone*/
     #start .buttons, #mode .buttons{
         display: flex;
         flex-direction: column;
@@ -322,22 +322,23 @@ main{
         width: 40vw;
     }
     #mode{
-        height: 60vh;
+        height: 65vh;
     }
     #mode .buttons p{
-        width: 40vw;
+        width: 55vw;
     }
     #mode .selector{
-        width: 50vw;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        overflow: auto;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr;
+        justify-content: center;
     }
-    #mode .selector p{
-        width: 50%;
-        padding: .4rem;
-        margin: .1rem;
+    .selector p:first-of-type{
+       grid-area: 1/1/2/3;
+    }
+    
+    
+    #settings{
+        opacity: 0;
     }
 }
 /************ Variables ************/
