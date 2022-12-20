@@ -159,7 +159,7 @@ function setCountryList(isNewRound) {
 function getCountry() {
     if (index >= countryList.length) { // Check if finished
         if (wrongCountrys.length == 0) { // Finished than go back to Menu
-            loadSide("M");
+            finishedRound();
         } else { // Next Round with the wrong answers
             setCountryList(true);
         }
@@ -186,10 +186,9 @@ function getCountry() {
 
 /**
  * Checks if the guess is correct
- * if it's true it goes into skip()
- * @param {*} i 
+ * if it's true it goes into skip() 
  */
-function checkCountry(i) {
+function checkCountry() {
     let guess = inputField.value.toLowerCase();
     let answer = countryList[index].name;
 
@@ -313,6 +312,21 @@ function skipped() {
     }
 }
 
+function finishedRound(){
+    let game = document.querySelector('#game');
+    let content = game.innerHTML
+    
+    game.innerHTML = 
+    `<div id="finishedRound">
+        <h2>You finished the round</h2>
+        <p>You got ${countryList.length - wrongCountrys.length} out of ${countryList.length}</p>
+        <div id="button">
+            <p onclick=""></p>
+            <p onclick=""></p>
+        </div>
+    </div>`
+}
+
 //#endregion
 
 //**************** Event Listener ****************//
@@ -329,7 +343,7 @@ flag.addEventListener("keydown", (event) => {
         loadHint();
     }
     if (event.keyCode == 13) { // Enter --> Check
-        checkCountry(index);
+        checkCountry();
     }
 });
 

@@ -11,7 +11,7 @@ let countries = [ // name: ["Deutsch", "Englisch", "Sonstige"]
 {name: ["Armenien", "Armenia"], capital:["Jerewan"], continent:"Asien", code:"AM"},
 {name: ["Aserbaidschan", "Azerbaijan"], capital:["Baku"], continent:"Asien", code:"AZ"},
 {name: ["Äthiopien", "Ethiopia"], capital:["Addis Abeba"], continent:"Afrika", code:"ET"},
-{name: ["Australien", "Astralia"], capital:["Canberra"], continent:"Ozeanien", code:"AU"},
+{name: ["Australien", "Australia"], capital:["Canberra"], continent:"Ozeanien", code:"AU"},
 {name: ["Bahamas", "Bahamas"], capital:["Nassau"], continent:"Nordamerika", code:"BS"},
 {name: ["Bahrain", "Bahrain"], capital:["Manama"], continent:"Asien", code:"BH"},
 {name: ["Bangladesch", "Bangladesh"], capital:["Dhaka"], continent:"Asien", code:"BD"},
