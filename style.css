@@ -35,16 +35,25 @@ main{
     display: none;
     flex-direction: column;
     align-items: center;
-    height:60%;
     width: fit-content;
     transition: 0.4s all ease;
 }
+#mode{
+    padding: 5vh;
+}
 /*---------- Start ----------*/
+#start{
+    height: 30vh;
+    justify-content: center;
+}
 #start .buttons p{
     width: fit-content;
 }
 
 /*---------- Game ----------*/
+#game{
+    padding-block: 3vh;
+}
 #game #input{
     font-size: 2rem;
     text-align: center;
@@ -164,8 +173,8 @@ main{
 
 .back{
     position: absolute;
-    top: 1.5vw;
-    left: 2vw;
+    top: .2vw;
+    left: .2vw;
     font-size: 1.5rem;
     transition: 0.2s all ease;
     padding: 1rem;
@@ -318,6 +327,9 @@ main{
         width: 75vw;
     }
 
+    #start{
+        height: fit-content;
+    }
     #start .buttons, #mode .buttons{
         display: flex;
         flex-direction: column;
@@ -328,8 +340,15 @@ main{
         font-size: 1.2rem;
     }
     
+    #mode{
+        padding: 5vh;
+    }
+    #mode p{
+        font-size: 1rem;
+    }
     #mode .buttons p{
         width: 75%;
+        margin-block: 0.2vw;
     }
     #mode .selector{
         grid-template-columns: 1fr 1fr;
@@ -337,7 +356,6 @@ main{
         justify-content: center;
     }
     #mode .selector p{
-        font-size: 1rem;
         padding-inline: 1rem;
         margin: 0.2rem;
     }
