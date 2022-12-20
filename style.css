@@ -21,11 +21,12 @@ body{
 /************ Main Style ************/
 main{
     width: 40vw;
+    box-sizing: border-box;
+    padding: 1rem;
     display: grid;
     place-content: center;
     background-color:var(--gray-2);
     border-radius: 1rem;
-    padding: 6rem;
     box-shadow: 0rem 0rem 1rem 0.5rem var(--shadow);
     transition: all 0.2s ease;
     position: relative;
@@ -185,7 +186,6 @@ main{
     text-align: center;
     padding-top: 5vh;
     font-size: 1.2rem;
-    gap: 1.5rem;
 }
 .selector p:first-of-type{
     grid-area: 1/1/1/4;
@@ -199,6 +199,7 @@ main{
     border-radius: 1rem;
     transition: 0.4s all ease;
     position: relative;
+    margin: 1rem;
 }
 .selector p.selected{
     color: #d5d5d5;
@@ -313,6 +314,10 @@ main{
 }
 
 @media screen and (max-width: 800px) { /*phone*/
+    main{
+        width: 75vw;
+    }
+
     #start .buttons, #mode .buttons{
         display: flex;
         flex-direction: column;
@@ -320,17 +325,21 @@ main{
     }
     #start .buttons div{
         width: 40vw;
+        font-size: 1.2rem;
     }
-    #mode{
-        height: 65vh;
-    }
+    
     #mode .buttons p{
-        width: 55vw;
+        width: 75%;
     }
     #mode .selector{
         grid-template-columns: 1fr 1fr;
         grid-template-rows: 1fr 1fr 1fr 1fr;
         justify-content: center;
+    }
+    #mode .selector p{
+        font-size: 1rem;
+        padding-inline: 1rem;
+        margin: 0.2rem;
     }
     .selector p:first-of-type{
        grid-area: 1/1/2/3;
@@ -338,6 +347,7 @@ main{
     
     
     #settings{
+        display: none;
         opacity: 0;
     }
 }
