@@ -1,5 +1,5 @@
 let countries = [ // name: ["Deutsch", "Englisch", "Sonstige"]
-{name: ["Afghanistan", "Afghanistan"], capital:["Kabul"], continent:"Asien", code:"AF"},
+{name: ["Afghanistan", "Afghanistan"], capital:["Kabul"], continent:"Asie", code:"AF"},
 {name: ["Ägypten", "Egypt"], capital:["Kairo"], continent:"Afrika", code:"EG"},
 {name: ["Albanien", "Albania"], capital:["Tirana"], continent:"Europa", code:"AL"},
 {name: ["Algerien", "Algeria"], capital:["Algier"], continent:"Afrika", code:"DZ"},

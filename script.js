@@ -108,11 +108,13 @@ function toggleSidebar(elem){
  * @param {*} elem continent
  */
 function selectContinent(elem) {
-    document.querySelector('.selected').classList.remove("selected")
+/*     document.querySelector('.selected').classList.remove("selected")
     elem.classList.add("selected")
     continent = elem.classList[0]
 
-    localStorage.setItem('flagContinent', continent);
+    localStorage.setItem('flagContinent', continent); */
+
+    continent = 'Asie'
     setCountryList();
 }
 
@@ -321,8 +323,8 @@ function finishedRound(){
         <h2>You finished the round</h2>
         <p>You got ${countryList.length - wrongCountrys.length} out of ${countryList.length}</p>
         <div id="button">
-            <p onclick=""></p>
-            <p onclick=""></p>
+            <p onclick="loadSide('G')">Restart</p>
+            <p onclick="loadSide('M')">Home</p>
         </div>
     </div>`
 }
