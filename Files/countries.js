@@ -134,7 +134,7 @@ let countries = [ // name: ["Deutsch", "Englisch", "Sonstige"]
 {name: ["Palau", "Palau"], capital:["Ngerulmud"], continent:"Ozeanien", code:"PW"},
 {name: ["Panama", "Panama"], capital:["Panama-Stadt", "Panama Stadt"], continent:"Nordamerika", code:"PA"},
 {name: ["Papua-Neuguinea", "Papua New Guinea", "Papua Neuguinea"], capital:["Port Moresby"], continent:"Ozeanien", code:"PG"},
-{name: ["Paraguay", "Paraguay"], capital:["Asunción", "Ascuncion"], continent:"Südamerika", code:"PY"},
+{name: ["Paraguay", "Paraguay"], capital:["Asunción", "Asuncion"], continent:"Südamerika", code:"PY"},
 {name: ["Peru", "Peru"], capital:["Lima"], continent:"Südamerika", code:"PE"},
 {name: ["Philippinen", "Philippines"], capital:["Manila"], continent:"Asien", code:"PH"},
 {name: ["Polen", "Poland"], capital:["Warschau"], continent:"Europa", code:"PL"},
