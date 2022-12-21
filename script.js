@@ -108,13 +108,11 @@ function toggleSidebar(elem){
  * @param {*} elem continent
  */
 function selectContinent(elem) {
-/*     document.querySelector('.selected').classList.remove("selected")
+    document.querySelector('.selected').classList.remove("selected")
     elem.classList.add("selected")
     continent = elem.classList[0]
 
-    localStorage.setItem('flagContinent', continent); */
-
-    continent = 'Asie'
+    localStorage.setItem('flagContinent', continent);
     setCountryList();
 }
 
