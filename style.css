@@ -31,7 +31,7 @@ main{
     transition: all 0.2s ease;
     position: relative;
 }
-#start, #mode, #game{
+#start, #mode, #game, #finishedRound{
     display: none;
     flex-direction: column;
     align-items: center;
@@ -150,7 +150,7 @@ main{
 .buttons i:hover, .buttons > p:hover, .buttons div:hover{
     cursor: pointer;
     color: var(--color-accent);
-    background: var(--gray-2) !important;
+    background: var(--gray-2);
 }
 .buttons i{
     background-color: var(--gray-3);
@@ -272,6 +272,31 @@ main{
     opacity: 1;
 }
 
+/*---------- Finished ----------*/
+#finishedRound{
+    background-color: var(--gray-2);
+    text-align: center;
+    flex-direction: column;
+}
+#finishedRound h2{
+    margin-block: 1rem;
+    font-size: 2.5rem;
+    color: var(--color-accent);
+}
+#finishedRound > p{
+    color: hsl(0, 0%, 75%);
+    margin-bottom: 2rem;
+    font-size: 1rem;
+}
+#finishedRound .buttons p{
+    font-size: 1.2rem;
+    background: var(--gray-2);
+    color: var(--color-accent);
+}
+#finishedRound .buttons p:hover{
+    background: var(--color-accent);
+    color: var(--gray-2);
+}
 
 /************ Imports ************/
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');

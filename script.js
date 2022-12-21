@@ -32,6 +32,8 @@ if (localStorage.getItem("flagContinent") != undefined) {
 const startPage = document.querySelector('#start');
 const modePage = document.querySelector('#mode');
 const gamePage = document.querySelector('#game');
+const finishPage = document.querySelector('#finishedRound')
+
 loadSide('S');
 /**
  * Loads or deloads the current page
@@ -43,6 +45,7 @@ function loadSide(t, m) {
     startPage.style.display = "none"
     modePage.style.display = "none"
     gamePage.style.display = "none"
+    finishPage.style.display = "none"
 
     // Load the current page
     switch (t) {
@@ -59,6 +62,10 @@ function loadSide(t, m) {
             gamePage.style.display = "block";
             gameMode = m;
             startGame();
+            break;
+        case "F":
+            finishPage.style.display = "flex"
+            finishedRound();
             break;
     }
 }
@@ -313,18 +320,17 @@ function skipped() {
 }
 
 function finishedRound(){
-    let game = document.querySelector('#game');
-    let content = game.innerHTML
-    
-    game.innerHTML = 
-    `<div id="finishedRound">
-        <h2>You finished the round</h2>
-        <p>You got ${countryList.length - wrongCountrys.length} out of ${countryList.length}</p>
-        <div id="button">
-            <p onclick="loadSide('G')">Restart</p>
-            <p onclick="loadSide('M')">Home</p>
-        </div>
-    </div>`
+    document.querySelector('#finishedRound p').innerHTML = `Du hast ${countryList.length - wrongCountrys.length} von ${countryList.length} richtig`
+
+    if(wrongCountrys.length == 0){
+        document.querySelector('#finishedRound .buttons').innerHTML = 
+        `<p onclick="setCountryList();loadSide('G');">Neustart</p>
+        <p onclick="loadSide('M')">Home</p>`
+    } else{
+        document.querySelector('#finishedRound .buttons').innerHTML = 
+        `<p onclick="setCountryList(true);loadSide('G');">Weiter</p>
+        <p onclick="loadSide('M')">Home</p>`
+    }
 }
 
 //#endregion
