@@ -7,8 +7,9 @@ let hintCount = 0; // Count of the shown letters
 
 let wrongCountrys = []; // List of the wrong anwsers
 
-let gameMode //Country | Capital
-let continent = "all" // Current continent
+let flagType = "country" // Country | Capital
+let flagContinent = "all" // Current continent
+let flagMode = "unranked" // Unranked | Ranked
 
 const completeCounter = document.querySelectorAll('#game h2')[0]; // e.g. 0/5
 function hidBox(){return document.querySelector('#content div[data-position="hidden"]')} // return hidden Flag Box
@@ -23,12 +24,23 @@ const inputField = document.querySelector('#input'); // input Field of the page
 //#region
 
 // Set or load the Localstorage
-if (localStorage.getItem("flagContinent") != undefined) {
-    continent = localStorage.getItem("flagContinent")
+if (localStorage.getItem("flagType") != undefined) {
+    flagType = localStorage.getItem("flagType")
 } else {
-    continent = localStorage.setItem("flagContinent", continent);
+    flagType = localStorage.setItem("flagType", flagType);
+}
+if (localStorage.getItem("flagContinent") != undefined) {
+    flagContinent = localStorage.getItem("flagContinent")
+} else {
+    flagContinent = localStorage.setItem("flagContinent", flagContinent);
+}
+if (localStorage.getItem("flagMode") != undefined) {
+    flagMode = localStorage.getItem("flagMode")
+} else {
+    flagMode = localStorage.setItem("flagMode", flagMode);
 }
 
+// Pages
 const startPage = document.querySelector('#start');
 const modePage = document.querySelector('#mode');
 const gamePage = document.querySelector('#game');
@@ -38,9 +50,8 @@ loadSide('S');
 /**
  * Loads or deloads the current page
  * @param {*} t is the type of the page
- * @param {*} m is the gamemode
  */
-function loadSide(t, m) {
+function loadSide(t) {
     // Reset the pages
     startPage.style.display = "none"
     modePage.style.display = "none"
@@ -54,13 +65,12 @@ function loadSide(t, m) {
             break;
         case "M":
             modePage.style.display = "flex";
-            if (continent != "all") {
-                selectContinent(document.querySelector(`.${continent}`))
+            if (flagContinent != "all") {
+                selector(document.querySelector(`.${flagContinent}`), "C")
             }
             break;
         case "G":
             gamePage.style.display = "block";
-            gameMode = m;
             startGame();
             break;
         case "F":
@@ -76,7 +86,7 @@ function startGame() {
     hidBox().innerHTML = `<img src="https://flagcdn.com/h120/${countryList[index].code.toLowerCase()}.png">`
 
     // Capital Mode
-    if (gameMode == "Capital") {
+    if (flagType == "capital") {
         showBox().innerHTML += `<h3></h3>`
         hidBox().innerHTML += `<h3>${countryList[index].name[0]}</h3>`
     }
@@ -112,16 +122,38 @@ function toggleSidebar(elem){
 
 /**
  * Selects the continent from the class
- * @param {*} elem continent
+ * @param {*} elem
+ * @param {*} type type of the selector
+ * T - Type || C - Continent || M - Mode
  */
-function selectContinent(elem) {
-    document.querySelector('.selected').classList.remove("selected")
-    elem.classList.add("selected")
-    continent = elem.classList[0]
+function selector(elem, type){
 
-    localStorage.setItem('flagContinent', continent);
-    setCountryList();
+    if(type == "T"){
+        document.querySelector('.type .selected').classList.remove("selected")
+        elem.classList.add("selected")
+        flagType = elem.classList[0]
+
+        localStorage.setItem('flagType', flagType);
+    }
+
+    if(type == "C"){
+        document.querySelector('.continent .selected').classList.remove("selected")
+        elem.classList.add("selected")
+        flagContinent = elem.classList[0]
+    
+        localStorage.setItem('flagContinent', flagContinent);
+        setCountryList();
+    }
+
+    if(type == "M"){
+        document.querySelector('.mode .selected').classList.remove("selected")
+        elem.classList.add("selected")
+        flagMode = elem.classList[0]
+
+        localStorage.setItem('flagMode', flagMode);
+    }
 }
+
 
 setCountryList()
 /**
@@ -133,11 +165,11 @@ function setCountryList(isNewRound) {
     if (isNewRound) { // Clone false answers into the country list
         countryList = [...wrongCountrys];
     } else {
-        if (continent == "all") { // Clone full list into the country list
+        if (flagContinent == "all") { // Clone full list into the country list
             countryList = [...countries];
         } else {
             for (let i = 0; i < countries.length; i++) { 
-                if (countries[i].continent == continent) { // Filter the continent
+                if (countries[i].continent == flagContinent) { // Filter the continent
                     countryList.push(countries[i]); // Set the country into the country list
                 }
             }
@@ -179,7 +211,7 @@ function getCountry() {
     inputField.placeholder = "";
 
     // Capital mode
-    if (gameMode == "Capital") {
+    if (flagType == "capital") {
         hidBox().querySelector('h3').innerHTML = countryList[index].name[0]
     }
 
@@ -200,7 +232,7 @@ function checkCountry() {
     let answer = countryList[index].name;
 
     // Capital Mode
-    if (gameMode == "Capital") {
+    if (flagType == "capital") {
         answer = countryList[index].capital;
     }
 
@@ -226,7 +258,7 @@ function loadHint() {
         wrongCountrys.push(countryList[index]);
     }
     inputField.value = ""
-    if (gameMode == "Capital") {
+    if (flagType == "capital") {
         inputField.placeholder = countryList[index].capital[0].substring(0, hintCount)
     } else {
         inputField.placeholder = countryList[index].name[0].substring(0, hintCount)
@@ -266,7 +298,7 @@ function skip(ind, typ) {
 
         inputField.style.color = "rgb(110, 110, 110)";
 
-        if (gameMode == "Capital") {
+        if (flagType == "capital") {
             inputField.value = countryList[index].capital[0];
         } else {
             inputField.value = countryList[index].name[0];
@@ -312,7 +344,7 @@ function swap() {
  * Skipped guess, writes the answeer into the placeholder
  */
 function skipped() {
-    if (gameMode == "Capital") {
+    if (flagType == "capital") {
         inputField.placeholder = countryList[index].capital[0];
     } else {
         inputField.placeholder = countryList[index].name[0];

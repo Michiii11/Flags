@@ -22,19 +22,28 @@
         </section>
 
         <section id="mode">
+            <div class="selector type">
+                <p class="country selected" onclick="selector(this, 'T')">Länder</p>
+                <p class="capital" onclick="selector(this, 'T')">Hauptstädte</p>
+            </div>
+            <div class="selector continent">
+                <p class="all selected" onclick="selector(this, 'C')">Alle Länder</p>
+                <p class="Europa" onclick="selector(this, 'C')">Europa</p>
+                <p class="Afrika" onclick="selector(this, 'C')">Afrika</p>
+                <p class="Asien" onclick="selector(this, 'C')">Asien</p>
+                <p class="Nordamerika" onclick="selector(this, 'C')">Nordamerika</p>
+                <p class="Südamerika" onclick="selector(this, 'C')">Südamerika</p>
+                <p class="Ozeanien" onclick="selector(this, 'C')">Ozeanien</p>
+            </div>
+            <div class="selector mode">
+                <p class="unranked selected" onclick="selector(this, 'M')">Unranked</p>
+                <p class="ranked" onclick="selector(this, 'M')">Ranked</p>
+            </div>
+
             <div class="buttons">
-                <p onclick="loadSide('G', 'Country');">Länder</p>
-                <p onclick="loadSide('G', 'Capital');">Hauptstädte</p>
-            </div>
-            <div class="selector">
-                <p class="all selected" onclick="selectContinent(this)">Alle Länder</p>
-                <p class="Europa" onclick="selectContinent(this)">Europa</p>
-                <p class="Afrika" onclick="selectContinent(this)">Afrika</p>
-                <p class="Asien" onclick="selectContinent(this)">Asien</p>
-                <p class="Nordamerika" onclick="selectContinent(this)">Nordamerika</p>
-                <p class="Südamerika" onclick="selectContinent(this)">Südamerika</p>
-                <p class="Ozeanien" onclick="selectContinent(this)">Ozeanien</p>
-            </div>
+                <p onclick="loadSide('G');">Start Game</p>
+            </div>        
+
             <div class="back" onclick="loadSide('S')"><i class="fa-solid fa-arrow-left"></i></div>
         </section>
 
