@@ -65,12 +65,19 @@ function loadSide(t) {
             break;
         case "M":
             modePage.style.display = "flex";
+            if (flagType != "country"){
+                selector(document.querySelector(`.${flagType}`), "T")
+            }
             if (flagContinent != "all") {
                 selector(document.querySelector(`.${flagContinent}`), "C")
+            }
+            if (flagMode != "unranked"){
+                selector(document.querySelector(`.${flagMode}`), "M")
             }
             break;
         case "G":
             gamePage.style.display = "block";
+            if(flagMode == "ranked"){startRankedGame()}
             startGame();
             break;
         case "F":
@@ -184,6 +191,36 @@ function setCountryList(isNewRound) {
     // Reset the 
     index = 0;
     wrongCountrys = [];
+}
+
+/**
+ * Starts a ranked game
+ */
+function startRankedGame(){
+    // 30 Runden
+    // All 197 - Europa 0,23 - Afrika 0,27 - Asien 0,24 - Nord 0,12 - Süd 0,06 - Ozean 0,08
+    let continents = [["Europa", 0.23], ["Afrika", 0.27], ["Asien", 0.24], ["Nordamerika", 0.12], ["Südamerika", 0.06], ["Ozeanien", 0.08]]
+    let europe = [];let africa = [];let asia = [];let north = [];let south = [];let ozean = [];
+    countryList = [[]];
+
+    for (let i = 0; i < continents; i++) {
+      for (let j = 0; j < countries.length; j++) {
+        if(countries[j].continent == continents[i]){
+            countryList[i].push(countries[j]);
+        }
+      }
+    }
+
+    europe = countryList[0].sort(() => {return Math.random() - 0.5})
+    africa = countryList[1].sort(() => {return Math.random() - 0.5})
+    asia = countryList[2].sort(() => {return Math.random() - 0.5})
+    north = countryList[3].sort(() => {return Math.random() - 0.5})
+    south = countryList[4].sort(() => {return Math.random() - 0.5})
+    ozean = countryList[5].sort(() => {return Math.random() - 0.5})
+
+    for (let i = 0; i < ; i++) {
+      
+    }
 }
 
 //#endregion
