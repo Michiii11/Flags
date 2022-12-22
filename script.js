@@ -11,9 +11,20 @@ let flagType = "country" // Country | Capital
 let flagContinent = "all" // Current continent
 let flagMode = "unranked" // Unranked | Ranked
 
+let points // Ranked current points
+let tryCount // Ranked try count
+let pointsPerTry = [1200, 800, 600, 400, 200];
+let lives
+let startTime
+let endTime
+
 const completeCounter = document.querySelectorAll('#game h2')[0]; // e.g. 0/5
-function hidBox(){return document.querySelector('#content div[data-position="hidden"]')} // return hidden Flag Box
-function showBox(){return document.querySelector('#content div[data-position="show"]')} // return visible Flag Box
+function hidBox() {
+    return document.querySelector('#content div[data-position="hidden"]')
+} // return hidden Flag Box
+function showBox() {
+    return document.querySelector('#content div[data-position="show"]')
+} // return visible Flag Box
 const scoreField = document.querySelector('#score') // e.g. Richtig 2/2
 const capitalField = document.querySelector('div[data-position="hidden"] h3'); // Field for the capital city
 const inputField = document.querySelector('#input'); // input Field of the page
@@ -57,6 +68,7 @@ function loadSide(t) {
     modePage.style.display = "none"
     gamePage.style.display = "none"
     finishPage.style.display = "none"
+    document.querySelector('.load').style.display = "none"
 
     // Load the current page
     switch (t) {
@@ -65,19 +77,21 @@ function loadSide(t) {
             break;
         case "M":
             modePage.style.display = "flex";
-            if (flagType != "country"){
+            if (flagType != "country") {
                 selector(document.querySelector(`.${flagType}`), "T")
             }
             if (flagContinent != "all") {
                 selector(document.querySelector(`.${flagContinent}`), "C")
             }
-            if (flagMode != "unranked"){
+            if (flagMode != "unranked") {
                 selector(document.querySelector(`.${flagMode}`), "M")
             }
             break;
         case "G":
             gamePage.style.display = "block";
-            if(flagMode == "ranked"){startRankedGame()}
+            if (flagMode == "ranked") {
+                startRankedGame()
+            }
             startGame();
             break;
         case "F":
@@ -101,18 +115,17 @@ function startGame() {
     getCountry();
 }
 
-function toggleSidebar(elem){
-    if(elem.dataset.state == "open"){
+function toggleSidebar(elem) {
+    if (elem.dataset.state == "open") {
         console.log(elem);
         elem.dataset.state = "close"
 
-        setTimeout(function(){     
+        setTimeout(function () {
             elem.querySelector(".heading").setAttribute("onclick", "")
             elem.setAttribute("onclick", "toggleSidebar(this)")
-        },10)
+        }, 10)
 
-    } 
-    else{
+    } else {
         elem.dataset.state = "open"
 
         elem.querySelector(".heading").setAttribute("onclick", "toggleSidebar(this.parentNode)")
@@ -133,9 +146,9 @@ function toggleSidebar(elem){
  * @param {*} type type of the selector
  * T - Type || C - Continent || M - Mode
  */
-function selector(elem, type){
+function selector(elem, type) {
 
-    if(type == "T"){
+    if (type == "T") {
         document.querySelector('.type .selected').classList.remove("selected")
         elem.classList.add("selected")
         flagType = elem.classList[0]
@@ -143,16 +156,16 @@ function selector(elem, type){
         localStorage.setItem('flagType', flagType);
     }
 
-    if(type == "C"){
+    if (type == "C") {
         document.querySelector('.continent .selected').classList.remove("selected")
         elem.classList.add("selected")
         flagContinent = elem.classList[0]
-    
+
         localStorage.setItem('flagContinent', flagContinent);
         setCountryList();
     }
 
-    if(type == "M"){
+    if (type == "M") {
         document.querySelector('.mode .selected').classList.remove("selected")
         elem.classList.add("selected")
         flagMode = elem.classList[0]
@@ -175,7 +188,7 @@ function setCountryList(isNewRound) {
         if (flagContinent == "all") { // Clone full list into the country list
             countryList = [...countries];
         } else {
-            for (let i = 0; i < countries.length; i++) { 
+            for (let i = 0; i < countries.length; i++) {
                 if (countries[i].continent == flagContinent) { // Filter the continent
                     countryList.push(countries[i]); // Set the country into the country list
                 }
@@ -196,31 +209,52 @@ function setCountryList(isNewRound) {
 /**
  * Starts a ranked game
  */
-function startRankedGame(){
-    // 30 Runden
-    // All 197 - Europa 0,23 - Afrika 0,27 - Asien 0,24 - Nord 0,12 - Süd 0,06 - Ozean 0,08
-    let continents = [["Europa", 0.23], ["Afrika", 0.27], ["Asien", 0.24], ["Nordamerika", 0.12], ["Südamerika", 0.06], ["Ozeanien", 0.08]]
-    let europe = [];let africa = [];let asia = [];let north = [];let south = [];let ozean = [];
-    countryList = [[]];
+function startRankedGame() {
+    points = 0;
+    tryCount = 0;
+    lives = 3;
 
-    for (let i = 0; i < continents; i++) {
-      for (let j = 0; j < countries.length; j++) {
-        if(countries[j].continent == continents[i]){
-            countryList[i].push(countries[j]);
+    let continents = [
+        ["Europa", 1/* 7 */], 
+        ["Afrika", 1/* 10 */],
+        ["Asien", 1/* 9 */],
+        ["Nordamerika", 1/* 2 */],
+        ["Südamerika", 1/* 1 */],
+        ["Ozeanien", 1/* 1 */]
+    ]
+
+    let tempList = [];
+    countryList = [];
+
+    // Get Continents seperate
+    for (let i = 0; i < continents.length; i++) {
+        tempList[i] = [];
+        for (let j = 0; j < countries.length; j++) {
+            if (countries[j].continent == continents[i][0]) {
+                tempList[i].push(countries[j]);
+            }
         }
-      }
+        tempList[i] = tempList[i].sort(() => {
+            return Math.random() - 0.5
+        })
     }
 
-    europe = countryList[0].sort(() => {return Math.random() - 0.5})
-    africa = countryList[1].sort(() => {return Math.random() - 0.5})
-    asia = countryList[2].sort(() => {return Math.random() - 0.5})
-    north = countryList[3].sort(() => {return Math.random() - 0.5})
-    south = countryList[4].sort(() => {return Math.random() - 0.5})
-    ozean = countryList[5].sort(() => {return Math.random() - 0.5})
-
-    for (let i = 0; i < ; i++) {
-      
+    // Push specifiy amount of countries per continent
+    for (let i = 0; i < continents.length; i++) {
+        for (let j = 0; j < continents[i][1]; j++) {
+            countryList.push(tempList[i][j])
+        }
     }
+    
+    // Shuffle list
+    countryList = countryList.sort(() => {
+        return Math.random() - 0.5
+    })
+
+    document.querySelector('#game .buttons').innerHTML =
+    `<i title="Enter" class="fa-solid fa-check" onclick="checkCountry()"></i>
+    <a></a>
+    <i title="#" class="fa-solid fa-forward" onclick="skip()"></i></div>`
 }
 
 //#endregion
@@ -235,7 +269,8 @@ function startRankedGame(){
 function getCountry() {
     if (index >= countryList.length) { // Check if finished
         if (wrongCountrys.length == 0) { // Finished than go back to Menu
-            finishedRound();
+            loadSide("F")
+            return;
         } else { // Next Round with the wrong answers
             setCountryList(true);
         }
@@ -243,7 +278,7 @@ function getCountry() {
 
     completeCounter.innerHTML = `${index+1}/${countryList.length}`
     hidBox().querySelector('img').setAttribute("src", `https://flagcdn.com/h120/${countryList[index].code.toLowerCase()}.png`);
-    
+
     inputField.value = "";
     inputField.placeholder = "";
 
@@ -256,7 +291,24 @@ function getCountry() {
 
     hintCount = 0; // New country = reset hintCount
 
-    scoreField.innerHTML = `Richtig ${index - wrongCountrys.length} / ${index}`;
+    if(flagMode == "unranked"){
+        scoreField.innerHTML = `Richtig ${index - wrongCountrys.length} / ${index}`;
+    } else{
+        tryCount = 0;
+        document.querySelector('#game .buttons a').innerHTML = points;
+        startTime = Math.floor(Date.now() / 1000);
+        document.querySelector('.load').style.display = "block"
+
+        scoreField.innerHTML = ""
+        for (let i = 0; i < 3; i++) {
+            if(i < lives){
+                scoreField.innerHTML += `<i class="fa-solid fa-heart"></i>`
+            } else{
+                scoreField.innerHTML += `<i class="fa-regular fa-heart"></i>`
+            }
+        }
+
+    }
     inputField.focus();
 }
 
@@ -268,6 +320,7 @@ function checkCountry() {
     let guess = inputField.value.toLowerCase();
     let answer = countryList[index].name;
 
+
     // Capital Mode
     if (flagType == "capital") {
         answer = countryList[index].capital;
@@ -276,10 +329,28 @@ function checkCountry() {
     // Loop goes throw all names from current Country
     for (let i = 0; i < answer.length; i++) {
         if (guess.replace(" ", "") == answer[i].toLowerCase().replace(" ", "")) {
+            if(flagMode == "ranked"){
+                if(tryCount < pointsPerTry.length){
+                    document.querySelector('.load').style.display = "none"
+    
+                    endTime = Math.floor(Date.now() / 1000);
+                    let timeDiff = Math.ceil(endTime-startTime);
+    
+                    let multiplier = 1 / (Math.ceil(timeDiff) / 3);
+                    points += pointsPerTry[tryCount]*multiplier;
+                } else{
+                    tryCount = 0;
+                    skip(false);
+                    return;
+                }
+            }
+
             skip(true);
             return;
         }
     }
+
+    tryCount ++;
     skip(false);
 }
 
@@ -361,7 +432,12 @@ function skip(ind, typ) {
     setTimeout(function () {
         inputField.style.color = "white";
         inputField.style.animation = "none"
+
+        if(setting.clearInput){
+            inputField.value = "";
+        }
     }, 500);
+
     return;
 }
 
@@ -386,18 +462,19 @@ function skipped() {
     } else {
         inputField.placeholder = countryList[index].name[0];
     }
+    lives--;
 }
 
-function finishedRound(){
+function finishedRound() {
     document.querySelector('#finishedRound p').innerHTML = `Du hast ${countryList.length - wrongCountrys.length} von ${countryList.length} richtig`
 
-    if(wrongCountrys.length == 0){
-        document.querySelector('#finishedRound .buttons').innerHTML = 
-        `<p onclick="setCountryList();loadSide('G');">Neustart</p>
+    if (wrongCountrys.length == 0) {
+        document.querySelector('#finishedRound .buttons').innerHTML =
+            `<p onclick="setCountryList();loadSide('G');">Neustart</p>
         <p onclick="loadSide('M')">Home</p>`
-    } else{
-        document.querySelector('#finishedRound .buttons').innerHTML = 
-        `<p onclick="setCountryList(true);loadSide('G');">Weiter</p>
+    } else {
+        document.querySelector('#finishedRound .buttons').innerHTML =
+            `<p onclick="setCountryList(true);loadSide('G');">Weiter</p>
         <p onclick="loadSide('M')">Home</p>`
     }
 }
@@ -409,17 +486,29 @@ function finishedRound(){
 
 let flag = inputField;
 flag.addEventListener("keydown", (event) => {
-    if (event.keyCode == 191) { // # --> Skip
+    if (event.keyCode == setting.skipKey) { // # --> Skip
         event.preventDefault();
         skip(false, true);
     }
-    if (event.keyCode == 187) { // * --> Hint
+    if (event.keyCode == setting.hintKey) { // * --> Hint
         event.preventDefault();
         loadHint();
     }
-    if (event.keyCode == 13) { // Enter --> Check
+    if (event.keyCode == setting.checkKey) { // Enter --> Check
         checkCountry();
     }
 });
 
 //#endregion
+
+
+
+//**************** Settings ****************//
+let setting = {
+    hintKey: 187,
+    skipKey: 191,
+    checkKey: 13,
+    clearInput: false,
+    isGerman: true,
+    isDarkMode: true,
+}
