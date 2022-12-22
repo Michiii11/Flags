@@ -386,6 +386,11 @@ main{
 }
 
 @media screen and (max-width: 700px) { /*phone*/
+    main{
+        width: 90%;
+    }
+
+    /*---------- Start ----------*/
     #start{
         height: fit-content;
     }
@@ -398,7 +403,8 @@ main{
         width: 40vw;
         font-size: 1.2rem;
     }
-    
+
+    /*---------- Mode ----------*/
     #mode{
         font-size: 1rem;
         padding: 1rem;
@@ -431,10 +437,38 @@ main{
        grid-area: 1/1/2/3;
     }
 
-    #game{
-        margin: .1rem;
+    /*---------- Game ----------*/
+    #game h2{
+        font-size: 1.5rem;
+    }
+    #game #score{
+        font-size: 0.8rem;
+        width: 100%;
+    }
+    #game #content div img{
+        height: 75%;
+    }
+    #game #content{
+        height: 21vh;
+    }
+    #game #input{
+        font-size: 1.2rem;
+        margin: 0.8rem 10%;
+    }
+    #game .buttons i{
+        width: 5vw;
+        font-size: 1rem;
+        font-weight: bold;
+        padding: 1rem;
+        margin: 1rem;
+        margin-bottom: 2rem;
+        text-align: center;
+        border-radius: 1rem;
+        position: relative;
+        transition: 0.2s all ease;
     }
     
+    /*---------- Settings ----------*/
     #settings{
         display: none;
         opacity: 0;

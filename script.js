@@ -35,20 +35,13 @@ const inputField = document.querySelector('#input'); // input Field of the page
 //#region
 
 // Set or load the Localstorage
-if (localStorage.getItem("flagType") != undefined) {
-    flagType = localStorage.getItem("flagType")
-} else {
-    flagType = localStorage.setItem("flagType", flagType);
-}
-if (localStorage.getItem("flagContinent") != undefined) {
-    flagContinent = localStorage.getItem("flagContinent")
-} else {
-    flagContinent = localStorage.setItem("flagContinent", flagContinent);
-}
-if (localStorage.getItem("flagMode") != undefined) {
-    flagMode = localStorage.getItem("flagMode")
-} else {
-    flagMode = localStorage.setItem("flagMode", flagMode);
+let selectorTypes = ["flagType", "flagContinent", "flagMode"]
+for (let i = 0; i < selectorTypes.length; i++) {
+    if (localStorage.getItem(selectorTypes[i]) != undefined) {
+        flagType = localStorage.getItem(selectorTypes[i])
+    } else {
+        flagType = localStorage.setItem(selectorTypes[i], flagType);
+    }
 }
 
 // Pages
@@ -77,15 +70,6 @@ function loadSide(t) {
             break;
         case "M":
             modePage.style.display = "flex";
-            if (flagType != "country") {
-                selector(document.querySelector(`.${flagType}`), "T")
-            }
-            if (flagContinent != "all") {
-                selector(document.querySelector(`.${flagContinent}`), "C")
-            }
-            if (flagMode != "unranked") {
-                selector(document.querySelector(`.${flagMode}`), "M")
-            }
             break;
         case "G":
             gamePage.style.display = "block";
@@ -117,7 +101,6 @@ function startGame() {
 
 function toggleSidebar(elem) {
     if (elem.dataset.state == "open") {
-        console.log(elem);
         elem.dataset.state = "close"
 
         setTimeout(function () {
@@ -147,13 +130,13 @@ function toggleSidebar(elem) {
  * T - Type || C - Continent || M - Mode
  */
 function selector(elem, type) {
-
     if (type == "T") {
         document.querySelector('.type .selected').classList.remove("selected")
         elem.classList.add("selected")
         flagType = elem.classList[0]
 
         localStorage.setItem('flagType', flagType);
+        setCountryList();
     }
 
     if (type == "C") {
@@ -171,6 +154,7 @@ function selector(elem, type) {
         flagMode = elem.classList[0]
 
         localStorage.setItem('flagMode', flagMode);
+        setCountryList();
     }
 }
 
