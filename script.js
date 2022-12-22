@@ -7,13 +7,17 @@ let hintCount = 0; // Count of the shown letters
 
 let wrongCountrys = []; // List of the wrong anwsers
 
-let flagType = "country" // Country | Capital
-let flagContinent = "all" // Current continent
-let flagMode = "unranked" // Unranked | Ranked
+let selectorOrder = {
+    "flagType": "country",
+    "selectorOrder.flagContinent": "all",
+    "selectorOrder.flagMode": "unranked"
+}
+// Country | Capital // Current continent // Unranked | Ranked
+
 
 let points // Ranked current points
 let tryCount // Ranked try count
-let pointsPerTry = [1200, 800, 600, 400, 200];
+let pointsPerTry = [1200, 800, 600, 400, 200] // Point matrix per try
 let lives
 let startTime
 let endTime
@@ -35,12 +39,11 @@ const inputField = document.querySelector('#input'); // input Field of the page
 //#region
 
 // Set or load the Localstorage
-let selectorTypes = ["flagType", "flagContinent", "flagMode"]
-for (let i = 0; i < selectorTypes.length; i++) {
-    if (localStorage.getItem(selectorTypes[i]) != undefined) {
-        flagType = localStorage.getItem(selectorTypes[i])
+for (let key in selectorOrder){
+    if (localStorage.getItem(key) != undefined) {
+        selectorOrder.key = localStorage.getItem(key)
     } else {
-        flagType = localStorage.setItem(selectorTypes[i], flagType);
+        localStorage.setItem(key, selectorOrder.key);
     }
 }
 
@@ -73,7 +76,7 @@ function loadSide(t) {
             break;
         case "G":
             gamePage.style.display = "block";
-            if (flagMode == "ranked") {
+            if (selectorOrder.flagMode == "ranked") {
                 startRankedGame()
             }
             startGame();
@@ -91,7 +94,7 @@ function startGame() {
     hidBox().innerHTML = `<img src="https://flagcdn.com/h120/${countryList[index].code.toLowerCase()}.png">`
 
     // Capital Mode
-    if (flagType == "capital") {
+    if (selectorOrder.flagType == "capital") {
         showBox().innerHTML += `<h3></h3>`
         hidBox().innerHTML += `<h3>${countryList[index].name[0]}</h3>`
     }
@@ -102,6 +105,7 @@ function startGame() {
 function toggleSidebar(elem) {
     if (elem.dataset.state == "open") {
         elem.dataset.state = "close"
+        document.querySelector('.switch').style.display = "none"
 
         setTimeout(function () {
             elem.querySelector(".heading").setAttribute("onclick", "")
@@ -110,6 +114,7 @@ function toggleSidebar(elem) {
 
     } else {
         elem.dataset.state = "open"
+        document.querySelector('.switch').style.display = "flex"
 
         elem.querySelector(".heading").setAttribute("onclick", "toggleSidebar(this.parentNode)")
         elem.setAttribute("onclick", "")
@@ -133,27 +138,27 @@ function selector(elem, type) {
     if (type == "T") {
         document.querySelector('.type .selected').classList.remove("selected")
         elem.classList.add("selected")
-        flagType = elem.classList[0]
+        selectorOrder.flagType = elem.classList[0]
 
-        localStorage.setItem('flagType', flagType);
+        localStorage.setItem('selectorOrder.flagType', selectorOrder.flagType);
         setCountryList();
     }
 
     if (type == "C") {
         document.querySelector('.continent .selected').classList.remove("selected")
         elem.classList.add("selected")
-        flagContinent = elem.classList[0]
+        selectorOrder.flagContinent = elem.classList[0]
 
-        localStorage.setItem('flagContinent', flagContinent);
+        localStorage.setItem('selectorOrder.flagContinent', selectorOrder.flagContinent);
         setCountryList();
     }
 
     if (type == "M") {
         document.querySelector('.mode .selected').classList.remove("selected")
         elem.classList.add("selected")
-        flagMode = elem.classList[0]
+        selectorOrder.flagMode = elem.classList[0]
 
-        localStorage.setItem('flagMode', flagMode);
+        localStorage.setItem('selectorOrder.flagMode', selectorOrder.flagMode);
         setCountryList();
     }
 }
@@ -169,11 +174,11 @@ function setCountryList(isNewRound) {
     if (isNewRound) { // Clone false answers into the country list
         countryList = [...wrongCountrys];
     } else {
-        if (flagContinent == "all") { // Clone full list into the country list
+        if (selectorOrder.flagContinent == "all") { // Clone full list into the country list
             countryList = [...countries];
         } else {
             for (let i = 0; i < countries.length; i++) {
-                if (countries[i].continent == flagContinent) { // Filter the continent
+                if (countries[i].continent == selectorOrder.flagContinent) { // Filter the continent
                     countryList.push(countries[i]); // Set the country into the country list
                 }
             }
@@ -267,7 +272,7 @@ function getCountry() {
     inputField.placeholder = "";
 
     // Capital mode
-    if (flagType == "capital") {
+    if (selectorOrder.flagType == "capital") {
         hidBox().querySelector('h3').innerHTML = countryList[index].name[0]
     }
 
@@ -275,7 +280,7 @@ function getCountry() {
 
     hintCount = 0; // New country = reset hintCount
 
-    if(flagMode == "unranked"){
+    if(selectorOrder.flagMode == "unranked"){
         scoreField.innerHTML = `Richtig ${index - wrongCountrys.length} / ${index}`;
     } else{
         tryCount = 0;
@@ -306,14 +311,14 @@ function checkCountry() {
 
 
     // Capital Mode
-    if (flagType == "capital") {
+    if (selectorOrder.flagType == "capital") {
         answer = countryList[index].capital;
     }
 
     // Loop goes throw all names from current Country
     for (let i = 0; i < answer.length; i++) {
         if (guess.replace(" ", "") == answer[i].toLowerCase().replace(" ", "")) {
-            if(flagMode == "ranked"){
+            if(selectorOrder.flagMode == "ranked"){
                 if(tryCount < pointsPerTry.length){
                     document.querySelector('.load').style.display = "none"
     
@@ -350,7 +355,7 @@ function loadHint() {
         wrongCountrys.push(countryList[index]);
     }
     inputField.value = ""
-    if (flagType == "capital") {
+    if (selectorOrder.flagType == "capital") {
         inputField.placeholder = countryList[index].capital[0].substring(0, hintCount)
     } else {
         inputField.placeholder = countryList[index].name[0].substring(0, hintCount)
@@ -390,7 +395,7 @@ function skip(ind, typ) {
 
         inputField.style.color = "rgb(110, 110, 110)";
 
-        if (flagType == "capital") {
+        if (selectorOrder.flagType == "capital") {
             inputField.value = countryList[index].capital[0];
         } else {
             inputField.value = countryList[index].name[0];
@@ -441,7 +446,7 @@ function swap() {
  * Skipped guess, writes the answeer into the placeholder
  */
 function skipped() {
-    if (flagType == "capital") {
+    if (selectorOrder.flagType == "capital") {
         inputField.placeholder = countryList[index].capital[0];
     } else {
         inputField.placeholder = countryList[index].name[0];
