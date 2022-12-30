@@ -95,7 +95,7 @@ function startGame() {
     showBox().innerHTML = `<img src="">`
     hidBox().innerHTML = `<img src="https://flagcdn.com/h120/${countryList[index].code.toLowerCase()}.png">`
 
-    // Capital Mode
+    // Capital Mode 
     if (selectorOrder.flagType == "capital") {
         showBox().innerHTML += `<h3></h3>`
         hidBox().innerHTML += `<h3>${countryList[index].name[0]}</h3>`
@@ -180,6 +180,7 @@ function setCountryList(isNewRound) {
             countryList = [...countries];
         } else {
             for (let i = 0; i < countries.length; i++) {
+                console.log(selectorOrder)
                 if (countries[i].continent == selectorOrder.flagContinent) { // Filter the continent
                     countryList.push(countries[i]); // Set the country into the country list
                 }
