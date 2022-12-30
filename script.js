@@ -9,8 +9,8 @@ let wrongCountrys = []; // List of the wrong anwsers
 
 let selectorOrder = {
     "flagType": "country",
-    "selectorOrder.flagContinent": "all",
-    "selectorOrder.flagMode": "unranked"
+    "flagContinent": "all",
+    "flagMode": "unranked"
 }
 // Country | Capital // Current continent // Unranked | Ranked
 
@@ -23,12 +23,14 @@ let startTime
 let endTime
 
 const completeCounter = document.querySelectorAll('#game h2')[0]; // e.g. 0/5
+
 function hidBox() {
     return document.querySelector('#content div[data-position="hidden"]')
 } // return hidden Flag Box
 function showBox() {
     return document.querySelector('#content div[data-position="show"]')
 } // return visible Flag Box
+
 const scoreField = document.querySelector('#score') // e.g. Richtig 2/2
 const capitalField = document.querySelector('div[data-position="hidden"] h3'); // Field for the capital city
 const inputField = document.querySelector('#input'); // input Field of the page
@@ -343,7 +345,7 @@ function checkCountry() {
     skip(false);
 }
 
-let temp = 0;
+let isWrongGuess = false;
 /**
  * Loads an hint for the flag
  */
@@ -351,7 +353,7 @@ function loadHint() {
     hintCount++;
     if (hintCount == 1) {
 
-        temp++;
+        isWrongGuess = true;
         wrongCountrys.push(countryList[index]);
     }
     inputField.value = ""
@@ -372,7 +374,8 @@ function loadHint() {
  * @returns 
  */
 function skip(ind, typ) {
-    if (ind) { // Richtige Eingabe
+    // Richtige Eingabe
+    if (ind) {
 
         // Accept Animation
         inputField.style.color = "green";
@@ -385,12 +388,12 @@ function skip(ind, typ) {
         return
     }
 
-    //falsche Eingabe
+    //Falsche Eingabe
     if (typ) { // Geskippte Eingabe
-        if (temp == 0) {
+        if (!isWrongGuess) {
             wrongCountrys.push(countryList[index]);
         } else {
-            temp = 0;
+            isWrongGuess = false
         }
 
         inputField.style.color = "rgb(110, 110, 110)";
@@ -484,6 +487,7 @@ flag.addEventListener("keydown", (event) => {
         loadHint();
     }
     if (event.keyCode == setting.checkKey) { // Enter --> Check
+        event.preventDefault();
         checkCountry();
     }
 });
