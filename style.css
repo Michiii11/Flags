@@ -379,13 +379,13 @@ main{
   }
 
 /************ Responsive ************/
-@media screen and (max-width: 1150px) { /*pc*/
+@media (max-width: 1150px) { /*pc*/
     main{
         width: auto;    
     }
 }
 
-@media screen and (max-width: 700px) { /*phone*/
+@media (max-width: 700px) { /*phone*/
     main{
         width: 90%;
     }
