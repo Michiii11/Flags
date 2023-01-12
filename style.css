@@ -26,7 +26,7 @@ main{
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color:var(--grey-2);
+    background: linear-gradient(45deg,  var(--grey-1-5) 0%, var(--grey-2) 100%);
     border-radius: 1rem;
     box-shadow: 0 0 1rem 0.5rem var(--shadow);
     position: relative;
@@ -36,6 +36,7 @@ main{
     flex-direction: column;
     width: fit-content;
     transition: 0.4s all ease;
+    background: linear-gradient(45deg,  var(--grey-1-5) 0%, var(--grey-2) 100%);
 }
 
 /*---------- Start ----------*/
@@ -87,10 +88,12 @@ main{
     border-radius: .2rem;
     box-shadow: 0 0 .2rem .2rem rgba(200, 200, 200, 0.1) inset;
     outline: .1rem solid var(--grey-5);
+    border-bottom: .2rem solid transparent;
     transition: 0.2s ease all;
 }
 #game #input:focus{
-    outline: .2rem solid var(--grey-5);
+    outline: none;
+    border-bottom: .15rem solid hsl(9, 100%, 60%);
 }
 #game #content div img{
     height: 20vh;
@@ -102,12 +105,13 @@ main{
     margin-block: 2vh;
     transition: all 1s ease;
 }
+
 #game div[data-position="show"]{
-    animation: in 1s forwards;
+    animation: in 1.3s forwards;
     z-index: 2; 
 }
 #game div[data-position="hidden"]{
-    animation: out 1s forwards;
+    animation: out 1.3s forwards;
     z-index: 1;
 }
 #game h2{
@@ -122,16 +126,34 @@ main{
     position: relative;
     display: flex;
     justify-content: center;
+    align-items: center;
     overflow: hidden;
     height: 25vh;
     width: 100%;
 }
+
 #game #content h3{
+    font-size: 1.3rem;
     height: fit-content;
     margin-top: auto;
 }
 #game #score{
     text-align: center;
+}
+
+#game #content.big{
+    height: 15vh;
+}
+#game #content.big div h3{
+    font-size: 3rem;
+    color: transparent;
+    background: linear-gradient(90deg, hsl(14, 100%, 60%) 0%, hsl(14, 100%, 50%) 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+#game #content.big div img{
+    display: none;
 }
 
 /*---------- Buttons ----------*/
@@ -187,7 +209,7 @@ main{
     color: var(--color-accent);
 }
 
-.back{
+.back, .hideButton{
     position: absolute;
     top: .2vw;
     left: .2vw;
@@ -198,9 +220,13 @@ main{
     border-radius: 50%;
     color: var(--grey-5);
 }
-.back:hover{
+.back:hover, .hideButton:hover{
     color: var(--color-accent);
 }
+.hideButton{
+    left: 46vw;
+}
+
 
 /*---------- Selector ----------*/
 .selector{
@@ -340,7 +366,7 @@ main{
 
 @keyframes in {
     from{
-        transform: translateX(200%);
+        transform: translateX(300%);
         opacity: 1;
     }
     to{
@@ -355,28 +381,10 @@ main{
         opacity: 1;
     }
     to{
-        transform: translateX(-200%);
+        transform: translateX(-300%);
         opacity: 1;
     }
 }
-
-@keyframes time {
-    0%{
-        clip-path: polygon(100% 0%, 100% 100%, 0% 100%, 0% 2%, 10% 10%, 0% 0%);
-    }
-    25%{
-        clip-path: polygon(100% 0%, 100% 100%, 0% 100%, 0% 2%, 50% 50%, 100% 0%);
-    }
-    50%{
-        clip-path: polygon(100% 100%, 100% 100%, 0% 100%, 0% 2%, 50% 50%, 100% 100%);
-    }
-    75%{
-        clip-path: polygon(0% 100%, 100% 100%, 0% 100%, 0% 2%, 50% 50%, 0% 100%);
-    }
-    99%{
-        clip-path: polygon(0% 0%, 0% 0%, 0% 0%, 0% 2%, 50% 50%, 0% 0%);
-    }
-  }
 
 /************ Responsive ************/
 @media (max-width: 1150px) { /*pc*/

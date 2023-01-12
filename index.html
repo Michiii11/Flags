@@ -35,10 +35,6 @@
                 <p class="Südamerika" onclick="selector(this, 'C')">Südamerika</p>
                 <p class="Ozeanien" onclick="selector(this, 'C')">Ozeanien</p>
             </div>
-            <div class="selector mode">
-                <p class="unranked selected" onclick="selector(this, 'M')">Unranked</p>
-                <p class="ranked" onclick="selector(this, 'M')">Ranked</p>
-            </div>
 
             <div class="buttons">
                 <p onclick="loadSide('G');">Start Game</p>
@@ -61,6 +57,7 @@
                         <i title="Enter" class="fa-solid fa-check" onclick="checkCountry()"></i>
                         <i title="#" class="fa-solid fa-forward" onclick="skip()"></i></div>
                     <div id="score"></div>
+                    <div class="hideButton" onclick="hideShowFlag()"><i class="fa-solid fa-arrows-rotate"></i></div>
                     <div class="back" onclick="loadSide('M')"><i class="fa-solid fa-arrow-left"></i></div>
                 </div>
         </section>
