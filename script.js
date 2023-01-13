@@ -33,18 +33,15 @@ const inputField = document.querySelector('#input'); // input Field of the page
 //#region
 
 // Set or load the Localstorage
-console.log(selectorOrder)
-
 for (const [key, value] of Object.entries(selectorOrder)) {
-    console.log(`${key}: ${value}`);
-
-    if (localStorage.getItem(key) != undefined) {
+    if (localStorage.getItem(key)) {
         selectorOrder[key] = localStorage.getItem(key)
     } else {
         localStorage.setItem(key, value)
     }
 }
 
+console.log(selectorOrder)
 document.querySelector('.type .selected').classList.remove("selected")
 document.querySelector('.continent .selected').classList.remove("selected")
 document.querySelector(`.${selectorOrder.flagType}`).classList.add('selected')
