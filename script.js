@@ -41,14 +41,10 @@ for (const [key, value] of Object.entries(selectorOrder)) {
     }
 }
 
-console.log(selectorOrder)
 document.querySelector('.type .selected').classList.remove("selected")
 document.querySelector('.continent .selected').classList.remove("selected")
 document.querySelector(`.${selectorOrder.flagType}`).classList.add('selected')
 document.querySelector(`.${selectorOrder.flagContinent}`).classList.add('selected')
-if(selectorOrder.flagStyle == "show"){
-    hideShowFlag();
-}
 
 // Pages
 const startPage = document.querySelector('#start');
@@ -92,13 +88,22 @@ function startGame() {
     // Set start img
     showBox().innerHTML = `<img src="">`
     hidBox().innerHTML = `<img src="https://flagcdn.com/h120/${countryList[index].code.toLowerCase()}.png">`
-    document.querySelector('.hideButton').style.display = "none"
 
     // Capital Mode 
     if (selectorOrder.flagType == "capital") {
         showBox().innerHTML += `<h3></h3>`
         hidBox().innerHTML += `<h3>${countryList[index].name[0]}</h3>`
+
+        if(selectorOrder.flagStyle == "show"){
+            hideShowFlag();
+        }
         document.querySelector('.hideButton').style.display = "block"
+    } else{
+
+        if(document.querySelector('#content').classList.contains("big")){
+            document.querySelector('#content').classList.remove("big")
+        }
+        document.querySelector('.hideButton').style.display = "none"
     }
 
     getCountry();
