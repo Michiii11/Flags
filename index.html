@@ -8,40 +8,17 @@
     <link rel="shortcut icon" href="./Files/logo.png">
     <link rel="stylesheet" href="./style.css">
     <script src="./Files/countries.js"></script>
+    <script src="./generate.js" defer></script>
     <script src='./script.js' defer></script>
+    <script src="language.js"></script>
     <script src="https://kit.fontawesome.com/557f0c19d3.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
     <main>
-        <section id="start">
-            <div class="buttons">
-                <div onclick="loadSide('M');"><p>Singleplayer</p></div>
-                <div onclick="loadSide('M');"><p>Multiplayer</p></div>
-            </div>
-        </section>
+        <section id="start"></section>
 
-        <section id="mode">
-            <div class="selector type">
-                <p class="country selected" onclick="selector(this, 'T')">Länder</p>
-                <p class="capital" onclick="selector(this, 'T')">Hauptstädte</p>
-            </div>
-            <div class="selector continent">
-                <p class="all selected" onclick="selector(this, 'C')">Alle Länder</p>
-                <p class="Europa" onclick="selector(this, 'C')">Europa</p>
-                <p class="Afrika" onclick="selector(this, 'C')">Afrika</p>
-                <p class="Asien" onclick="selector(this, 'C')">Asien</p>
-                <p class="Nordamerika" onclick="selector(this, 'C')">Nordamerika</p>
-                <p class="Südamerika" onclick="selector(this, 'C')">Südamerika</p>
-                <p class="Ozeanien" onclick="selector(this, 'C')">Ozeanien</p>
-            </div>
-
-            <div class="buttons">
-                <p onclick="loadSide('G');">Start Game</p>
-            </div>        
-
-            <div class="back" onclick="loadSide('S')"><i class="fa-solid fa-arrow-left"></i></div>
-        </section>
+        <section id="mode"></section>
 
         <section id="game">
                 <div>
@@ -57,34 +34,19 @@
                         <i title="Enter" class="fa-solid fa-check" onclick="checkCountry()"></i>
                         <i title="#" class="fa-solid fa-forward" onclick="skip()"></i></div>
                     <div id="score"></div>
-                    <div class="hideButton" onclick="hideShowFlag()"><i class="fa-solid fa-arrows-rotate"></i></div>
+                    <div class="hideButton" onclick="hideShowFlag()"><i class="fa-solid fa-eye"></i></div>
                     <div class="back" onclick="loadSide('M')"><i class="fa-solid fa-arrow-left"></i></div>
                 </div>
         </section>
         <div class="load"></div>
         
         <section id="finishedRound">
-            <h2>You finished the round</h2>
+            <h2></h2>
             <p></p>
             <div class="buttons"><div>
         </section>
     </main>
 
-    <aside id="settings" onclick="toggleSidebar(this)" data-state="close">
-        <p class="heading">SETTINGS</p>
- 
-        <div class="hidden">
-            <label for="hint">Tipp: </label><input id="hint" type="text">
-            <label for="skip">Überspringen</label><input id="skip" type="text">
-            <label for="guess">Eingabe</label><input id="guess" type="text">
-        </div>
-
-        <label class="switch">
-            <input type="checkbox">
-            <span class="slider round"></span>
-        </label>
-<!--         <i class="fa-solid fa-sun"></i>
-        <i class="fa-solid fa-moon"></i> -->
-    </aside>
+    <aside id="settings" onclick="toggleSidebar(this)" data-state="close"></aside>
 </body>
 </html>

@@ -63,7 +63,7 @@ main{
     border-radius: 1rem;
 }
 .load{
-    background-color: tomato;
+    background-color: var(--color-accent);
     animation: time 20s linear;
     animation-fill-mode: forwards;
     animation-play-state: "running";
@@ -83,10 +83,10 @@ main{
     text-align: center;
     margin: 1rem 10%;
     border: none;
-    color: white;
+    color: var(--color-contrast);
     background: var(--grey-1-5);
     border-radius: .2rem;
-    box-shadow: 0 0 .2rem .2rem rgba(200, 200, 200, 0.1) inset;
+    box-shadow: 0 0 .2rem .2rem hsla(0, 0%, 78%, 0.1) inset;
     outline: .1rem solid var(--grey-5);
     border-bottom: .2rem solid transparent;
     transition: 0.2s ease all;
@@ -158,8 +158,8 @@ main{
 
 /*---------- Buttons ----------*/
 #start .buttons div{
+    width: fit-content;
     display: grid;
-    width: 12vw;
     padding-block: 4rem;
     place-content: center;
     text-transform: uppercase;
@@ -192,12 +192,12 @@ main{
 }
 .buttons a{
     border: var(--grey-3);
-    color: white;
+    color: var(--color-contrast);
     background-color: 0.2rem solid var(--grey-3);
 }
 .buttons i{
     background-color: var(--grey-3);
-    color: white;
+    color: var(--color-contrast);
     border: 0.2rem solid var(--grey-3);
 }
 .buttons i:hover, .buttons > p:hover, .buttons div:hover{
@@ -235,7 +235,7 @@ main{
     text-align: center;
     font-size: 1.2rem;
     margin-block: 1rem;
-    background-color: hsl(0, 0%, 18%);
+    background-color: var(--grey-2);
     padding: .2rem;
     border-radius: 1.5rem;
 }
@@ -247,7 +247,7 @@ main{
 }
 .selector p{
     font-size: 1.5rem;
-    background-color: hsl(0, 0%, 16%);
+    background-color: var(--grey-1-5);
     color: var(--grey-5);
     padding: 1vw 1vw;
     text-align: center;
@@ -258,21 +258,20 @@ main{
     cursor: pointer;
 }
 .selector p.selected{
-    color: #d5d5d5;
-    background-color: rgb(32 32 32);
-    outline: .1rem solid var(--color-accent);
     color: var(--color-accent);
+    background-color: var(--grey-1);
+    outline: .1rem solid var(--color-accent);
 }
 .selector p:hover{
     color: #cecece;
-    background-color: hsl(0, 0%, 15%);
+    background-color: var(--grey-1-5);
 }
 .selector p.selected:hover{
     color: var(--color-accent);
-    background-color: rgb(32 32 32);
+    background-color: var(--grey-1);
 }
 
-/*---------- Setting ----------*/
+/*---------- Settings ----------*/
 #settings{
     position: absolute;
     left: 0;
@@ -281,6 +280,23 @@ main{
     background-color: var(--grey-2);
     height: 50vh;
     transition: all .5s;
+}
+#settings section div{
+    display: flex;
+    justify-content: space-between;
+}
+#settings section div div{
+    width: 7vw;
+}
+#settings section{
+    padding-inline: 1rem;
+    margin-block: 1rem;
+}
+#settings input{
+    text-align: center;
+}
+#setting section > h3{
+    text-transform: uppercase;
 }
 #settings .heading{
     text-align: center;
@@ -408,7 +424,6 @@ main{
         width: 100%;
     }
     #start .buttons div{
-        width: 40vw;
         font-size: 1.2rem;
     }
 
@@ -482,81 +497,16 @@ main{
         opacity: 0;
     }
 }
+
 /************ Variables ************/
 :root {
     --color-accent: tomato;
-    --color-contrast: white;
-    --grey-1:rgb(30, 30, 30);
-    --grey-2:rgb(50, 50, 50);
-    --grey-1-5:rgb(40, 40, 40);
-    --grey-3:rgb(70, 70, 70);
-    --grey-4: rgb(90, 90, 90);
-    --grey-5: rgb(110, 110, 110);
-    --shadow: rgb(18, 18, 18);
+    --shadow: hsl(0, 0%, 7%);
+    --grey-1:hsl(0, 0%, 12%);
+    --grey-1-5:hsl(0, 0%, 16%);
+    --grey-2:hsl(0, 0%, 20%);
+    --grey-3:hsl(0, 0%, 27%);
+    --grey-4: hsl(0, 0%, 35%);
+    --grey-5: hsl(0, 0%, 43%);
+    --color-contrast: hsl(0, 0%, 100%);
 }
-
-
-
-
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 60px;
-    height: 34px;
-    display: none;
-  }
-  
-  /* Hide default HTML checkbox */
-  .switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-  
-  /* The slider */
-  .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    -webkit-transition: .4s;
-    transition: .4s;
-  }
-  
-  .slider:before {
-    position: absolute;
-    content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    -webkit-transition: .4s;
-    transition: .4s;
-  }
-  
-  input:checked + .slider {
-    background-color: #2196F3;
-  }
-  
-  input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
-  }
-  
-  input:checked + .slider:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
-    transform: translateX(26px);
-  }
-  
-  /* Rounded sliders */
-  .slider.round {
-    border-radius: 34px;
-  }
-  
-  .slider.round:before {
-    border-radius: 50%;
-  }

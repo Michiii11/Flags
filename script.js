@@ -1,9 +1,11 @@
 //**************** Variables ****************//
 //#region
-
 let countryList = []; // List of all possible countries in current round - eruope selected: all european countries
 let index = 0; // Index of the current flag
 let hintCount = 0; // Count of the shown letters
+
+let currentLanguage
+let colorContrast = getComputedStyle(document.documentElement).getPropertyValue('--color-contrast');
 
 let wrongCountrys = []; // List of the wrong anwsers
 
@@ -12,6 +14,7 @@ let selectorOrder = {
     flagContinent: "all",
     flagStyle: "show"
 }
+
 // Country | Capital // Current continent
 
 const completeCounter = document.querySelectorAll('#game h2')[0]; // e.g. 0/5
@@ -32,7 +35,7 @@ const inputField = document.querySelector('#input'); // input Field of the page
 //**************** Loader ****************//
 //#region
 
-// Set or load the Localstorage
+// load or set the variables from/into the localstorage
 for (const [key, value] of Object.entries(selectorOrder)) {
     if (localStorage.getItem(key)) {
         selectorOrder[key] = localStorage.getItem(key)
@@ -41,17 +44,28 @@ for (const [key, value] of Object.entries(selectorOrder)) {
     }
 }
 
-document.querySelector('.type .selected').classList.remove("selected")
-document.querySelector('.continent .selected').classList.remove("selected")
-document.querySelector(`.${selectorOrder.flagType}`).classList.add('selected')
-document.querySelector(`.${selectorOrder.flagContinent}`).classList.add('selected')
+/**
+ * loads the variables from the localStorage
+ */
+function loadSettingsLocalStorage(){
+    // Set or load the Localstorage
+    setting = JSON.parse(localStorage.getItem("settingFlagGame"))
+    setLanguage();
+}
+
+/**
+ * sets the variables into the localStorage
+ */
+function saveSettingsLocalStorage(){
+    localStorage.setItem("settingFlagGame", JSON.stringify(setting))
+}
+
 
 // Pages
 const startPage = document.querySelector('#start');
 const modePage = document.querySelector('#mode');
 const gamePage = document.querySelector('#game');
 const finishPage = document.querySelector('#finishedRound')
-
 loadSide('S');
 /**
  * Loads or deloads the current page
@@ -109,26 +123,6 @@ function startGame() {
     getCountry();
 }
 
-function toggleSidebar(elem) {
-    if (elem.dataset.state == "open") {
-        elem.dataset.state = "close"
-        document.querySelector('.switch').style.display = "none"
-
-        setTimeout(function () {
-            elem.querySelector(".heading").setAttribute("onclick", "")
-            elem.setAttribute("onclick", "toggleSidebar(this)")
-        }, 10)
-
-    } else {
-        elem.dataset.state = "open"
-        document.querySelector('.switch').style.display = "flex"
-
-        elem.querySelector(".heading").setAttribute("onclick", "toggleSidebar(this.parentNode)")
-        elem.setAttribute("onclick", "")
-
-    }
-}
-
 
 //#endregion
 
@@ -139,7 +133,7 @@ function toggleSidebar(elem) {
  * Selects the continent from the class
  * @param {*} elem
  * @param {*} type type of the selector
- * T - Type || C - Continent || M - Mode
+ * T - Type || C - Continent
  */
 function selector(elem, type) {
     if (type == "T") {
@@ -227,7 +221,7 @@ function getCountry() {
 
     hintCount = 0; // New country = reset hintCount
 
-    scoreField.innerHTML = `Richtig ${index - wrongCountrys.length} / ${index}`;
+    scoreField.innerHTML = `${currentLanguage.game[0]} ${index - wrongCountrys.length} / ${index}`;
     inputField.focus();
 }
 
@@ -291,7 +285,7 @@ function skip(ind, typ) {
         // Accept Animation
         inputField.style.color = "green";
         setTimeout(function () {
-            inputField.style.color = "white";
+            inputField.style.color = colorAccent;
             index++;
             getCountry();
         }, 500);
@@ -322,7 +316,7 @@ function skip(ind, typ) {
         setTimeout(function () {
             index++;
             inputField.disabled = false;
-            inputField.style.color = "white";
+            inputField.style.color = colorAccent;
             getCountry();
         }, 1000);
         return;
@@ -333,7 +327,7 @@ function skip(ind, typ) {
     inputField.style.animation = "shake 0.5s"
 
     setTimeout(function () {
-        inputField.style.color = "white";
+        inputField.style.color = colorAccent;
         inputField.style.animation = "none"
 
         if(setting.clearInput){
@@ -423,10 +417,82 @@ flag.addEventListener("keydown", (event) => {
 
 //**************** Settings ****************//
 let setting = {
-    hintKey: 187,
-    skipKey: 191,
+    hintKey: 43,
+    skipKey: 35,
     checkKey: 13,
     clearInput: false,
     isGerman: true,
     isDarkMode: true,
+}
+
+if(localStorage.getItem("settingFlagGame")){
+    loadSettingsLocalStorage()
+} else{
+    saveSettingsLocalStorage()
+}
+setLanguage();
+
+/**
+ * 
+ * @param {*} elem 
+ */
+function toggleSidebar(elem) {
+    // Close Sidebar
+    if (elem.dataset.state == "open") {
+        elem.dataset.state = "close"
+
+        setTimeout(function () {
+            elem.querySelector(".heading").setAttribute("onclick", "")
+            elem.setAttribute("onclick", "toggleSidebar(this)")
+        }, 10)
+
+    } 
+    // Open Sidebar
+    else {
+        elem.dataset.state = "open"
+
+        document.querySelector('.hint').value = String.fromCharCode(setting.hintKey)
+        document.querySelector('.skip').value = String.fromCharCode(setting.skipKey)
+        if(String.fromCharCode(setting.checkKey)){
+            document.querySelector('.guess').value = "Enter"
+        } else{
+            document.querySelector('.guess').value = String.fromCharCode(setting.checkKey)
+        }
+
+        elem.querySelector(".heading").setAttribute("onclick", "toggleSidebar(this.parentNode)")
+        elem.setAttribute("onclick", "")
+
+    }
+}
+
+function swapDarkMode(){
+    setting.isDarkMode = !setting.isDarkMode;
+    document.querySelector('.settingDesign > div p').innerHTML = 
+    `${setting.isDarkMode ? "Dark Mode" : "Light Mode"}`
+    saveSettingsLocalStorage();
+
+    let styleKeys = ["--grey-1", "--grey-1-5", "--grey-2", "--grey-3", "--grey-4", "--grey-5", "--shadow", "--color-contrast"]
+    let variableValue = [7, 12, 16, 20, 27, 35, 43, 100]
+
+    for (let i = 0; i < styleKeys.length; i++) {
+        document.documentElement.style.setProperty(styleKeys[i], `hsl(0, 0%, ${setting.isDarkMode ? variableValue[i] : 100-variableValue[i]}%)`);
+    }
+}
+
+function swapLanguage(){
+    setting.isGerman = !setting.isGerman;
+    document.querySelector('.settingLanguage > div p').innerHTML = 
+    `${setting.isGerman ? "Deutsch" : "English"}`
+    saveSettingsLocalStorage();
+}
+
+/**
+ * saves settings from the setting side
+ */
+function saveSettings(){
+    setting.hintKey = document.querySelector('.hint').value.charCodeAt(0)
+    setting.skipKey = document.querySelector('.skip').value.charCodeAt(0)
+    setting.checkKey = document.querySelector('.guess').value.charCodeAt(0)
+
+    saveSettingsLocalStorage();
 }
