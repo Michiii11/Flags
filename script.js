@@ -4,9 +4,9 @@ let countryList = []; // List of all possible countries in current round - eruop
 let index = 0; // Index of the current flag
 let hintCount = 0; // Count of the shown letters
 
-let currentLanguage
 let colorContrast = getComputedStyle(document.documentElement).getPropertyValue('--color-contrast');
 
+let isWrongGuess = false;
 let wrongCountrys = []; // List of the wrong anwsers
 
 let selectorOrder = {
@@ -14,8 +14,6 @@ let selectorOrder = {
     flagContinent: "all",
     flagStyle: "show"
 }
-
-// Country | Capital // Current continent
 
 const completeCounter = document.querySelectorAll('#game h2')[0]; // e.g. 0/5
 
@@ -30,12 +28,18 @@ const scoreField = document.querySelector('#score') // e.g. Richtig 2/2
 const capitalField = document.querySelector('div[data-position="hidden"] h3'); // Field for the capital city
 const inputField = document.querySelector('#input'); // input Field of the page
 
+// Pages
+const startPage = document.querySelector('#start');
+const modePage = document.querySelector('#mode');
+const gamePage = document.querySelector('#game');
+const finishPage = document.querySelector('#finishedRound')
+
 //#endregion
 
 //**************** Loader ****************//
 //#region
 
-// load or set the variables from/into the localstorage
+// load or set the selectorOrder from/into the localstorage
 for (const [key, value] of Object.entries(selectorOrder)) {
     if (localStorage.getItem(key)) {
         selectorOrder[key] = localStorage.getItem(key)
@@ -44,60 +48,41 @@ for (const [key, value] of Object.entries(selectorOrder)) {
     }
 }
 
-/**
- * loads the variables from the localStorage
- */
-function loadSettingsLocalStorage(){
-    // Set or load the Localstorage
-    setting = JSON.parse(localStorage.getItem("settingFlagGame"))
-    setLanguage();
-}
-
-/**
- * sets the variables into the localStorage
- */
-function saveSettingsLocalStorage(){
-    localStorage.setItem("settingFlagGame", JSON.stringify(setting))
-}
-
-
-// Pages
-const startPage = document.querySelector('#start');
-const modePage = document.querySelector('#mode');
-const gamePage = document.querySelector('#game');
-const finishPage = document.querySelector('#finishedRound')
-loadSide('S');
+loadSide('start');
 /**
  * Loads or deloads the current page
- * @param {*} t is the type of the page
+ * @param {*} type is the type of the page
  */
-function loadSide(t) {
+function loadSide(type) {
     // Reset the pages
     startPage.style.display = "none"
     modePage.style.display = "none"
     gamePage.style.display = "none"
     finishPage.style.display = "none"
-    document.querySelector('.load').style.display = "none"
 
     // Load the current page
-    switch (t) {
-        case "S":
+    switch (type) {
+        case "start":
             startPage.style.display = "flex";
             break;
-        case "M":
+        case "mode":
             modePage.style.display = "flex";
             break;
-        case "G":
+        case "game":
             gamePage.style.display = "block";
             startGame();
             break;
-        case "F":
+        case "finished":
             finishPage.style.display = "flex"
             finishedRound();
             break;
     }
 }
 
+/**
+ * Start function
+ * it sets the html for the Game (Country / Capital Mode)
+ */
 function startGame() {
     // Set start img
     showBox().innerHTML = `<img src="">`
@@ -113,7 +98,6 @@ function startGame() {
         }
         document.querySelector('.hideButton').style.display = "block"
     } else{
-
         if(document.querySelector('#content').classList.contains("big")){
             document.querySelector('#content').classList.remove("big")
         }
@@ -132,29 +116,16 @@ function startGame() {
 /**
  * Selects the continent from the class
  * @param {*} elem
- * @param {*} type type of the selector
- * T - Type || C - Continent
+ * @param {*} type type of the selector (type | continent)
  */
 function selector(elem, type) {
-    if (type == "T") {
-        document.querySelector('.type .selected').classList.remove("selected")
-        elem.classList.add("selected")
-        selectorOrder.flagType = elem.classList[0]
+    document.querySelector(`.${type} .selected`).classList.remove("selected")
+    elem.classList.add("selected")
+    selectorOrder.flagType = elem.classList[0]
 
-        localStorage.setItem('flagType', selectorOrder.flagType);
-        setCountryList();
-    }
-
-    if (type == "C") {
-        document.querySelector('.continent .selected').classList.remove("selected")
-        elem.classList.add("selected")
-        selectorOrder.flagContinent = elem.classList[0]
-
-        localStorage.setItem('flagContinent', selectorOrder.flagContinent);
-        setCountryList();
-    }
+    localStorage.setItem(`${type == "type" ? 'flagType' : 'flagContinent'}`, selectorOrder.flagType);
+    setCountryList();
 }
-
 
 setCountryList()
 /**
@@ -182,7 +153,7 @@ function setCountryList(isNewRound) {
         return Math.random() - 0.5
     })
 
-    // Reset the 
+    // Reset the game variables
     index = 0;
     wrongCountrys = [];
 }
@@ -199,7 +170,7 @@ function setCountryList(isNewRound) {
 function getCountry() {
     if (index >= countryList.length) { // Check if finished
         if (wrongCountrys.length == 0) { // Finished than go back to Menu
-            loadSide("F")
+            loadSide("finished")
             return;
         } else { // Next Round with the wrong answers
             setCountryList(true);
@@ -207,6 +178,7 @@ function getCountry() {
     }
 
     completeCounter.innerHTML = `${index+1}/${countryList.length}`
+    // Load new flag
     hidBox().querySelector('img').setAttribute("src", `https://flagcdn.com/h120/${countryList[index].code.toLowerCase()}.png`);
 
     inputField.value = "";
@@ -221,6 +193,7 @@ function getCountry() {
 
     hintCount = 0; // New country = reset hintCount
 
+    // Update score and focus to inputField
     scoreField.innerHTML = `${currentLanguage.game[0]} ${index - wrongCountrys.length} / ${index}`;
     inputField.focus();
 }
@@ -231,15 +204,11 @@ function getCountry() {
  */
 function checkCountry() {
     let guess = inputField.value.toLowerCase();
-    let answer = countryList[index].name;
 
+    // set the answer either to country or to capital
+    let answer = getCurrentAnswer();
 
-    // Capital Mode
-    if (selectorOrder.flagType == "capital") {
-        answer = countryList[index].capital;
-    }
-
-    // Loop goes throw all names from current Country
+    // Loop goes throw all names from current answer
     for (let i = 0; i < answer.length; i++) {
         if (guess.replace(" ", "") == answer[i].toLowerCase().replace(" ", "")) {
             skip(true);
@@ -250,42 +219,41 @@ function checkCountry() {
     skip(false);
 }
 
-let isWrongGuess = false;
 /**
  * Loads an hint for the flag
  */
 function loadHint() {
     hintCount++;
-    if (hintCount == 1) {
 
+    // Wrong answer
+    if (hintCount == 1) {
         isWrongGuess = true;
         wrongCountrys.push(countryList[index]);
     }
-    inputField.value = ""
-    if (selectorOrder.flagType == "capital") {
-        inputField.placeholder = countryList[index].capital[0].substring(0, hintCount)
-    } else {
-        inputField.placeholder = countryList[index].name[0].substring(0, hintCount)
-    }
 
-    let flag = inputField;
-    flag.focus();
+    inputField.value = ""
+
+    // Get current country or capital, then substring it to the amount of hints
+    let currentCountry = getCurrentAnswer();
+    inputField.placeholder = currentCountry[0].substring(0, hintCount)
+
+    inputField.focus();
 }
 
 /**
  * Skips the current flag
- * @param {*} ind is the indicator if the guess was right or false
- * @param {*} typ is the indicator if the guess was completly skipped or not
+ * @param {*} isCorrect is the indicator if the guess was right or false
+ * @param {*} isSkipped is the indicator if the guess was completly skipped or not
  * @returns 
  */
-function skip(ind, typ) {
+function skip(isCorrect, isSkipped) {
     // Richtige Eingabe
-    if (ind) {
+    if (isCorrect) {
 
         // Accept Animation
         inputField.style.color = "green";
         setTimeout(function () {
-            inputField.style.color = colorAccent;
+            inputField.style.color = colorContrast;
             index++;
             getCountry();
         }, 500);
@@ -293,49 +261,40 @@ function skip(ind, typ) {
         return
     }
 
-    //Falsche Eingabe
-    if (typ) { // Geskippte Eingabe
+     // Geskippte Eingabe
+    if (isSkipped) {
         if (!isWrongGuess) {
             wrongCountrys.push(countryList[index]);
-        } else {
-            isWrongGuess = false
         }
+        isWrongGuess = false
 
-        inputField.style.color = "rgb(110, 110, 110)";
-
-        if (selectorOrder.flagType == "capital") {
-            inputField.value = countryList[index].capital[0];
-        } else {
-            inputField.value = countryList[index].name[0];
-        }
-
+        // fill the input field with the answer
+        inputField.value = getCurrentAnswer()
         inputField.disabled = true;
-        skipped();
+        inputField.placeHolder = getCurrentAnswer();
 
-
+        // Skip animation
+        inputField.style.color = "rgb(110, 110, 110)";
         setTimeout(function () {
             index++;
             inputField.disabled = false;
-            inputField.style.color = colorAccent;
+            inputField.style.color = colorContrast;
             getCountry();
         }, 1000);
-        return;
+        return
     }
 
-    // Fail Animation
+    // Wrong Answer :  Fail Animation
     inputField.style.color = "red";
     inputField.style.animation = "shake 0.5s"
-
     setTimeout(function () {
-        inputField.style.color = colorAccent;
+        inputField.style.color = colorContrast;
         inputField.style.animation = "none"
 
         if(setting.clearInput){
             inputField.value = "";
         }
     }, 500);
-
-    return;
 }
 
 /**
@@ -351,32 +310,24 @@ function swap() {
 }
 
 /**
- * Skipped guess, writes the answeer into the placeholder
+ * sets the html to the finishedRound page
  */
-function skipped() {
-    if (selectorOrder.flagType == "capital") {
-        inputField.placeholder = countryList[index].capital[0];
-    } else {
-        inputField.placeholder = countryList[index].name[0];
-    }
-}
-
 function finishedRound() {
     document.querySelector('#finishedRound p').innerHTML = `Du hast ${countryList.length - wrongCountrys.length} von ${countryList.length} richtig`
 
-    if (wrongCountrys.length == 0) {
-        document.querySelector('#finishedRound .buttons').innerHTML =
-            `<p onclick="setCountryList();loadSide('G');">Neustart</p>
-        <p onclick="loadSide('M')">Home</p>`
-    } else {
-        document.querySelector('#finishedRound .buttons').innerHTML =
-            `<p onclick="setCountryList(true);loadSide('G');">Weiter</p>
-        <p onclick="loadSide('M')">Home</p>`
-    }
+    let isNewRound = (wrongCountrys.length == 0 ? false : true)
+    let tempIndex = (!isNewRound ? 2 : 3)
+
+    document.querySelector('#finishedRound .buttons').innerHTML = 
+    `<p onclick="setCountryList(${isNewRound});loadSide('game');">${currentLanguage.game[tempIndex]}</p>
+    <p onclick="loadSide('mode')">Home</p>`
 }
 
+/**
+ * toogles the flag opacity
+ */
 function hideShowFlag(){
-    document.querySelectorAll('#content').forEach((elem)=>{
+    document.querySelector('#content').forEach((elem)=>{
         elem.classList.toggle("big")
 
         if(elem.classList.contains("big")){
@@ -390,13 +341,19 @@ function hideShowFlag(){
     inputField.focus();
 }
 
+/**
+ * @returns either the current country name or the capital name
+ */
+function getCurrentAnswer(){
+    return (selectorOrder.flagType == "country" ? countryList[index].name : countryList[index].capital);
+}
+
 //#endregion
 
 //**************** Event Listener ****************//
 //#region
 
-let flag = inputField;
-flag.addEventListener("keydown", (event) => {
+inputField.addEventListener("keydown", (event) => {
     if (event.keyCode == setting.skipKey) { // # --> Skip
         event.preventDefault();
         skip(false, true);
@@ -414,8 +371,9 @@ flag.addEventListener("keydown", (event) => {
 //#endregion
 
 
-
 //**************** Settings ****************//
+//#region
+
 let setting = {
     hintKey: 43,
     skipKey: 35,
@@ -433,7 +391,7 @@ if(localStorage.getItem("settingFlagGame")){
 setLanguage();
 
 /**
- * 
+ * toggles the sidebar between open and close state
  * @param {*} elem 
  */
 function toggleSidebar(elem) {
@@ -442,11 +400,13 @@ function toggleSidebar(elem) {
         elem.dataset.state = "close"
 
         setTimeout(function () {
+            // Set the close function onclick to the full field
             elem.querySelector(".heading").setAttribute("onclick", "")
             elem.setAttribute("onclick", "toggleSidebar(this)")
         }, 10)
 
     } 
+
     // Open Sidebar
     else {
         elem.dataset.state = "open"
@@ -459,16 +419,15 @@ function toggleSidebar(elem) {
             document.querySelector('.guess').value = String.fromCharCode(setting.checkKey)
         }
 
+        // Set the close function onclick to the heading attribute
         elem.querySelector(".heading").setAttribute("onclick", "toggleSidebar(this.parentNode)")
         elem.setAttribute("onclick", "")
-
     }
 }
 
 function swapDarkMode(){
     setting.isDarkMode = !setting.isDarkMode;
-    document.querySelector('.settingDesign > div p').innerHTML = 
-    `${setting.isDarkMode ? "Dark Mode" : "Light Mode"}`
+    document.querySelector('.settingDesign > div p').innerHTML = `${setting.isDarkMode ? "Dark Mode" : "Light Mode"}`
     saveSettingsLocalStorage();
 
     let styleKeys = ["--grey-1", "--grey-1-5", "--grey-2", "--grey-3", "--grey-4", "--grey-5", "--shadow", "--color-contrast"]
@@ -477,12 +436,12 @@ function swapDarkMode(){
     for (let i = 0; i < styleKeys.length; i++) {
         document.documentElement.style.setProperty(styleKeys[i], `hsl(0, 0%, ${setting.isDarkMode ? variableValue[i] : 100-variableValue[i]}%)`);
     }
-}
 
+    colorContrast = getComputedStyle(document.documentElement).getPropertyValue('--color-contrast');
+}
 function swapLanguage(){
     setting.isGerman = !setting.isGerman;
-    document.querySelector('.settingLanguage > div p').innerHTML = 
-    `${setting.isGerman ? "Deutsch" : "English"}`
+    document.querySelector('.settingLanguage > div p').innerHTML = `${setting.isGerman ? "Deutsch" : "English"}`
     saveSettingsLocalStorage();
 }
 
@@ -496,3 +455,22 @@ function saveSettings(){
 
     saveSettingsLocalStorage();
 }
+
+/**
+ * loads the variables from the localStorage
+ */
+function loadSettingsLocalStorage(){
+    // Set or load the Localstorage
+    setting = JSON.parse(localStorage.getItem("settingFlagGame"))
+    setLanguage();
+}
+
+/**
+ * sets the variables into the localStorage
+ */
+function saveSettingsLocalStorage(){
+    localStorage.setItem("settingFlagGame", JSON.stringify(setting))
+    setLanguage();
+}
+
+//#endregion

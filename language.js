@@ -9,7 +9,7 @@ let language = {
             modeButton: "Starte Spiel"
         },
         game: [
-            "Richtig", "Du hast die Runde beendet"
+            "Richtig", "Du hast die Runde beendet", "Neustart", "Weiter"
         ],
         settings: {
             headlines: ["Einstellungen", "Steuerung", "Bild"],
@@ -28,7 +28,7 @@ let language = {
             modeButton: "Start Game"
         },
         game: [
-            "Correct", "You finished the round"
+            "Correct", "You finished the round", "Restart", "Continue"
         ],
         settings: {
             headlines: ["Settings", "Keybinds", "Display"],
