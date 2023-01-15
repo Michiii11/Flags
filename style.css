@@ -270,16 +270,18 @@ main{
     height: 50vh;
     transition: all .5s;
 }
-#settings section div{
-    display: flex;
-    justify-content: space-between;
-}
-#settings section div div{
-    width: 7vw;
-}
 #settings section{
     padding-inline: 1rem;
     margin-block: 1rem;
+}
+#settings section div{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding-block: .1rem;
+}
+#settings .toggle{
+    width: 2.5vw;
 }
 #settings input{
     text-align: center;
@@ -321,6 +323,37 @@ main{
 #settings[data-state="open"] .hidden{
     flex-direction: column;
     opacity: 1;
+}
+
+/*---------- Toggle ----------*/
+.toggle{
+    aspect-ratio: 1.8/1;
+    background-color: gray;
+    height: 1.6rem;
+    border-radius: 1.3rem;
+    padding: .25rem;
+    box-sizing: border-box;
+    transition: all .3s;
+    cursor: pointer;
+}
+.toggle::before{
+    content: " ";
+    border-radius: 50%;
+    background-color: black;
+    aspect-ratio: 1;
+    height: 100%;
+    display: block;
+    margin-left: 0%;
+    transform: translateX(0%);
+    transition: all .3s ease-in-out;
+}
+.toggle.on::before{
+    margin-left: auto;
+    margin-left: 100%;
+    transform: translateX(-100%);
+}
+.toggle.on{
+    background-color: tomato;
 }
 
 /*---------- Finished ----------*/

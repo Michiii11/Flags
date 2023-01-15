@@ -62,37 +62,16 @@ function setLanguage(){
 
 
     //----------- Settings -----------//
-    document.querySelector('#settings').innerHTML = `<p class="heading">${currentLanguage.settings.headlines[0]}</p>`
+    document.querySelector('#settings .heading').innerHTML = currentLanguage.settings.headlines[0]
 
     let hiddenBox = document.createElement("div")
     hiddenBox.classList.add("hidden")
     
-    let section1 = document.createElement("section")
+    let section1 = document.querySelectorAll('.hidden section')[0]
     section1.innerHTML = `<h3>${currentLanguage.settings.headlines[1]}</h3>`
     for (let i = 0; i < currentLanguage.settings.keybinds.length; i++) {
         section1.innerHTML += `<div><p>${currentLanguage.settings.keybinds[i]}</p><input class="${language.english.settings.keybinds[i].toLowerCase()}" type="text" autocomplete="off" onclick="this.select()"></div>`
     }
 
-    let section2 = document.createElement("section")
-    section2.innerHTML = `<h3>${currentLanguage.settings.headlines[2]}</h3>
-    <div class="settingDesign">
-        <p>${currentLanguage.settings.display[0]}</p>
-        <div>
-            <i onclick="swapDarkMode()" class="fa-solid fa-arrow-left"></i>
-            <p>${setting.isDarkMode ? "Dark Mode" : "Light Mode"}</p>
-            <i onclick="swapDarkMode()" class="fa-solid fa-arrow-right"></i>
-        </div>
-    </div>
-    <div class="settingLanguage">
-        <p>${currentLanguage.settings.display[1]}</p>
-        <div>
-            <i onclick="swapLanguage()" class="fa-solid fa-arrow-left"></i>
-            <p>${setting.isGerman ? "Deutsch" : "Englisch"}</p>
-            <i onclick="swapLanguage()" class="fa-solid fa-arrow-right"></i>
-        </div>
-    </div>
-    `
-    
-    hiddenBox.append(section1, section2)
-    document.querySelector('#settings').appendChild(hiddenBox)
+    document.querySelectorAll('.hidden section')[1].querySelectorAll('h3')[0].innerHTML = currentLanguage.settings.headlines[2]
 }

@@ -14,7 +14,6 @@ let language = {
         settings: {
             headlines: ["Einstellungen", "Steuerung", "Bild"],
             keybinds: ["Tipp", "Weiter", "Versuch", ],
-            display: ["Design", "Sprache"],
         }
     },
 
@@ -33,7 +32,6 @@ let language = {
         settings: {
             headlines: ["Settings", "Keybinds", "Display"],
             keybinds: ["Hint", "Skip", "Guess"],
-            display: ["Design", "Language"],
         }
     }
 }

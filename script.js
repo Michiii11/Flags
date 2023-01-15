@@ -427,7 +427,6 @@ function toggleSidebar(elem) {
 
 function swapDarkMode(){
     setting.isDarkMode = !setting.isDarkMode;
-    document.querySelector('.settingDesign > div p').innerHTML = `${setting.isDarkMode ? "Dark Mode" : "Light Mode"}`
     saveSettingsLocalStorage();
 
     let styleKeys = ["--grey-1", "--grey-1-5", "--grey-2", "--grey-3", "--grey-4", "--grey-5", "--shadow", "--color-contrast"]
@@ -441,7 +440,6 @@ function swapDarkMode(){
 }
 function swapLanguage(){
     setting.isGerman = !setting.isGerman;
-    document.querySelector('.settingLanguage > div p').innerHTML = `${setting.isGerman ? "Deutsch" : "English"}`
     saveSettingsLocalStorage();
 }
 
@@ -463,6 +461,13 @@ function loadSettingsLocalStorage(){
     // Set or load the Localstorage
     setting = JSON.parse(localStorage.getItem("settingFlagGame"))
     setLanguage();
+
+    if(!setting.isDarkMode){
+        document.querySelector('.toggle.design').classList.add("on")
+    }
+    if(!setting.isGerman){
+        document.querySelector('.toggle.language').classList.add("on")
+    }
 }
 
 /**
@@ -472,5 +477,20 @@ function saveSettingsLocalStorage(){
     localStorage.setItem("settingFlagGame", JSON.stringify(setting))
     setLanguage();
 }
+
+// toggle button
+document.querySelectorAll('.toggle').forEach((elem)=>{
+    elem.addEventListener("click", function(){
+        elem.classList.toggle("on")
+
+        if(elem.classList.contains("design")){
+            swapDarkMode()
+        }
+
+        if(elem.classList.contains("language")){
+            swapLanguage()
+        }
+    })
+})
 
 //#endregion
