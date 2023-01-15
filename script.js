@@ -235,7 +235,12 @@ function loadHint() {
 
     // Get current country or capital, then substring it to the amount of hints
     let currentCountry = getCurrentAnswer();
-    inputField.placeholder = currentCountry[0].substring(0, hintCount)
+
+    if(setting.isGerman){
+        inputField.placeholder = currentCountry[0].substring(0, hintCount)
+    } else{
+        inputField.placeholder = currentCountry[1].substring(0, hintCount)
+    }
 
     inputField.focus();
 }
@@ -269,9 +274,12 @@ function skip(isCorrect, isSkipped) {
         isWrongGuess = false
 
         // fill the input field with the answer
-        inputField.value = getCurrentAnswer()
+        if(setting.isGerman){
+            inputField.value = getCurrentAnswer()[0]
+        } else{
+            inputField.value = getCurrentAnswer()[1]
+        }
         inputField.disabled = true;
-        inputField.placeHolder = getCurrentAnswer();
 
         // Skip animation
         inputField.style.color = "rgb(110, 110, 110)";
@@ -354,19 +362,33 @@ function getCurrentAnswer(){
 //#region
 
 inputField.addEventListener("keydown", (event) => {
-    if (event.keyCode == setting.skipKey) { // # --> Skip
+    if (event.keyCode == setting.skipKey.keyCode) { // # --> Skip
         event.preventDefault();
         skip(false, true);
     }
-    if (event.keyCode == setting.hintKey) { // * --> Hint
+    if (event.keyCode == setting.hintKey.keyCode) { // * --> Hint
         event.preventDefault();
         loadHint();
     }
-    if (event.keyCode == setting.checkKey) { // Enter --> Check
+    if (event.keyCode == setting.checkKey.keyCode) { // Enter --> Check
         event.preventDefault();
         checkCountry();
     }
 });
+
+function activateKeybindsEventListener(){
+    document.querySelectorAll('.hidden input').forEach((elem)=>{
+        elem.addEventListener("keydown", function(){
+            switch(elem.classList.value){
+                case "hint": setting.hintKey.keyCode = event.keyCode; setting.hintKey.key = event.key; break;
+                case "skip": setting.skipKey.keyCode = event.keyCode; setting.skipKey.key = event.key; break;
+                case "guess": setting.checkKey.keyCode = event.keyCode; setting.checkKey.key = event.key; break;
+            }
+
+            saveSettingsLocalStorage()
+        })
+    })
+}
 
 //#endregion
 
@@ -375,9 +397,9 @@ inputField.addEventListener("keydown", (event) => {
 //#region
 
 let setting = {
-    hintKey: 43,
-    skipKey: 35,
-    checkKey: 13,
+    hintKey: {key: "+", keyCode: 187},
+    skipKey: {key: "#", keyCode: 189},
+    checkKey: {key: "Enter", keyCode: 13},
     clearInput: false,
     isGerman: true,
     isDarkMode: true,
@@ -388,7 +410,7 @@ if(localStorage.getItem("settingFlagGame")){
 } else{
     saveSettingsLocalStorage()
 }
-setLanguage();
+generateHTML();
 
 /**
  * toggles the sidebar between open and close state
@@ -410,14 +432,7 @@ function toggleSidebar(elem) {
     // Open Sidebar
     else {
         elem.dataset.state = "open"
-
-        document.querySelector('.hint').value = String.fromCharCode(setting.hintKey)
-        document.querySelector('.skip').value = String.fromCharCode(setting.skipKey)
-        if(String.fromCharCode(setting.checkKey)){
-            document.querySelector('.guess').value = "Enter"
-        } else{
-            document.querySelector('.guess').value = String.fromCharCode(setting.checkKey)
-        }
+        updateSettingsInput();
 
         // Set the close function onclick to the heading attribute
         elem.querySelector(".heading").setAttribute("onclick", "toggleSidebar(this.parentNode)")
@@ -425,11 +440,13 @@ function toggleSidebar(elem) {
     }
 }
 
-function swapDarkMode(){
-    setting.isDarkMode = !setting.isDarkMode;
-    saveSettingsLocalStorage();
+function swapDarkMode(isStart){
+    if(!isStart){
+        setting.isDarkMode = !setting.isDarkMode;
+        saveSettingsLocalStorage();
+    }
 
-    let styleKeys = ["--grey-1", "--grey-1-5", "--grey-2", "--grey-3", "--grey-4", "--grey-5", "--shadow", "--color-contrast"]
+    let styleKeys = [ "--shadow", "--grey-1", "--grey-1-5", "--grey-2", "--grey-3", "--grey-4", "--grey-5","--color-contrast"]
     let variableValue = [7, 12, 16, 20, 27, 35, 43, 100]
 
     for (let i = 0; i < styleKeys.length; i++) {
@@ -438,21 +455,6 @@ function swapDarkMode(){
 
     colorContrast = getComputedStyle(document.documentElement).getPropertyValue('--color-contrast');
 }
-function swapLanguage(){
-    setting.isGerman = !setting.isGerman;
-    saveSettingsLocalStorage();
-}
-
-/**
- * saves settings from the setting side
- */
-function saveSettings(){
-    setting.hintKey = document.querySelector('.hint').value.charCodeAt(0)
-    setting.skipKey = document.querySelector('.skip').value.charCodeAt(0)
-    setting.checkKey = document.querySelector('.guess').value.charCodeAt(0)
-
-    saveSettingsLocalStorage();
-}
 
 /**
  * loads the variables from the localStorage
@@ -460,14 +462,7 @@ function saveSettings(){
 function loadSettingsLocalStorage(){
     // Set or load the Localstorage
     setting = JSON.parse(localStorage.getItem("settingFlagGame"))
-    setLanguage();
-
-    if(!setting.isDarkMode){
-        document.querySelector('.toggle.design').classList.add("on")
-    }
-    if(!setting.isGerman){
-        document.querySelector('.toggle.language').classList.add("on")
-    }
+    generateHTML();
 }
 
 /**
@@ -475,8 +470,8 @@ function loadSettingsLocalStorage(){
  */
 function saveSettingsLocalStorage(){
     localStorage.setItem("settingFlagGame", JSON.stringify(setting))
-    setLanguage();
-}
+    generateHTML();
+ }
 
 // toggle button
 document.querySelectorAll('.toggle').forEach((elem)=>{
@@ -488,7 +483,13 @@ document.querySelectorAll('.toggle').forEach((elem)=>{
         }
 
         if(elem.classList.contains("language")){
-            swapLanguage()
+            setting.isGerman = !setting.isGerman;
+            saveSettingsLocalStorage();
+        }
+
+        if(elem.classList.contains("clearInput")){
+            setting.clearInput = !setting.clearInput
+            saveSettingsLocalStorage();
         }
     })
 })

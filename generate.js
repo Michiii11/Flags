@@ -3,7 +3,7 @@ let currentLanguage
 /**
  * Generates the html with the right language
  */
-function setLanguage(){
+function generateHTML(){
     // Get currentLanguage
     if(setting.isGerman){
         currentLanguage = language.german
@@ -70,8 +70,28 @@ function setLanguage(){
     let section1 = document.querySelectorAll('.hidden section')[0]
     section1.innerHTML = `<h3>${currentLanguage.settings.headlines[1]}</h3>`
     for (let i = 0; i < currentLanguage.settings.keybinds.length; i++) {
-        section1.innerHTML += `<div><p>${currentLanguage.settings.keybinds[i]}</p><input class="${language.english.settings.keybinds[i].toLowerCase()}" type="text" autocomplete="off" onclick="this.select()"></div>`
+        section1.innerHTML += `<div><p>${currentLanguage.settings.keybinds[i]}</p><input class="${language.english.settings.keybinds[i].toLowerCase()}" value="" type="text" autocomplete="off" onclick="this.select()"></div>`
     }
 
     document.querySelectorAll('.hidden section')[1].querySelectorAll('h3')[0].innerHTML = currentLanguage.settings.headlines[2]
+
+
+    //----------- Function calls and updates -----------//
+    activateKeybindsEventListener();
+    updateSettingsInput();
+    if(!setting.isDarkMode){
+        swapDarkMode(true)
+    }
+    if(!setting.isDarkMode){
+        document.querySelector('.toggle.design').classList.add("on")
+    }
+    if(!setting.isGerman){
+        document.querySelector('.toggle.language').classList.add("on")
+    }
+}
+
+function updateSettingsInput(){
+    document.querySelector('.hint').value = setting.hintKey.key
+    document.querySelector('.skip').value = setting.skipKey.key
+    document.querySelector('.guess').value = setting.checkKey.key
 }
