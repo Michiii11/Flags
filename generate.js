@@ -33,7 +33,7 @@ function generateHTML(){
     let selectorType = document.createElement("div")
     selectorType.classList.add("selector", "type")
     selectorType.innerHTML = 
-    `<p class="country selected" onclick="selector(this, 'type')">${currentLanguage.mode.selectorType[0]}</p>
+    `<p class="country " onclick="selector(this, 'type')">${currentLanguage.mode.selectorType[0]}</p>
     <p class="capital" onclick="selector(this, 'type')">${currentLanguage.mode.selectorType[1]}</p>`
 
     let selectorContinent = document.createElement("div")
@@ -52,14 +52,18 @@ function generateHTML(){
     document.querySelector('#mode').innerHTML = ""
     document.querySelector('#mode').append(selectorType, selectorContinent, modeButton, backButton)
 
-    document.querySelector('.selected').classList.remove('selected')
     document.querySelector(`.${selectorOrder.flagType}`).classList.add('selected')
     document.querySelector(`.${selectorOrder.flagContinent}`).classList.add('selected')
+    setCountryList();
 
 
     //----------- Game Page -----------//
     document.querySelector('#finishedRound h2').innerHTML = currentLanguage.game[1]
 
+    let backUpPage = document.querySelector('#backUpRound')
+    backUpPage.innerHTML = `<h2>${currentLanguage.backUp[0]}</h2><p>${currentLanguage.backUp[1]}</p>
+                            <div class="buttons"><p onclick="setCountryList();loadSide('game')">${currentLanguage.backUp[2]}</p>
+                            <p onclick="loadSide('game')">${currentLanguage.backUp[3]}</p></div>`
 
     //----------- Settings -----------//
     document.querySelector('#settings .heading').innerHTML = currentLanguage.settings.headlines[0]

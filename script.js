@@ -3,6 +3,7 @@
 let countryList = []; // List of all possible countries in current round - eruope selected: all european countries
 let index = 0; // Index of the current flag
 let hintCount = 0; // Count of the shown letters
+let isBackUp = false;
 
 let colorContrast = getComputedStyle(document.documentElement).getPropertyValue('--color-contrast');
 
@@ -33,13 +34,13 @@ const startPage = document.querySelector('#start');
 const modePage = document.querySelector('#mode');
 const gamePage = document.querySelector('#game');
 const finishPage = document.querySelector('#finishedRound')
+const backUpPage = document.querySelector('#backUpRound')
 
 //#endregion
 
 //**************** Loader ****************//
 //#region
 
-// load or set the selectorOrder from/into the localstorage
 for (const [key, value] of Object.entries(selectorOrder)) {
     if (localStorage.getItem(key)) {
         selectorOrder[key] = localStorage.getItem(key)
@@ -59,6 +60,7 @@ function loadSide(type) {
     modePage.style.display = "none"
     gamePage.style.display = "none"
     finishPage.style.display = "none"
+    backUpPage.style.display = "none"
 
     // Load the current page
     switch (type) {
@@ -74,7 +76,11 @@ function loadSide(type) {
             break;
         case "finished":
             finishPage.style.display = "flex"
+            isBackUp = false;
             finishedRound();
+            break;
+        case "backUp":
+            backUpPage.style.display = "block"
             break;
     }
 }
@@ -84,27 +90,33 @@ function loadSide(type) {
  * it sets the html for the Game (Country / Capital Mode)
  */
 function startGame() {
-    // Set start img
-    showBox().innerHTML = `<img src="">`
-    hidBox().innerHTML = `<img src="https://flagcdn.com/h120/${countryList[index].code.toLowerCase()}.png">`
-
-    // Capital Mode 
-    if (selectorOrder.flagType == "capital") {
-        showBox().innerHTML += `<h3></h3>`
-        hidBox().innerHTML += `<h3>${countryList[index].name[0]}</h3>`
-
-        if(selectorOrder.flagStyle == "show"){
-            hideShowFlag();
-        }
-        document.querySelector('.hideButton').style.display = "block"
+    if(isBackUp){
+        isBackUp = false;
+        loadSide("backUp")
     } else{
-        if(document.querySelector('#content').classList.contains("big")){
-            document.querySelector('#content').classList.remove("big")
-        }
-        document.querySelector('.hideButton').style.display = "none"
-    }
+        // Set start img
+        showBox().innerHTML = `<img src="">`
+        hidBox().innerHTML = `<img src="https://flagcdn.com/h120/${countryList[index].code.toLowerCase()}.png">`
 
-    getCountry();
+        // Capital Mode 
+        if (selectorOrder.flagType == "capital") {
+            showBox().innerHTML += `<h3></h3>`
+            hidBox().innerHTML += `<h3>${countryList[index].name[0]}</h3>`
+
+            if(selectorOrder.flagStyle == "show"){
+                hideShowFlag();
+            }
+            document.querySelector('.hideButton').style.display = "block"
+        } else{
+            if(document.querySelector('#content').classList.contains("big")){
+                document.querySelector('#content').classList.remove("big")
+            }
+            document.querySelector('.hideButton').style.display = "none"
+        }
+
+        getCountry();
+        isBackUp = true;
+    }
 }
 
 
@@ -119,11 +131,18 @@ function startGame() {
  * @param {*} type type of the selector (type | continent)
  */
 function selector(elem, type) {
-    document.querySelector(`.${type} .selected`).classList.remove("selected")
+    if(document.querySelector(`.${type} .selected`)){
+        document.querySelector(`.${type} .selected`).classList.remove("selected")
+    }
     elem.classList.add("selected")
-    selectorOrder.flagType = elem.classList[0]
 
-    localStorage.setItem(`${type == "type" ? 'flagType' : 'flagContinent'}`, selectorOrder.flagType);
+    if(type == "continent"){
+        selectorOrder.flagContinent = elem.classList[0]
+    } else{
+        selectorOrder.flagType = elem.classList[0]
+    }
+
+    setLocalStorage();
     setCountryList();
 }
 
@@ -133,6 +152,7 @@ setCountryList()
  * @param {boolean} isNewRound true = next round with false answers
  */
 function setCountryList(isNewRound) {
+    isBackUp = false;
     countryList = [];
     if (isNewRound) { // Clone false answers into the country list
         countryList = [...wrongCountrys];
@@ -211,6 +231,7 @@ function checkCountry() {
     // Loop goes throw all names from current answer
     for (let i = 0; i < answer.length; i++) {
         if (guess.replace(" ", "") == answer[i].toLowerCase().replace(" ", "")) {
+            index++;
             skip(true);
             return;
         }
@@ -259,10 +280,9 @@ function skip(isCorrect, isSkipped) {
         inputField.style.color = "green";
         setTimeout(function () {
             inputField.style.color = colorContrast;
-            index++;
             getCountry();
         }, 500);
-
+        isWrongGuess = false
         return
     }
 
@@ -335,17 +355,17 @@ function finishedRound() {
  * toogles the flag opacity
  */
 function hideShowFlag(){
-    document.querySelector('#content').forEach((elem)=>{
-        elem.classList.toggle("big")
+    let elem = document.querySelector('#content')
+    elem.classList.toggle("big")
 
-        if(elem.classList.contains("big")){
-            selectorOrder.flagStyle = "show"
-        } else{
-            selectorOrder.flagStyle = "hidden"
-        }
+    if(elem.classList.contains("big")){
+        selectorOrder.flagStyle = "show"
+    } else{
+        selectorOrder.flagStyle = "hidden"
+    }
 
-        localStorage.setItem("flagStyle", selectorOrder.flagStyle)
-    })
+    localStorage.setItem("flagStyle", selectorOrder.flagStyle)
+
     inputField.focus();
 }
 
@@ -385,7 +405,7 @@ function activateKeybindsEventListener(){
                 case "guess": setting.checkKey.keyCode = event.keyCode; setting.checkKey.key = event.key; break;
             }
 
-            saveSettingsLocalStorage()
+            setLocalStorage()
         })
     })
 }
@@ -398,7 +418,7 @@ function activateKeybindsEventListener(){
 
 let setting = {
     hintKey: {key: "+", keyCode: 187},
-    skipKey: {key: "#", keyCode: 189},
+    skipKey: {key: "-", keyCode: 189},
     checkKey: {key: "Enter", keyCode: 13},
     clearInput: false,
     isGerman: true,
@@ -406,10 +426,35 @@ let setting = {
 }
 
 if(localStorage.getItem("settingFlagGame")){
-    loadSettingsLocalStorage()
+    loadLocalStorage()
 } else{
-    saveSettingsLocalStorage()
+    setLocalStorage()
 }
+if(localStorage.getItem("selectorOrder")){
+    loadLocalStorage()
+} else{
+    setLocalStorage()
+}
+
+/**
+ * loads the variables from the localStorage
+ */
+function loadLocalStorage(){
+    // Set or load the Localstorage
+    setting = JSON.parse(localStorage.getItem("settingFlagGame"))
+    selectorOrder = JSON.parse(localStorage.getItem("selectorOrder"))
+    generateHTML();
+}
+
+/**
+ * sets the variables into the localStorage
+ */
+function setLocalStorage(){
+    localStorage.setItem("settingFlagGame", JSON.stringify(setting))
+    localStorage.setItem("selectorOrder", JSON.stringify(selectorOrder))
+    generateHTML();
+}
+
 generateHTML();
 
 /**
@@ -443,7 +488,7 @@ function toggleSidebar(elem) {
 function swapDarkMode(isStart){
     if(!isStart){
         setting.isDarkMode = !setting.isDarkMode;
-        saveSettingsLocalStorage();
+        setLocalStorage();
     }
 
     let styleKeys = [ "--shadow", "--grey-1", "--grey-1-5", "--grey-2", "--grey-3", "--grey-4", "--grey-5","--color-contrast"]
@@ -456,23 +501,6 @@ function swapDarkMode(isStart){
     colorContrast = getComputedStyle(document.documentElement).getPropertyValue('--color-contrast');
 }
 
-/**
- * loads the variables from the localStorage
- */
-function loadSettingsLocalStorage(){
-    // Set or load the Localstorage
-    setting = JSON.parse(localStorage.getItem("settingFlagGame"))
-    generateHTML();
-}
-
-/**
- * sets the variables into the localStorage
- */
-function saveSettingsLocalStorage(){
-    localStorage.setItem("settingFlagGame", JSON.stringify(setting))
-    generateHTML();
- }
-
 // toggle button
 document.querySelectorAll('.toggle').forEach((elem)=>{
     elem.addEventListener("click", function(){
@@ -484,12 +512,12 @@ document.querySelectorAll('.toggle').forEach((elem)=>{
 
         if(elem.classList.contains("language")){
             setting.isGerman = !setting.isGerman;
-            saveSettingsLocalStorage();
+            setLocalStorage();
         }
 
         if(elem.classList.contains("clearInput")){
             setting.clearInput = !setting.clearInput
-            saveSettingsLocalStorage();
+            setLocalStorage();
         }
     })
 })

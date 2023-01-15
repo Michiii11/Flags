@@ -14,7 +14,8 @@ let language = {
         settings: {
             headlines: ["Einstellungen", "Steuerung", "Bild"],
             keybinds: ["Tipp", "Weiter", "Versuch", ],
-        }
+        },
+        backUp: ["Ein Spiel ist noch am Laufen", "Entscheide was du machst", "Neues Spiel", "Weiterspielen"]
     },
 
     english: {
@@ -32,6 +33,7 @@ let language = {
         settings: {
             headlines: ["Settings", "Keybinds", "Display"],
             keybinds: ["Hint", "Skip", "Guess"],
-        }
+        },
+        backUp: ["There is a game still running", "Choose what to do", "New Game", "Continue"]
     }
 }

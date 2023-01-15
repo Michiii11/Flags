@@ -363,28 +363,28 @@ main{
     background-color: tomato;
 }
 
-/*---------- Finished ----------*/
-#finishedRound{
-    background-color: var(--grey-2);
+/*---------- Finished & Back Up ----------*/
+.inRoundWindow{
+    background: linear-gradient(45deg, var(--grey-1-5) 0%, var(--grey-2) 100%);
     text-align: center;
     flex-direction: column;
 }
-#finishedRound h2{
+.inRoundWindow h2{
     margin-block: 1rem;
     font-size: 2.5rem;
     color: var(--color-accent);
 }
-#finishedRound > p{
-    color: hsl(0, 0%, 75%);
+.inRoundWindow > p{
+    color: var(--color-contrast);
     margin-bottom: 2rem;
     font-size: 1rem;
 }
-#finishedRound .buttons p{
+.inRoundWindow .buttons p{
     font-size: 1.2rem;
     background: var(--grey-2);
     color: var(--color-accent);
 }
-#finishedRound .buttons p:hover{
+.inRoundWindow .buttons p:hover{
     background: var(--color-accent);
     color: var(--grey-2);
 }
