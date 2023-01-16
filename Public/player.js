@@ -3,7 +3,7 @@ let urlParams = new URLSearchParams(queryString);
 let lobbyKey = urlParams.get("lobby")
 let ownerKey = "haha i prevent u from doing cool owner shit"
 
-const socket = io();
+const socket = io()
 
 socket.emit("verifyLobby", lobbyKey) //send lobby key to server
 
@@ -74,6 +74,11 @@ function createLobby(){
 	socket.emit("createLobby")
 }
 
+function joinLobby(){
+    let key = document.querySelector('#lobbyKey')
+    socket.emit("verifyLobby", lobbyKey) //send lobby key to server
+}
+
 /**
  * demo function - sends message to all clients in the same lobby
 */
@@ -92,5 +97,5 @@ function editLobby(){
  * @param {*} content will be writen to innerHTML
  */
 function output(content){
-    console.log(content)
+    document.querySelector('#chat').innerHTML += content
 }

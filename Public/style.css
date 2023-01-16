@@ -332,6 +332,12 @@ main{
     opacity: 1;
 }
 
+/*----------  ----------*/
+#chat{
+    position: absolute;
+    left: 90vw;
+}
+
 /*---------- Toggle ----------*/
 .toggle{
     aspect-ratio: 1.8/1;
