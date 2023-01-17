@@ -13,7 +13,7 @@ let wrongCountrys = []; // List of the wrong anwsers
 
 let selectorOrder = {
     flagType: "country",
-    flagContinent: "all",
+    flagContinent: ["all"],
     flagStyle: "show"
 }
 
@@ -137,19 +137,55 @@ function toggleMode(index){
  * @param {*} type type of the selector (type | continent)
  */
 function selector(elem, type) {
-    if(document.querySelector(`.${type} .selected`)){
-        document.querySelector(`.${type} .selected`).classList.remove("selected")
-    }
-    elem.classList.add("selected")
-
     if(type == "continent"){
-        selectorOrder.flagContinent = elem.classList[0]
+        multipleSelector(elem)
     } else{
+        if(document.querySelector(`.${type} .selected`)){
+            document.querySelector(`.${type} .selected`).classList.remove("selected")
+        }
+        elem.classList.add("selected")
+    
         selectorOrder.flagType = elem.classList[0]
     }
 
     setLocalStorage();
     setCountryList();
+}
+
+function multipleSelector(elem){
+    if(elem.classList.contains("all")){
+        selectorOrder.flagContinent = []
+        selectorOrder.flagContinent.push(elem.classList[0])
+    } else {
+        if(document.querySelector(`.all`).classList.contains('selected')){
+            selectorOrder.flagContinent = []
+        }
+
+        // Remove elem from list
+        if(selectorOrder.flagContinent.includes(elem.classList[0])){
+            selectorOrder.flagContinent.splice(selectorOrder.flagContinent.indexOf(elem.classList[0]), 1)
+        } 
+        // Add elem to list
+        else{
+            selectorOrder.flagContinent.push(elem.classList[0])
+        }
+
+        if(selectorOrder.flagContinent.length == 0 || selectorOrder.flagContinent.length == 6){
+            multipleSelector(document.querySelector('.all'))
+        }
+    }
+    selectAttributes();
+}
+
+function selectAttributes(){
+    // remove all selects
+    document.querySelectorAll('selected').forEach((elem) => {
+        elem.classList.remove("selected")
+    })
+    // select all selects
+    for (let i = 0; i < selectorOrder.flagContinent.length; i++) {
+        document.querySelector(`.${selectorOrder.flagContinent[i]}`).classList.add("selected")
+    }
 }
 
 setCountryList()
@@ -163,12 +199,14 @@ function setCountryList(isNewRound) {
     if (isNewRound) { // Clone false answers into the country list
         countryList = [...wrongCountrys];
     } else {
-        if (selectorOrder.flagContinent == "all") { // Clone full list into the country list
+        if (selectorOrder.flagContinent[0] == "all") { // Clone full list into the country list
             countryList = [...countries];
         } else {
             for (let i = 0; i < countries.length; i++) {
-                if (countries[i].continent == selectorOrder.flagContinent) { // Filter the continent
-                    countryList.push(countries[i]); // Set the country into the country list
+                for (let j = 0; j < selectorOrder.flagContinent.length; j++) {
+                    if (countries[i].continent == selectorOrder.flagContinent[j]) { // Filter the continent
+                        countryList.push(countries[i]); // Set the country into the country list
+                    }
                 }
             }
         }

@@ -23,7 +23,7 @@ let countries = [
 {name: ["Benin", "Benin"], capital:["Porto-Novo", "Porto Novo"], continent:"Afrika", code:"BJ"},
 {name: ["Bhutan", "Bhutan"], capital:["Thimphu"], continent:"Asien", code:"BT"},
 {name: ["Bolivien", "Bolivia"], capital:["Sucre", "La Paz"], continent:"Südamerika", code:"BO"},
-{name: ["Bosnien und Herzegowina", "Bosnia and Herzegovina"], capital:["Sarajevo"], continent:"Europa", code:"BA"},
+{name: ["Bosnien und Herzegowina", "Bosnia and Herzegovina", "Bosnien"], capital:["Sarajevo"], continent:"Europa", code:"BA"},
 {name: ["Botswana", "Botsuana"], capital:["Gaborone"], continent:"Afrika", code:"BW"},
 {name: ["Brasilien", "Brazil"], capital:["Brasília", "Brasilia"], continent:"Südamerika", code:"BR"},
 {name: ["Brunei", "Brunei"], capital:["Bandar Seri Begawan"], continent:"Asien", code:"BN"},

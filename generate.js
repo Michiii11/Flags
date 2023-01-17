@@ -3,11 +3,11 @@ let currentLanguage
 /**
  * Generates the html with the right language
  */
-function generateHTML(){
+function generateHTML() {
     // Get currentLanguage
-    if(setting.isGerman){
+    if (setting.isGerman) {
         currentLanguage = language.german
-    } else{
+    } else {
         currentLanguage = language.english
     }
 
@@ -21,7 +21,7 @@ function generateHTML(){
     divButton.classList.add("buttons")
     for (let i = 0; i < currentLanguage.start.length; i++) {
         let div = document.createElement("div")
-        div.setAttribute("onclick", `loadSide('${i == 0 ? "mode" : "multiplayer"}');toggleMode(${i})`)
+        div.setAttribute("onclick", `loadSide("mode");toggleMode(${i})`)
         div.innerHTML = `<p>${currentLanguage.start[i]}</p>`
         divButton.appendChild(div);
     }
@@ -33,14 +33,14 @@ function generateHTML(){
     //----------- Mode Page -----------//
     let selectorType = document.createElement("div")
     selectorType.classList.add("selector", "type")
-    selectorType.innerHTML = 
-    `<p class="country " onclick="selector(this, 'type')">${currentLanguage.mode.selectorType[0]}</p>
+    selectorType.innerHTML =
+        `<p class="country " onclick="selector(this, 'type')">${currentLanguage.mode.selectorType[0]}</p>
     <p class="capital" onclick="selector(this, 'type')">${currentLanguage.mode.selectorType[1]}</p>`
 
     let selectorContinent = document.createElement("div")
     selectorContinent.classList.add("selector", "continent")
     for (let i = 0; i < currentLanguage.mode.selectorContinent.length; i++) {
-            selectorContinent.innerHTML += 
+        selectorContinent.innerHTML +=
             `<p class="${i != 0 ? language.german.mode.selectorContinent[i] : "all"}" onclick="selector(this, 'continent')">${currentLanguage.mode.selectorContinent[i]}</p>`
     }
 
@@ -57,7 +57,7 @@ function generateHTML(){
     document.querySelector(`.${selectorOrder.flagType}`).classList.add('selected')
     document.querySelector(`.${selectorOrder.flagContinent}`).classList.add('selected')
     setCountryList();
-
+    selectAttributes()
 
     //----------- Game Page -----------//
     document.querySelector('#finishedRound h2').innerHTML = currentLanguage.game[1]
@@ -72,7 +72,7 @@ function generateHTML(){
 
     let hiddenBox = document.createElement("div")
     hiddenBox.classList.add("hidden")
-    
+
     let section1 = document.querySelectorAll('.hidden section')[0]
     section1.innerHTML = `<h3>${currentLanguage.settings.headlines[1]}</h3>`
     for (let i = 0; i < currentLanguage.settings.keybinds.length; i++) {
@@ -81,22 +81,21 @@ function generateHTML(){
 
     document.querySelectorAll('.hidden section')[1].querySelectorAll('h3')[0].innerHTML = currentLanguage.settings.headlines[2]
 
-
     //----------- Function calls and updates -----------//
     activateKeybindsEventListener();
     updateSettingsInput();
-    if(!setting.isDarkMode){
+    if (!setting.isDarkMode) {
         swapDarkMode(true)
     }
-    if(!setting.isDarkMode){
+    if (!setting.isDarkMode) {
         document.querySelector('.toggle.design').classList.add("on")
     }
-    if(!setting.isGerman){
+    if (!setting.isGerman) {
         document.querySelector('.toggle.language').classList.add("on")
     }
 }
 
-function updateSettingsInput(){
+function updateSettingsInput() {
     document.querySelector('.hint').value = setting.hintKey.key
     document.querySelector('.skip').value = setting.skipKey.key
     document.querySelector('.guess').value = setting.checkKey.key
