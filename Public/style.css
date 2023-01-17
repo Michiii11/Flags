@@ -332,10 +332,14 @@ main{
     opacity: 1;
 }
 
-/*----------  ----------*/
+/*---------- Multiplayer ----------*/
+#multiplayer .lobbySelect {
+}
+#multiplayer .lobbyWaiting {
+}
 #chat{
     position: absolute;
-    left: 90vw;
+    left: 80vw;
 }
 
 /*---------- Toggle ----------*/

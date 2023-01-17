@@ -79,6 +79,8 @@ function loadSide(type) {
             break;
         case "multiplayer":
             multiPlayerPage.style.display = "block";
+            document.querySelector('.lobbyWaiting').style.display = "none"
+            document.querySelector('.lobbySelect').style.display = "block"
             toggleMode();
             break;
         case "finished":

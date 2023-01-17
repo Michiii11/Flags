@@ -18,7 +18,8 @@ socket.on("verifiedLobby", (erg) => {
 		output("lobby exists")
 	}
 	else{
-		output("unknown lobby")
+		document.querySelector('.lobbySelect').style.display = "none"
+		document.querySelector('.lobbyWaiting').style.display = "flex"
 		lobbyKey = null
 	}
 
@@ -75,8 +76,9 @@ function createLobby(){
 }
 
 function joinLobby(){
-    let key = document.querySelector('#lobbyKey')
+    lobbyKey = document.querySelector('#lobbyKey').value
     socket.emit("verifyLobby", lobbyKey) //send lobby key to server
+	console.log(lobbyKey)
 }
 
 /**
