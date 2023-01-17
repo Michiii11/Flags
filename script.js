@@ -3,6 +3,7 @@
 let countryList = []; // List of all possible countries in current round - eruope selected: all european countries
 let index = 0; // Index of the current flag
 let hintCount = 0; // Count of the shown letters
+let baseListLength;
 let isBackUp = false;
 let isSingleplayer
 
@@ -174,10 +175,10 @@ function multipleSelector(elem){
             multipleSelector(document.querySelector('.all'))
         }
     }
-    selectAttributes();
+    selectContinents();
 }
 
-function selectAttributes(){
+function selectContinents(){
     // remove all selects
     document.querySelectorAll('selected').forEach((elem) => {
         elem.classList.remove("selected")
@@ -209,6 +210,7 @@ function setCountryList(isNewRound) {
                     }
                 }
             }
+            baseListLength = countryList.length
         }
     }
 
@@ -385,7 +387,7 @@ function swap() {
  * sets the html to the finishedRound page
  */
 function finishedRound() {
-    document.querySelector('#finishedRound p').innerHTML = `Du hast ${countryList.length - wrongCountrys.length} von ${countryList.length} richtig`
+    document.querySelector('#finishedRound p').innerHTML = `Du hast ${baseListLength - wrongCountrys.length} von ${baseListLength} richtig`
 
     let isNewRound = (wrongCountrys.length == 0 ? false : true)
     let tempIndex = (!isNewRound ? 2 : 3)

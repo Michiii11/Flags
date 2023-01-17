@@ -57,7 +57,7 @@ function generateHTML() {
     document.querySelector(`.${selectorOrder.flagType}`).classList.add('selected')
     document.querySelector(`.${selectorOrder.flagContinent}`).classList.add('selected')
     setCountryList();
-    selectAttributes()
+    selectContinents()
 
     //----------- Game Page -----------//
     document.querySelector('#finishedRound h2').innerHTML = currentLanguage.game[1]
