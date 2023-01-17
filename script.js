@@ -61,7 +61,6 @@ function loadSide(type) {
     startPage.style.display = "none"
     modePage.style.display = "none"
     gamePage.style.display = "none"
-    multiPlayerPage.style.display = "none"
     finishPage.style.display = "none"
     backUpPage.style.display = "none"
 
@@ -76,10 +75,6 @@ function loadSide(type) {
         case "game":
             gamePage.style.display = "block";
             startGame();
-            break;
-        case "multiplayer":
-            multiPlayerPage.style.display = "block";
-            toggleMode();
             break;
         case "finished":
             finishPage.style.display = "flex"
