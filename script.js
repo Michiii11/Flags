@@ -11,6 +11,8 @@ let colorContrast = getComputedStyle(document.documentElement).getPropertyValue(
 
 let isWrongGuess = false;
 let wrongCountrys = []; // List of the wrong anwsers
+let isWaitingForSkip = false;
+let isGameRunning = false;
 
 let selectorOrder = {
     flagType: "country",
@@ -64,6 +66,7 @@ function loadSide(type) {
     gamePage.style.display = "none"
     finishPage.style.display = "none"
     backUpPage.style.display = "none"
+    isGameRunning = false;
 
     // Load the current page
     switch (type) {
@@ -75,7 +78,8 @@ function loadSide(type) {
             break;
         case "game":
             gamePage.style.display = "block";
-            startGame();
+            if(selectorOrder.flagContinent.length == 0){loadSide('mode');selectContinentsError()}
+            else{startGame();}
             break;
         case "finished":
             finishPage.style.display = "flex"
@@ -93,6 +97,7 @@ function loadSide(type) {
  * it sets the html for the Game (Country / Capital Mode)
  */
 function startGame() {
+    isGameRunning = true;
     if(isBackUp){
         isBackUp = false;
         loadSide("backUp")
@@ -149,32 +154,39 @@ function selector(elem, type) {
         selectorOrder.flagType = elem.classList[0]
     }
 
-    setLocalStorage();
     setCountryList();
+    setLocalStorage();
 }
 
 function multipleSelector(elem){
-    if(elem.classList.contains("all")){
-        selectorOrder.flagContinent = []
-        selectorOrder.flagContinent.push(elem.classList[0])
-    } else {
-        if(document.querySelector(`.all`).classList.contains('selected')){
-            selectorOrder.flagContinent = []
-        }
-
+    if(!elem.classList.contains("all")){
+        
         // Remove elem from list
         if(selectorOrder.flagContinent.includes(elem.classList[0])){
             selectorOrder.flagContinent.splice(selectorOrder.flagContinent.indexOf(elem.classList[0]), 1)
+
+            if(selectorOrder.flagContinent.includes("all")){
+                selectorOrder.flagContinent.splice(selectorOrder.flagContinent.indexOf("all"), 1)
+            }
         } 
         // Add elem to list
         else{
             selectorOrder.flagContinent.push(elem.classList[0])
         }
+    }
 
-        if(selectorOrder.flagContinent.length == 0 || selectorOrder.flagContinent.length == 6){
-            multipleSelector(document.querySelector('.all'))
+    // Toggle all on off
+    if(elem.classList.contains("all") || selectorOrder.flagContinent.length == 6){
+        if(selectorOrder.flagContinent.includes("all")){
+            selectorOrder.flagContinent = []
+        } else{
+            selectorOrder.flagContinent = []
+            for (let i = 0; i < language.german.mode.selectorContinent.length; i++) {
+                selectorOrder.flagContinent.push(i == 0 ? "all" : language.german.mode.selectorContinent[i])
+            }
         }
     }
+
     selectContinents();
 }
 
@@ -187,6 +199,21 @@ function selectContinents(){
     for (let i = 0; i < selectorOrder.flagContinent.length; i++) {
         document.querySelector(`.${selectorOrder.flagContinent[i]}`).classList.add("selected")
     }
+}
+
+function selectContinentsError(){
+    let selector = document.querySelector('.selector.continent')
+    selector.style.color = "red";
+    selector.style.animation = "shake .7s"
+    setTimeout(function () {
+        selector.style.color = colorContrast;
+        selector.style.animation = "none"
+
+        if(setting.clearInput){
+            selector.value = "";
+        }
+    }, 500);
+    return
 }
 
 setCountryList()
@@ -319,6 +346,16 @@ function loadHint() {
  * @returns 
  */
 function skip(isCorrect, isSkipped) {
+    if(isWaitingForSkip){ 
+        isWaitingForSkip = false
+
+        index++;
+        inputField.disabled = false;
+        inputField.style.color = colorContrast;
+        getCountry();
+        return;
+    }
+
     // Richtige Eingabe
     if (isCorrect) {
 
@@ -349,12 +386,18 @@ function skip(isCorrect, isSkipped) {
 
         // Skip animation
         inputField.style.color = "rgb(110, 110, 110)";
-        setTimeout(function () {
-            index++;
-            inputField.disabled = false;
-            inputField.style.color = colorContrast;
-            getCountry();
-        }, 1000);
+
+        if(!setting.confirmSkip){
+            setTimeout(function () {    
+                index++;
+                inputField.disabled = false;
+                inputField.style.color = colorContrast;
+                getCountry();
+            }, 1000);
+        } else{
+            isWaitingForSkip = true
+        }
+
         return
     }
 
@@ -427,24 +470,31 @@ function getCurrentAnswer(){
 //**************** Event Listener ****************//
 //#region
 
-inputField.addEventListener("keydown", (event) => {
+addEventListener("keydown", (event) => {
     if (event.keyCode == setting.skipKey.keyCode) { // # --> Skip
-        event.preventDefault();
-        skip(false, true);
+        if(isGameRunning){
+            event.preventDefault();
+            skip(false, true);
+        }
     }
     if (event.keyCode == setting.hintKey.keyCode) { // * --> Hint
-        event.preventDefault();
-        loadHint();
+        if(isGameRunning){
+            event.preventDefault();
+            loadHint();
+        }
     }
     if (event.keyCode == setting.checkKey.keyCode) { // Enter --> Check
-        event.preventDefault();
-        checkCountry();
+        if(isGameRunning){
+            event.preventDefault();
+            checkCountry();
+        }
     }
 });
 
 function activateKeybindsEventListener(){
     document.querySelectorAll('.hidden input').forEach((elem)=>{
         elem.addEventListener("keydown", function(){
+            console.log(elem.classList.value)
             switch(elem.classList.value){
                 case "hint": setting.hintKey.keyCode = event.keyCode; setting.hintKey.key = event.key; break;
                 case "skip": setting.skipKey.keyCode = event.keyCode; setting.skipKey.key = event.key; break;
@@ -464,19 +514,15 @@ function activateKeybindsEventListener(){
 
 let setting = {
     hintKey: {key: "+", keyCode: 187},
-    skipKey: {key: "-", keyCode: 189},
+    skipKey: {key: "#", keyCode: 191},
     checkKey: {key: "Enter", keyCode: 13},
     clearInput: false,
+    confirmSkip: false,
     isGerman: true,
     isDarkMode: true,
 }
 
-if(localStorage.getItem("settingFlagGame")){
-    loadLocalStorage()
-} else{
-    setLocalStorage()
-}
-if(localStorage.getItem("selectorOrder")){
+if(localStorage.getItem("settingFlagGame") || localStorage.getItem("selectorOrder")){
     loadLocalStorage()
 } else{
     setLocalStorage()
@@ -489,7 +535,8 @@ function loadLocalStorage(){
     // Set or load the Localstorage
     setting = JSON.parse(localStorage.getItem("settingFlagGame"))
     selectorOrder = JSON.parse(localStorage.getItem("selectorOrder"))
-    generateHTML();
+    generateHTML(false);
+    updateSettings();
 }
 
 /**
@@ -498,10 +545,17 @@ function loadLocalStorage(){
 function setLocalStorage(){
     localStorage.setItem("settingFlagGame", JSON.stringify(setting))
     localStorage.setItem("selectorOrder", JSON.stringify(selectorOrder))
+    updateSettings();
     generateHTML();
 }
 
-generateHTML();
+function updateSettings(){
+    document.querySelectorAll('.buttons i')[0].title = setting.hintKey.key;
+    document.querySelectorAll('.buttons i')[1].title = setting.checkKey.key;
+    document.querySelectorAll('.buttons i')[2].title = setting.skipKey.key;
+}
+
+generateHTML(true);
 
 /**
  * toggles the sidebar between open and close state
@@ -547,7 +601,7 @@ function swapDarkMode(isStart){
     colorContrast = getComputedStyle(document.documentElement).getPropertyValue('--color-contrast');
 }
 
-// toggle button
+//----------- toggle buttons -----------//
 document.querySelectorAll('.toggle').forEach((elem)=>{
     elem.addEventListener("click", function(){
         elem.classList.toggle("on")
@@ -561,8 +615,13 @@ document.querySelectorAll('.toggle').forEach((elem)=>{
             setLocalStorage();
         }
 
-        if(elem.classList.contains("clearInput")){
+        if(elem.classList.contains("inputClear")){
             setting.clearInput = !setting.clearInput
+            setLocalStorage();
+        }
+
+        if(elem.classList.contains("skipConfirm")){
+            setting.confirmSkip = !setting.confirmSkip
             setLocalStorage();
         }
     })

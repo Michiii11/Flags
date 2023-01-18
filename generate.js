@@ -3,7 +3,7 @@ let currentLanguage
 /**
  * Generates the html with the right language
  */
-function generateHTML() {
+function generateHTML(newCountryList) {
     // Get currentLanguage
     if (setting.isGerman) {
         currentLanguage = language.german
@@ -55,9 +55,11 @@ function generateHTML() {
     document.querySelector('#mode').append(selectorType, selectorContinent, modeButton, backButton)
 
     document.querySelector(`.${selectorOrder.flagType}`).classList.add('selected')
-    document.querySelector(`.${selectorOrder.flagContinent}`).classList.add('selected')
-    setCountryList();
     selectContinents()
+
+    if(newCountryList){
+        setCountryList();
+    }
 
     //----------- Game Page -----------//
     document.querySelector('#finishedRound h2').innerHTML = currentLanguage.game[1]
@@ -84,14 +86,20 @@ function generateHTML() {
     //----------- Function calls and updates -----------//
     activateKeybindsEventListener();
     updateSettingsInput();
+
+    console.log(setting)
     if (!setting.isDarkMode) {
         swapDarkMode(true)
-    }
-    if (!setting.isDarkMode) {
-        document.querySelector('.toggle.design').classList.add("on")
+        document.querySelector('.design').classList.add("on")
     }
     if (!setting.isGerman) {
-        document.querySelector('.toggle.language').classList.add("on")
+        document.querySelector('.language').classList.add("on")
+    }
+    if (setting.clearInput) {
+        document.querySelector('.inputClear').classList.add("on")
+    }
+    if (setting.confirmSkip) {
+        document.querySelector('.skipConfirm').classList.add("on")
     }
 }
 

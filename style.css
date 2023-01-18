@@ -36,7 +36,6 @@ main{
     flex-direction: column;
     width: fit-content;
     transition: 0.4s all ease;
-    background: linear-gradient(45deg,  var(--grey-1-5) 0%, var(--grey-2) 100%);
 }
 
 /*---------- Start ----------*/
@@ -258,7 +257,7 @@ main{
     grid-template-columns: 1fr 1fr 1fr;
 }
 .continent p:first-of-type{
-    grid-area: 1/1/1/4;
+    grid-area: 3/1/3/4;
 }
 
 /*---------- Settings ----------*/
