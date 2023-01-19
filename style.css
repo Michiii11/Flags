@@ -43,6 +43,7 @@ main{
     height: 40vh;
     justify-content: center;
 }
+
 #start .buttons div{
     width: fit-content;
     display: grid;
@@ -70,10 +71,7 @@ main{
     width: 100%;
     border-radius: 1rem;
 }
-#game > div{
-    width: fit-content;
-    margin-inline: auto;
-}
+
 #game #input{
     width: 80%;
     font-size: 2rem;
@@ -92,33 +90,7 @@ main{
     outline: none;
     border-bottom: .15rem solid hsl(9, 100%, 60%);
 }
-#game #content div img{
-    height: 20vh;
-    box-shadow: 0.3rem 0.3rem 0.2rem 0.2rem var(--grey-1-5);
-}
-#game #content div{
-    position: absolute;
-    width: auto;
-    margin-block: 2vh;
-    transition: all 1s ease;
-}
 
-#game div[data-position="show"]{
-    animation: in 1.3s forwards;
-    z-index: 2; 
-}
-#game div[data-position="hidden"]{
-    animation: out 1.3s forwards;
-    z-index: 1;
-}
-#game h2{
-    font-family: 'Bebas Neue', cursive;
-    font-size: 2rem;
-    letter-spacing: 0.1rem;
-}
-#game h2, #game h3{
-    text-align: center;
-}
 #game #content{
     position: relative;
     display: flex;
@@ -134,10 +106,16 @@ main{
     height: fit-content;
     margin-top: auto;
 }
-#game #score{
-    text-align: center;
+#game #content div img{
+    height: 20vh;
+    box-shadow: 0.3rem 0.3rem 0.2rem 0.2rem var(--grey-1-5);
 }
-
+#game #content div{
+    position: absolute;
+    width: auto;
+    margin-block: 2vh;
+    transition: all 1s ease;
+}
 #game #content.big{
     height: 15vh;
 }
@@ -151,6 +129,33 @@ main{
 }
 #game #content.big div img{
     display: none;
+}
+
+
+#game > div{
+    width: fit-content;
+    margin-inline: auto;
+}
+#game div[data-position="show"]{
+    animation: in 1.3s forwards;
+    z-index: 2; 
+}
+#game div[data-position="hidden"]{
+    animation: out 1.3s forwards;
+    z-index: 1;
+}
+
+#game h2{
+    font-family: 'Bebas Neue', cursive;
+    font-size: 2rem;
+    letter-spacing: 0.1rem;
+}
+#game h2, #game h3{
+    text-align: center;
+}
+
+#game #score{
+    text-align: center;
 }
 
 /*---------- Buttons ----------*/
@@ -269,66 +274,84 @@ main{
     border-bottom-right-radius: 2rem;
     background-color: var(--grey-2);
     height: 50vh;
-    transition: all .5s;
+    transition: all .8s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: fit-content;
+    padding: .5rem;
 }
+#settings[data-state="close"]{
+    cursor: pointer;
+    max-width: 3vw;
+    transition-delay: .4s;
+}
+#settings[data-state="open"]{
+    max-width: 40vw;
+    padding-right: 1rem;
+}
+
 #settings section{
     padding-inline: 1rem;
     margin-block: 1rem;
 }
-#settings section div{
+#settings section div:not(.toggle){
     display: flex;
     justify-content: space-between;
     width: 100%;
     padding-block: .1rem;
 }
-#settings .toggle{
-    width: 2.5vw;
-}
+
 #settings input{
     background-color: var(--grey-2);
     text-align: center;
 }
+
 #setting section > h3{
-    text-transform: uppercase;
-}
-#settings .heading{
-    text-align: center;
-    font-weight: bold;
-    font-size: 2rem;
-    margin-block: auto;
-    cursor: pointer;
-    transition: all .3s;
-    transition-delay: .5s;
     text-transform: uppercase;
 }
 #settings h3{
     text-transform: uppercase;
 }
-#settings[data-state="close"] .heading{
-    rotate: -90deg;
-}
-#settings[data-state="close"]{
-    width: 3vw;
+
+#settings .heading{
+    cursor: pointer;
     display: flex;
     justify-content: center;
-    cursor: pointer;
+    margin-top: .5rem;
 }
-#settings[data-state="open"]{
-    width: 15vw;
+#settings[data-state="close"] .heading p{
+    rotate: -90deg;
+    transform-origin: center center;
+    transition-delay: .5s;
+}
+#settings[data-state="open"] .heading p{
+    transform-origin: top right;
+    margin-block: 0;
+    transition-delay: .5s;
+}
+
+#settings .heading p{
+    transition: all .5s;
+    text-transform: uppercase;
+    text-align: center;
+    font-weight: bold;
+    font-size: 2rem;
 }
 
 #settings .hidden{
     transition: all 1s;
-    transition-delay: .5s;
-    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 #settings[data-state="close"] .hidden{
-    display: none;
+    height: 0;
     opacity: 0;
 }
 #settings[data-state="open"] .hidden{
-    flex-direction: column;
+    height: 100%;
     opacity: 1;
+    transition-delay: .8s;
 }
 
 /*---------- Toggle ----------*/

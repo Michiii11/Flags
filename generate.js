@@ -70,7 +70,7 @@ function generateHTML(newCountryList) {
                             <p onclick="loadSide('game')">${currentLanguage.backUp[3]}</p></div>`
 
     //----------- Settings -----------//
-    document.querySelector('#settings .heading').innerHTML = currentLanguage.settings.headlines[0]
+    document.querySelector('#settings .heading p').innerHTML = currentLanguage.settings.headlines[0]
 
     let hiddenBox = document.createElement("div")
     hiddenBox.classList.add("hidden")
