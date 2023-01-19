@@ -83,6 +83,9 @@ function generateHTML(newCountryList) {
 
     document.querySelectorAll('.hidden section')[1].querySelectorAll('h3')[0].innerHTML = currentLanguage.settings.headlines[2]
 
+    document.querySelector('.clearInput').dataset.text = currentLanguage.settings.popup[0]
+    document.querySelector('.confirmSkip').dataset.text = currentLanguage.settings.popup[1]
+
     //----------- Function calls and updates -----------//
     activateKeybindsEventListener();
     updateSettingsInput();

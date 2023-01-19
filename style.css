@@ -158,6 +158,55 @@ main{
     text-align: center;
 }
 
+
+/*---------- Scroll Text ----------*/
+
+/* #region*/
+
+#scroll-container {
+    border: 3px solid black;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  
+  #scroll-text {
+    /* animation properties */
+    -moz-transform: translateX(100%);
+    -webkit-transform: translateX(100%);
+    transform: translateX(100%);
+    
+    -moz-animation: my-animation 15s linear infinite;
+    -webkit-animation: my-animation 15s linear infinite;
+    animation: my-animation 15s linear infinite;
+  }
+  
+  /* for Firefox */
+  @-moz-keyframes my-animation {
+    from { -moz-transform: translateX(100%); }
+    to { -moz-transform: translateX(-100%); }
+  }
+  
+  /* for Chrome */
+  @-webkit-keyframes my-animation {
+    from { -webkit-transform: translateX(100%); }
+    to { -webkit-transform: translateX(-100%); }
+  }
+  
+  @keyframes my-animation {
+    from {
+      -moz-transform: translateX(100%);
+      -webkit-transform: translateX(100%);
+      transform: translateX(100%);
+    }
+    to {
+      -moz-transform: translateX(-100%);
+      -webkit-transform: translateX(-100%);
+      transform: translateX(-100%);
+    }
+  }
+/* #endregion */
+
+
 /*---------- Buttons ----------*/
 .buttons{
     display: flex;
@@ -320,6 +369,14 @@ main{
     justify-content: center;
     margin-top: .5rem;
 }
+
+#settings .heading p{
+    transition: all .5s;
+    text-transform: uppercase;
+    text-align: center;
+    font-weight: bold;
+    font-size: 2rem;
+}
 #settings[data-state="close"] .heading p{
     rotate: -90deg;
     transform-origin: center center;
@@ -331,18 +388,9 @@ main{
     transition-delay: .5s;
 }
 
-#settings .heading p{
-    transition: all .5s;
-    text-transform: uppercase;
-    text-align: center;
-    font-weight: bold;
-    font-size: 2rem;
-}
-
 #settings .hidden{
     transition: all 1s;
     flex-direction: column;
-    overflow: hidden;
 }
 #settings[data-state="close"] .hidden{
     height: 0;
@@ -352,6 +400,46 @@ main{
     height: 100%;
     opacity: 1;
     transition-delay: .8s;
+}
+
+.info-popup{
+    color: var(--gray-600);
+    width: fit-content;
+    position: relative;
+    
+    cursor: pointer;
+}
+.info-popup:hover::after{
+	scale: 1;
+  opacity: 1;
+}
+.info-popup::after{
+    transition: all .3s;
+	scale: 0;
+    opacity: 0;
+    
+    content: attr(data-text);
+    position: absolute;
+/*     transform: translateX(50%);
+    right: 50%; */
+    bottom: 100%;
+  
+	font-size: 1.2rem;
+	font-family: calibri, sans-serif;
+	line-height: 130%;
+	color: var(--color-contrast);
+	background-color: var(--grey-4);
+	box-shadow: 0 0 .3rem .3rem rgba(0, 0, 0, 0.3);
+  
+	white-space: pre-wrap;
+	
+	width: max-content;
+	max-width: 15vw;
+    padding: .5rem;
+  
+	pointer-events: none;
+
+    z-index: 100000;
 }
 
 /*---------- Toggle ----------*/

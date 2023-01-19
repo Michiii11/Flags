@@ -279,7 +279,11 @@ function getCountry() {
 
     // Capital mode
     if (selectorOrder.flagType == "capital") {
-        hidBox().querySelector('h3').innerHTML = countryList[index].name[0]
+        if(setting.isGerman = false){
+            hidBox().querySelector('h3').innerHTML = countryList[index].name[1]
+        } else{
+            hidBox().querySelector('h3').innerHTML = countryList[index].name[0]
+        }
     }
 
     swap(); // Call swap animation
@@ -303,7 +307,7 @@ function checkCountry() {
 
     // Loop goes throw all names from current answer
     for (let i = 0; i < answer.length; i++) {
-        if (guess.replace(" ", "") == answer[i].toLowerCase().replace(" ", "")) {
+        if (guess.replace(/[^a-z]/gi, '') == answer[i].toLowerCase().replace(/[^a-z]/gi, '')) {
             index++;
             skip(true);
             return;
@@ -535,6 +539,15 @@ function loadLocalStorage(){
     // Set or load the Localstorage
     setting = JSON.parse(localStorage.getItem("settingFlagGame"))
     selectorOrder = JSON.parse(localStorage.getItem("selectorOrder"))
+
+    setting.hintKey = setting.hintKey || {key: "+", keyCode: 187}
+    setting.skipKey = setting.skipKey || {key: "#", keyCode: 191}
+    setting.checkKey = setting.checkKey || {key: "Enter", keyCode: 13}
+    setting.clearInput = setting.clearInput || false
+    setting.confirmSkip = setting.confirmSkip || false
+    setting.isGerman = setting.isGerman || true
+    setting.isDarkMode = setting.isDarkMode || true
+
     generateHTML(false);
     updateSettings();
 }
