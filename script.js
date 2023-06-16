@@ -146,7 +146,6 @@ function selector(elem, type) {
     if(type === "continent"){
         multipleSelector(elem)
     } else{
-        console.log(elem)
         if(document.querySelector(`.${type} .selected`)){
             document.querySelector(`.${type} .selected`).classList.remove("selected")
         }
@@ -210,10 +209,9 @@ function selectContinentsError(){
             selector.value = "";
         }
     }, 500);
-    return
 }
 
-setCountryList()
+setCountryList(false)
 /**
  * Set the List dependend on the Type of Continent
  * @param {boolean} isNewRound true = next round with false answers
@@ -311,7 +309,9 @@ function checkCountry() {
         }
     }
 
-    skip(false);
+    if(!setting.isAutoSkip){
+        skip();
+    }
 }
 
 /**
@@ -343,7 +343,7 @@ function loadHint() {
 /**
  * Skips the current flag
  * @param {*} isCorrect is the indicator if the guess was right or false
- * @param {*} isSkipped is the indicator if the guess was completly skipped or not
+ * @param {*} isSkipped is the indicator if the guess was completely skipped or not
  * @returns 
  */
 function skip(isCorrect, isSkipped) {
@@ -433,7 +433,7 @@ function swap() {
 function finishedRound() {
     document.querySelector('#finishedRound p').innerHTML = `Du hast ${baseListLength - wrongCountries.length} von ${baseListLength} richtig`
 
-    let isNewRound = (wrongCountries.length === 0 ? false : true)
+    let isNewRound = (wrongCountries.length !== 0)
     let tempIndex = (!isNewRound ? 2 : 3)
 
     document.querySelector('#finishedRound .buttons').innerHTML = 
@@ -495,7 +495,6 @@ addEventListener("keydown", (event) => {
 function activateKeybindsEventListener(){
     document.querySelectorAll('.hidden input').forEach((elem)=>{
         elem.addEventListener("keydown", function(){
-            console.log(elem.classList.value)
             switch(elem.classList.value){
                 case "hint": setting.hintKey.keyCode = event.keyCode; setting.hintKey.key = event.key; break;
                 case "skip": setting.skipKey.keyCode = event.keyCode; setting.skipKey.key = event.key; break;
@@ -519,9 +518,9 @@ let setting = {
     checkKey: {key: "Enter", keyCode: 13},
     clearInput: false,
     confirmSkip: false,
-    isGerman: true,
+    isGerman: false,
     isDarkMode: true,
-    isAutoSkip: false
+    isAutoSkip: true
 }
 
 if(localStorage.getItem("settingFlagGame") || localStorage.getItem("selectorOrder")){
@@ -567,9 +566,10 @@ function updateSettings(){
     document.querySelectorAll('.buttons i')[2].title = setting.skipKey.key;
 
     if(setting.isAutoSkip){
-        inputField.addEventListener("onkeydown", checkCountry)
+        console.log("true")
+        inputField.addEventListener("keyup", checkCountry)
     } else{
-        inputField.removeEventListener("onkeydown", checkCountry);
+        inputField.removeEventListener("keyup", checkCountry);
     }
 }
 

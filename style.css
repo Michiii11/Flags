@@ -546,6 +546,9 @@ main{
     main{
         width: auto;    
     }
+    .hideButton{
+        left: 85%;
+    }
 }
 
 @media (max-width: 700px) { /*phone*/
@@ -628,6 +631,15 @@ main{
         border-radius: 1rem;
         position: relative;
         transition: 0.2s all ease;
+    }
+    .hideButton{
+        left: 70vw;
+    }
+    #content:not(.big){
+        margin-block: 2rem;
+    }
+    #game #content.big div h3{
+        font-size: 2rem;
     }
     
     /*---------- Settings ----------*/

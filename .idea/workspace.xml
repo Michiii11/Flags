@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="38266ebf-a222-47e9-9ffc-ff2aeb8a4885" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -21,6 +24,10 @@
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "main",
     "last_opened_file_path": "C:/Users/micha/OneDrive/Documents/MyWebsites/Flags",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -34,7 +41,7 @@
       <updated>1686908443262</updated>
       <workItem from="1686908444414" duration="152000" />
       <workItem from="1686909662942" duration="7000" />
-      <workItem from="1686909699805" duration="180000" />
+      <workItem from="1686909699805" duration="3915000" />
     </task>
     <servers />
   </component>
