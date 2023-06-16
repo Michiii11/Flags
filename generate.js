@@ -41,7 +41,7 @@ function generateHTML(newCountryList) {
     selectorContinent.classList.add("selector", "continent")
     for (let i = 0; i < currentLanguage.mode.selectorContinent.length; i++) {
         selectorContinent.innerHTML +=
-            `<p class="${i != 0 ? language.german.mode.selectorContinent[i] : "all"}" onclick="selector(this, 'continent')">${currentLanguage.mode.selectorContinent[i]}</p>`
+            `<p class="${i !== 0 ? language.german.mode.selectorContinent[i] : "all"}" onclick="selector(this, 'continent')">${currentLanguage.mode.selectorContinent[i]}</p>`
     }
 
     let modeButton = document.createElement("div")
@@ -85,6 +85,7 @@ function generateHTML(newCountryList) {
 
     document.querySelector('.clearInput').dataset.text = currentLanguage.settings.popup[0]
     document.querySelector('.confirmSkip').dataset.text = currentLanguage.settings.popup[1]
+    document.querySelector('.confirmAutoSkip').dataset.text = currentLanguage.settings.popup[1]
 
     //----------- Function calls and updates -----------//
     activateKeybindsEventListener();
@@ -103,6 +104,9 @@ function generateHTML(newCountryList) {
     }
     if (setting.confirmSkip) {
         document.querySelector('.skipConfirm').classList.add("on")
+    }
+    if (setting.isAutoSkip){
+        document.querySelector('.autoSkip').classList.add("on")
     }
 }
 

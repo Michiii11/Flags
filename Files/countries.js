@@ -1141,7 +1141,7 @@ let countries = [
         code: "VU"
     },
     {
-        name: ["Vatikanstadt", "Vatican City", "Vatikan"],
+        name: ["Vatikanstadt", "Vatican City", "Vatikan", "Vatican"],
         capital: ["Vatikanstadt", "Vatican City"],
         continent: "Europa",
         code: "VA"
