@@ -146,6 +146,7 @@ function selector(elem, type) {
     if(type === "continent"){
         multipleSelector(elem)
     } else{
+        console.log(elem)
         if(document.querySelector(`.${type} .selected`)){
             document.querySelector(`.${type} .selected`).classList.remove("selected")
         }
@@ -191,10 +192,6 @@ function multipleSelector(elem){
 }
 
 function selectContinents(){
-    // remove all selects
-    document.querySelectorAll('.selected').forEach((elem) => {
-        elem.classList.remove("selected")
-    })
     // select all selects
     for (let i = 0; i < selectorOrder.flagContinent.length; i++) {
         document.querySelector(`.${selectorOrder.flagContinent[i]}`).classList.add("selected")

@@ -19,7 +19,7 @@
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "Game-2.0",
+    "git-widget-placeholder": "main",
     "last_opened_file_path": "C:/Users/micha/OneDrive/Documents/MyWebsites/Flags",
     "vue.rearranger.settings.migration": "true"
   }
@@ -33,6 +33,8 @@
       <option name="presentableId" value="Default" />
       <updated>1686908443262</updated>
       <workItem from="1686908444414" duration="152000" />
+      <workItem from="1686909662942" duration="7000" />
+      <workItem from="1686909699805" duration="180000" />
     </task>
     <servers />
   </component>
