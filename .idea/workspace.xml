@@ -22,7 +22,7 @@
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "Game-2.0",
     "last_opened_file_path": "C:/Users/micha/OneDrive/Documents/MyWebsites/Flags",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -42,6 +42,7 @@
       <workItem from="1686908444414" duration="152000" />
       <workItem from="1686909662942" duration="7000" />
       <workItem from="1686909699805" duration="3915000" />
+      <workItem from="1688932763242" duration="427000" />
     </task>
     <servers />
   </component>

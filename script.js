@@ -16,7 +16,7 @@ let isGameRunning = false;
 
 let selectorOrder = {
     flagType: "country",
-    flagContinent: ["all"],
+    flagContinent: ["all", "Europa", "Afrika", "Asien", "Nordamerika", "Südamerika", "Ozeanien"],
     flagStyle: "show"
 }
 
