@@ -57,11 +57,16 @@ function generateHTML(newCountryList) {
     document.querySelector(`.${selectorOrder.flagType}`).classList.add('selected')
     selectContinents()
 
-    if(newCountryList){
+    if (newCountryList) {
         setCountryList();
     }
 
     //----------- Game Page -----------//
+    scoreField.innerHTML = `${currentLanguage.game[0]} ${index - wrongCountries.length} / ${index}`;
+    console.log(countryList)
+    if (capitalField && countryList) {
+        capitalField.innerHTML = countryList[index].name[setting.isGerman ? 0 : 1]
+    }
     document.querySelector('#finishedRound h2').innerHTML = currentLanguage.game[1]
 
     let backUpPage = document.querySelector('#backUpRound')
@@ -91,11 +96,6 @@ function generateHTML(newCountryList) {
     activateKeybindsEventListener();
     updateSettingsInput();
 
-    console.log(setting)
-    if (!setting.isDarkMode) {
-        swapDarkMode(true)
-        document.querySelector('.design').classList.add("on")
-    }
     if (!setting.isGerman) {
         document.querySelector('.language').classList.add("on")
     }

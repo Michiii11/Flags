@@ -448,6 +448,9 @@ function hideShowFlag(){
     let elem = document.querySelector('#content')
     elem.classList.toggle("big")
 
+    document.querySelector(".fa-flag").classList.toggle("fa-solid")
+    document.querySelector(".fa-flag").classList.toggle("fa-regular")
+
     if(elem.classList.contains("big")){
         selectorOrder.flagStyle = "show"
     } else{
@@ -519,7 +522,6 @@ let setting = {
     clearInput: false,
     confirmSkip: false,
     isGerman: false,
-    isDarkMode: true,
     isAutoSkip: true
 }
 
@@ -534,7 +536,9 @@ if(localStorage.getItem("settingFlagGame") || localStorage.getItem("selectorOrde
  */
 function loadLocalStorage(){
     // Set or load the Localstorage
+    console.log(localStorage.getItem("settingFlagGame"))
     setting = JSON.parse(localStorage.getItem("settingFlagGame"))
+    console.log(setting)
     selectorOrder = JSON.parse(localStorage.getItem("selectorOrder"))
 
     setting.hintKey = setting.hintKey || {key: "+", keyCode: 187}
@@ -542,8 +546,7 @@ function loadLocalStorage(){
     setting.checkKey = setting.checkKey || {key: "Enter", keyCode: 13}
     setting.clearInput = setting.clearInput || false
     setting.confirmSkip = setting.confirmSkip || false
-    setting.isGerman = setting.isGerman || true
-    setting.isDarkMode = setting.isDarkMode || true
+    setting.isGerman = setting.isGerman || false
     setting.isAutoSkip = setting.isAutoSkip || false
 
     generateHTML(false);
@@ -566,7 +569,6 @@ function updateSettings(){
     document.querySelectorAll('.buttons i')[2].title = setting.skipKey.key;
 
     if(setting.isAutoSkip){
-        console.log("true")
         inputField.addEventListener("keyup", checkCountry)
     } else{
         inputField.removeEventListener("keyup", checkCountry);
@@ -603,30 +605,10 @@ function toggleSidebar(elem) {
     }
 }
 
-function swapDarkMode(isStart){
-    if(!isStart){
-        setting.isDarkMode = !setting.isDarkMode;
-        setLocalStorage();
-    }
-
-    let styleKeys = [ "--shadow", "--grey-1", "--grey-1-5", "--grey-2", "--grey-3", "--grey-4", "--grey-5","--color-contrast"]
-    let variableValue = [7, 12, 16, 20, 27, 35, 43, 100]
-
-    for (let i = 0; i < styleKeys.length; i++) {
-        document.documentElement.style.setProperty(styleKeys[i], `hsl(0, 0%, ${setting.isDarkMode ? variableValue[i] : 100-variableValue[i]}%)`);
-    }
-
-    colorContrast = getComputedStyle(document.documentElement).getPropertyValue('--color-contrast');
-}
-
 //----------- toggle buttons -----------//
 document.querySelectorAll('.toggle').forEach((elem)=>{
     elem.addEventListener("click", function(){
         elem.classList.toggle("on")
-
-        if(elem.classList.contains("design")){
-            swapDarkMode()
-        }
 
         if(elem.classList.contains("language")){
             setting.isGerman = !setting.isGerman;
