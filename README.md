@@ -30,11 +30,11 @@ A game for learning all flags, countries and capitals. You can choose a pool of 
 - Autoskip
   - If the right answer is in the input field it automatically skips
 
-![SelectMode](https://github.com/Michiii11/Flags/assets/92372034/f837b924-e8e3-41a6-904e-fa736089f79e)
+![SelectMode](https://github.com/Michiii11/Flags/assets/92372034/1019012f-215c-4d16-a6b5-c1c1330c9ce9)
 *Select Mode*
 
-![CountryMode](https://github.com/Michiii11/Flags/assets/92372034/9214cfba-3a97-4718-b654-b9facd0c1a27)
+![CountryMode](https://github.com/Michiii11/Flags/assets/92372034/ed2d3c03-ff77-4093-90c6-6150f26a89ce)
 *Country Mode*
 
-![CapitalMode](https://github.com/Michiii11/Flags/assets/92372034/32b20d18-09c6-4733-9b67-9a83f9c5bc2a)
+![CapitalMode](https://github.com/Michiii11/Flags/assets/92372034/9289a9c8-b13c-4c67-9869-d097b8ec4072)
 *Capital Mode*
