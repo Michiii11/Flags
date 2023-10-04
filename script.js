@@ -91,6 +91,7 @@ function loadSide(type) {
             break;
     }
 }
+loadSide("mode")
 
 /**
  * Start function
@@ -631,5 +632,7 @@ document.querySelectorAll('.toggle').forEach((elem)=>{
         }
     })
 })
+
+
 
 //#endregion
