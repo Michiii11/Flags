@@ -1,4 +1,5 @@
 # Flag Game
+[Link to the game](https://learnflags.netlify.app)
 
 ### Select Mode
 - Select Gamemode
