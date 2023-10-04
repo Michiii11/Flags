@@ -29,11 +29,11 @@
 - Autoskip
   - If the right answer is in the input field it automatically skips
 
--- image
+![SelectMode](https://github.com/Michiii11/Flags/assets/92372034/f837b924-e8e3-41a6-904e-fa736089f79e)
 *Select Mode*
 
--- image
+![CountryMode](https://github.com/Michiii11/Flags/assets/92372034/9214cfba-3a97-4718-b654-b9facd0c1a27)
 *Country Mode*
 
--- iamge
+![CapitalMode](https://github.com/Michiii11/Flags/assets/92372034/32b20d18-09c6-4733-9b67-9a83f9c5bc2a)
 *Capital Mode*
