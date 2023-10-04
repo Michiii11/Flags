@@ -1,5 +1,5 @@
 # Flag Game
-[Link to the game](https://learnflags.netlify.app)
+A game for learning all flags, countries and capitals. You can choose a pool of countries you wanna learn.
 
 ### Select Mode
 - Select Gamemode
