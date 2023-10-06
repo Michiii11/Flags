@@ -439,7 +439,7 @@ function finishedRound() {
 
     document.querySelector('#finishedRound .buttons').innerHTML = 
     `<p onclick="setCountryList(${isNewRound});loadSide('game');">${currentLanguage.game[tempIndex]}</p>
-    <p onclick="loadSide('mode')">Home</p>`
+    <p onclick="loadSide('mode');resetGame()">Home</p>`
 }
 
 /**
@@ -467,7 +467,14 @@ function hideShowFlag(){
  * @returns either the current country name or the capital name
  */
 function getCurrentAnswer(){
-    return (selectorOrder.flagType === "country" ? countryList[index].name : countryList[index].capital);
+    if(index < countryList.length){
+        return (selectorOrder.flagType === "country" ? countryList[index].name : countryList[index].capital);
+    }
+}
+
+function resetGame(){
+    setCountryList();
+    index = 0;
 }
 
 //#endregion
@@ -537,9 +544,7 @@ if(localStorage.getItem("settingFlagGame") || localStorage.getItem("selectorOrde
  */
 function loadLocalStorage(){
     // Set or load the Localstorage
-    console.log(localStorage.getItem("settingFlagGame"))
     setting = JSON.parse(localStorage.getItem("settingFlagGame"))
-    console.log(setting)
     selectorOrder = JSON.parse(localStorage.getItem("selectorOrder"))
 
     setting.hintKey = setting.hintKey || {key: "+", keyCode: 187}

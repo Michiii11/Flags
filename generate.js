@@ -63,7 +63,6 @@ function generateHTML(newCountryList) {
 
     //----------- Game Page -----------//
     scoreField.innerHTML = `${currentLanguage.game[0]} ${index - wrongCountries.length} / ${index}`;
-    console.log(countryList)
     if (capitalField && countryList) {
         capitalField.innerHTML = countryList[index].name[setting.isGerman ? 0 : 1]
     }
