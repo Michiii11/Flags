@@ -1182,4 +1182,263 @@ let countries = [
         continent: "Europa",
         code: "CY"
     },
+
+    {
+        name: ["Åaland", "Åaland Islands", "Aaland", "Aaland Islands"],
+        capital: ["Mariehamn", "Mariehamn"],
+        continent: "Europa",
+        code: "AX"
+    },
+    {
+        name: ["Amerikanisch Samoa", "American Samoa"],
+        capital: ["Pago Pago", "Pago Pago"],
+        continent: "Ozeanien",
+        code: "AS"
+    },
+    {
+        name: ["Bonaire", "Bonaire"],
+        capital: ["Kralendijk", "Kralendijk"],
+        continent: "Nordamerika",
+        code: "BQ"
+    },
+    {
+        name: ["Kaimaninseln", "Cayman Islands"],
+        capital: ["George Town", "George Town"],
+        continent: "Nordamerika",
+        code: "KY"
+    },
+    {
+        name: ["Weihnachtsinsel", "Christmas Island"],
+        capital: ["Flying Fish Cove", "Flying Fish Cove"],
+        continent: "Asien",
+        code: "CX"
+    },
+    {
+        name: ["Curacao", "Curacao"],
+        capital: ["Willemstad", "Willemstad"],
+        continent: "Nordamerika",
+        code: "CW"
+    },
+    {
+        name: ["Falklandinseln", "Falkland Islands"],
+        capital: ["Stanley", "Stanley"],
+        continent: "Südamerika",
+        code: "FK"
+    },
+    {
+        name: ["Französisch Polynesien", "French Polynesia"],
+        capital: ["Papeete", "Papeete"],
+        continent: "Ozeanien",
+        code: "PF"
+    },
+    {
+        name: ["Französische Guyana", "French Guiana"],
+        capital: ["Cayenne", "Cayenne"],
+        continent: "Südamerika",
+        code: "GF"
+    },
+    {
+        name: ["Grönland", "Greenland"],
+        capital: ["Nuuk", "Nuuk"],
+        continent: "Nordamerika",
+        code: "GL"
+    },
+    {
+        name: ["Guadeloupe", "Guadeloupe"],
+        capital: ["Basse-Terre", "Basse-Terre"],
+        continent: "Nordamerika",
+        code: "GP"
+    },
+    {
+        name: ["Guam", "Guam"],
+        capital: ["Hagåtña", "Hagatna"],
+        continent: "Ozeanien",
+        code: "GU"
+    },
+    {
+        name: ["Jersey", "Jersey"],
+        capital: ["Saint Helier", "Saint Helier"],
+        continent: "Europa",
+        code: "JE"
+    },
+    {
+        name: ["Guernsey", "Guernsey"],
+        capital: ["St. Peter Port", "Saint Peter Port"],
+        continent: "Europa",
+        code: "GG"
+    },
+    {
+        name: ["Hongkong", "Hong Kong"],
+        capital: ["Hongkong", "Hong Kong"],
+        continent: "Asien",
+        code: "HK"
+    },
+    {
+        name: ["Isle of Man", "Isle of Man"],
+        capital: ["Douglas", "Douglas"],
+        continent: "Europa",
+        code: "IM"
+    },
+    {
+        name: ["Macau", "Macau", "Macao"],
+        capital: ["Macau", "Macau"],
+        continent: "Asien",
+        code: "MO"
+    },
+    {
+        name: ["Martinique", "Martinique"],
+        capital: ["Fort-de-France", "Fort-de-France"],
+        continent: "Nordamerika",
+        code: "MQ"
+    },
+    {
+        name: ["Mayotte", "Mayotte"],
+        capital: ["Mamoudzou", "Mamoudzou"],
+        continent: "Afrika",
+        code: "YT"
+    },
+    {
+        name: ["Montserrat", "Montserrat"],
+        capital: ["Plymouth", "Plymouth"],
+        continent: "Nordamerika",
+        code: "MS"
+    },
+    {
+        name: ["Neukaledonien", "New Caledonia"],
+        capital: ["Nouméa", "Noumea"],
+        continent: "Ozeanien",
+        code: "NC"
+    },
+    {
+        name: ["Niue", "Niue"],
+        capital: ["Alofi", "Alofi"],
+        continent: "Ozeanien",
+        code: "NU"
+    },
+    {
+        name: ["Norfolkinsel", "Norfolk Island"],
+        capital: ["Kingston", "Kingston"],
+        continent: "Ozeanien",
+        code: "NF"
+    },
+    {
+        name: ["Nordirland", "Northern Ireland"],
+        capital: ["Belfast", "Belfast"],
+        continent: "Europa",
+        code: "GB-NIR"
+    },
+    {
+        name: ["Nördliche Marianen", "Northern Mariana Islands"],
+        capital: ["Saipan", "Saipan"],
+        continent: "Ozeanien",
+        code: "MP"
+    },
+    {
+        name: ["St. Helena", "Saint Helena", "St Helena"],
+        capital: ["Jamestown", "Jamestown"],
+        continent: "Afrika",
+        code: "SH"
+    },
+    {
+        name: ["St. Pierre und Miquelon", "Saint Pierre and Miquelon"],
+        capital: ["Saint-Pierre", "Saint Pierre"],
+        continent: "Nordamerika",
+        code: "PM"
+    },
+    {
+        name: ["St. Barthélemy", "Saint Barthélemy", "St Barthelemy"],
+        capital: ["Gustavia", "Gustavia"],
+        continent: "Nordamerika",
+        code: "BL"
+    },
+    {
+        name: ["St. Martin", "Saint Martin"],
+        capital: ["Marigot", "Marigot"],
+        continent: "Nordamerika",
+        code: "MF"
+    },
+    {
+        name: ["St. Pierre und Miquelon", "Saint Pierre and Miquelon", "St Pierre und Miquelon"],
+        capital: ["Saint-Pierre", "Saint Pierre"],
+        continent: "Nordamerika",
+        code: "PM"
+    },
+    {
+        name: ["Tokelau", "Tokelau"],
+        capital: ["Fakaofo", "Fakaofo"],
+        continent: "Ozeanien",
+        code: "TK"
+    },
+    {
+        name: ["Turks- und Caicosinseln", "Turks and Caicos Islands", "Turks und Caicosinseln"],
+        capital: ["Cockburn Town", "Cockburn Town"],
+        continent: "Nordamerika",
+        code: "TC"
+    },
+    {
+        name: ["Zypern", "Cyprus"],
+        capital: ["Nikosia", "Nicosia"],
+        continent: "Europa",
+        code: "CY"
+    },
+    {
+        name: ["Palästina", "Palestina"],
+        capital: ["Jerusalem", "Jerusalem"],
+        continent: "Asien",
+        code: "PS"
+    },
+    {
+        name: ["Britische Jungferninseln", "British Virgin Islands"],
+        capital: ["Road Town", "Road Town"],
+        continent: "Nordamerika",
+        code: "VG"
+    },
+    {
+        name: ["Anguilla", "Anguilla"],
+        capital: ["The Valley", "The Valley"],
+        continent: "Nordamerika",
+        code: "AI"
+    },
+    {
+        name: ["Aruba", "Aruba"],
+        capital: ["Oranjestad", "Oranjestad"],
+        continent: "Nordamerika",
+        code: "AW"
+    },
+    {
+        name: ["Sint Maarten", "Sint Maarten"],
+        capital: ["Philipsburg", "Philipsburg"],
+        continent: "Nordamerika",
+        code: "SX"
+    },
+    {
+        name: ["Puerto Rico", "Puerto Rico"],
+        capital: ["San Juan", "San Juan"],
+        continent: "Nordamerika",
+        code: "PR"
+    },
+    {
+        name: ["Wales", "Wales"],
+        capital: ["Cardiff", "Cardiff"],
+        continent: "Europa",
+        code: "GB-WLS"
+    },
+    {
+        name: ["Réunion", "Reunion"],
+        capital: ["Saint-Denis", "Saint Denis"],
+        continent: "Afrika",
+        code: "RE"
+    },
+    {
+        name: ["England", "England"],
+        capital: ["London", "London"],
+        continent: "Europa",
+        code: "GB-ENG"
+    },
+    {
+        name: ["Schottland", "Scotland"],
+        capital: ["Edinburgh", "Edinburgh"],
+        continent: "Europa",
+        code: "GB-SCT"
+    }
 ]
