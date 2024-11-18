@@ -1183,7 +1183,7 @@ let countries = [
         code: "CY"
     },
 
-    {
+    /*{
         name: ["Åaland", "Åaland Islands", "Aaland", "Aaland Islands"],
         capital: ["Mariehamn", "Mariehamn"],
         continent: "Europa",
@@ -1440,5 +1440,5 @@ let countries = [
         capital: ["Edinburgh", "Edinburgh"],
         continent: "Europa",
         code: "GB-SCT"
-    }
+    }*/
 ]
