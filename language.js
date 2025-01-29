@@ -5,6 +5,7 @@ let language = {
         ],
         mode: {
             selectorType: ["Länder", "Hauptstädte"],
+            selectorUN: ["UN", "Nicht UN", "Alle Länder"],
             selectorContinent: ["Alle Länder", "Europa", "Afrika", "Asien", "Nordamerika", "Südamerika", "Ozeanien"],
             modeButton: "Starte Spiel"
         },
@@ -27,6 +28,7 @@ let language = {
         ],
         mode: {
             selectorType: ["Country", "Capital"],
+            selectorUN: ["UN", "Not UN", "All Countries"],
             selectorContinent: ["All Countries", "Europe", "Africa", "Asia", "North America", "South America", "Oceania"],
             modeButton: "Start Game"
         },

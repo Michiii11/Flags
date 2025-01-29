@@ -34,14 +34,20 @@ function generateHTML(newCountryList) {
     let selectorType = document.createElement("div")
     selectorType.classList.add("selector", "type")
     selectorType.innerHTML =
-        `<p class="country " onclick="selector(this, 'type')">${currentLanguage.mode.selectorType[0]}</p>
+    `<p class="country " onclick="selector(this, 'type')">${currentLanguage.mode.selectorType[0]}</p>
     <p class="capital" onclick="selector(this, 'type')">${currentLanguage.mode.selectorType[1]}</p>`
+
+    let selectorUN = document.createElement("div")
+    selectorUN.classList.add("selector", "un")
+    selectorUN.innerHTML =
+    `<p class="yesun" onclick="selector(this, 'un')">${currentLanguage.mode.selectorUN[0]}</p>
+    <p class="noun" onclick="selector(this, 'un')">${currentLanguage.mode.selectorUN[1]}</p>`
 
     let selectorContinent = document.createElement("div")
     selectorContinent.classList.add("selector", "continent")
     for (let i = 0; i < currentLanguage.mode.selectorContinent.length; i++) {
         selectorContinent.innerHTML +=
-            `<p class="${i !== 0 ? language.german.mode.selectorContinent[i] : "all"}" onclick="selector(this, 'continent')">${currentLanguage.mode.selectorContinent[i]}</p>`
+            `<p class="${i !== 0 ? language.german.mode.selectorContinent[i] :  "all"}" onclick="selector(this, 'continent')">${currentLanguage.mode.selectorContinent[i]}</p>`
     }
 
     let modeButton = document.createElement("div")
@@ -52,7 +58,7 @@ function generateHTML(newCountryList) {
     backButton.setAttribute("onclick", "loadSide('start')")
 
     document.querySelector('#mode').innerHTML = ""
-    document.querySelector('#mode').append(selectorType, selectorContinent, modeButton, backButton)
+    document.querySelector('#mode').append(selectorType, selectorUN, selectorContinent, modeButton, backButton)
 
     document.querySelector(`.${selectorOrder.flagType}`).classList.add('selected')
     selectContinents()

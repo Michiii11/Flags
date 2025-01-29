@@ -16,6 +16,7 @@ let isGameRunning = false;
 
 let selectorOrder = {
     flagType: "country",
+    flagUn: ["yesun"],
     flagContinent: ["all", "Europa", "Afrika", "Asien", "Nordamerika", "Südamerika", "Ozeanien"],
     flagStyle: "show"
 }
@@ -32,6 +33,13 @@ function showBox() {
 const scoreField = document.querySelector('#score') // e.g. Richtig 2/2
 const capitalField = document.querySelector('div[data-position="hidden"] h3'); // Field for the capital city
 const inputField = document.querySelector('#input'); // input Field of the page
+
+inputField.addEventListener('input', function() {
+    if(this.inputField.value.length > 0){
+        this.style.width = 'auto'; // Reset width to auto to calculate the new width
+        this.style.width = Math.max(this.scrollWidth, this.clientWidth) + 'px';
+    }
+});
 
 // Pages
 const startPage = document.querySelector('#start')
@@ -78,8 +86,16 @@ function loadSide(type) {
             break;
         case "game":
             gamePage.style.display = "block";
-            if(selectorOrder.flagContinent.length === 0){loadSide('mode');selectContinentsError()}
-            else{startGame();}
+            if(selectorOrder.flagContinent.length === 0){
+                loadSide('mode');
+                selectContinentsError()
+            } else if(selectorOrder.flagUn.length === 0){
+                loadSide('mode');
+                selectUnError()
+            }
+            else{
+                startGame();
+            }
             break;
         case "finished":
             finishPage.style.display = "flex"
@@ -105,7 +121,7 @@ function startGame() {
     } else{
         // Set start img
         showBox().innerHTML = `<img src="">`
-        hidBox().innerHTML = `<img src="https://flagcdn.com/h120/${countryList[index].code.toLowerCase()}.png">`
+        hidBox().innerHTML = `<img src="https://flagsapi.com/${countryList[index].code.toLowerCase()}/flat/64.png">`
 
         // Capital Mode 
         if (selectorOrder.flagType === "capital") {
@@ -146,7 +162,13 @@ function toggleMode(index){
 function selector(elem, type) {
     if(type === "continent"){
         multipleSelector(elem)
-    } else{
+    } else if(type === "un"){
+        if (selectorOrder.flagUn.includes(elem.classList[0])) {
+            selectorOrder.flagUn.splice(selectorOrder.flagUn.indexOf(elem.classList[0]), 1);
+        } else {
+            selectorOrder.flagUn.push(elem.classList[0]);
+        }
+    } else {
         if(document.querySelector(`.${type} .selected`)){
             document.querySelector(`.${type} .selected`).classList.remove("selected")
         }
@@ -192,6 +214,10 @@ function multipleSelector(elem){
 }
 
 function selectContinents(){
+    for (let i = 0; i < selectorOrder.flagUn.length; i++) {
+        document.querySelector(`.${selectorOrder.flagUn[i]}`).classList.add("selected")
+    }
+
     // select all selects
     for (let i = 0; i < selectorOrder.flagContinent.length; i++) {
         document.querySelector(`.${selectorOrder.flagContinent[i]}`).classList.add("selected")
@@ -200,6 +226,20 @@ function selectContinents(){
 
 function selectContinentsError(){
     let selector = document.querySelector('.selector.continent')
+    selector.style.color = "red";
+    selector.style.animation = "shake .7s"
+    setTimeout(function () {
+        selector.style.color = colorContrast;
+        selector.style.animation = "none"
+
+        if(setting.clearInput){
+            selector.value = "";
+        }
+    }, 500);
+}
+
+function selectUnError(){
+    let selector = document.querySelector('.selector.un')
     selector.style.color = "red";
     selector.style.animation = "shake .7s"
     setTimeout(function () {
@@ -224,12 +264,22 @@ function setCountryList(isNewRound) {
         countryList = [...wrongCountries];
     } else {
         if (selectorOrder.flagContinent[0] === "all") { // Clone full list into the country list
-            countryList = [...countries];
+            for (let i = 0; i < countries.length; i++) {
+                if(selectorOrder.flagUn.includes("yesun") && countries[i].un === true){
+                    countryList.push(countries[i]); // Set the country into the country list
+                } else if(selectorOrder.flagUn.includes("noun") && countries[i].un === false) {
+                    countryList.push(countries[i]); // Set the country into the country list
+                }
+            }
         } else {
             for (let i = 0; i < countries.length; i++) {
                 for (let j = 0; j < selectorOrder.flagContinent.length; j++) {
                     if (countries[i].continent === selectorOrder.flagContinent[j]) { // Filter the continent
-                        countryList.push(countries[i]); // Set the country into the country list
+                        if(selectorOrder.flagUn.includes("yesun") && countries[i].un === true){
+                            countryList.push(countries[i]); // Set the country into the country list
+                        } else if(selectorOrder.flagUn.includes("noun") && countries[i].un === false) {
+                            countryList.push(countries[i]); // Set the country into the country list
+                        }
                     }
                 }
             }
@@ -482,30 +532,34 @@ function resetGame(){
 //**************** Event Listener ****************//
 //#region
 
+let settingChange = false;
 addEventListener("keydown", (event) => {
-    if (event.keyCode == setting.skipKey.keyCode) { // # --> Skip
-        if(isGameRunning){
-            event.preventDefault();
-            skip(false, true);
+    if(!settingChange){
+        if (event.keyCode == setting.skipKey.keyCode) { // # --> Skip
+            if(isGameRunning){
+                event.preventDefault();
+                skip(false, true);
+            }
         }
-    }
-    if (event.keyCode == setting.hintKey.keyCode) { // * --> Hint
-        if(isGameRunning){
-            event.preventDefault();
-            loadHint();
+        if (event.keyCode == setting.hintKey.keyCode) { // * --> Hint
+            if(isGameRunning){
+                event.preventDefault();
+                loadHint();
+            }
         }
-    }
-    if (event.keyCode == setting.checkKey.keyCode) { // Enter --> Check
-        if(isGameRunning){
-            event.preventDefault();
-            checkCountry();
+        if (event.keyCode == setting.checkKey.keyCode) { // Enter --> Check
+            if(isGameRunning){
+                event.preventDefault();
+                checkCountry();
+            }
         }
     }
 });
 
 function activateKeybindsEventListener(){
     document.querySelectorAll('.hidden input').forEach((elem)=>{
-        elem.addEventListener("keydown", function(){
+        elem.addEventListener("keydown", function(event){
+            event.stopPropagation()
             switch(elem.classList.value){
                 case "hint": setting.hintKey.keyCode = event.keyCode; setting.hintKey.key = event.key; break;
                 case "skip": setting.skipKey.keyCode = event.keyCode; setting.skipKey.key = event.key; break;

@@ -73,7 +73,7 @@ main{
 }
 
 #game #input{
-    width: 100%;
+    min-width: 100%;
     font-size: 2rem;
     text-align: center;
     margin-block: 1rem;
@@ -618,7 +618,6 @@ main{
     }
     #game #input{
         font-size: 1.2rem;
-        margin: 0.8rem 10%;
     }
     #game .buttons i{
         width: 5vw;
