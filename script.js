@@ -56,9 +56,9 @@ const backUpPage = document.querySelector('#backUpRound')
 
 for (const [key, value] of Object.entries(selectorOrder)) {
     if (localStorage.getItem(key)) {
-        selectorOrder[key] = localStorage.getItem(key)
+        selectorOrder[key] = localStorage.getItem("fg_" + key)
     } else {
-        localStorage.setItem(key, value)
+        localStorage.setItem("fg_" + key, value)
     }
 }
 
