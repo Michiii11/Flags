@@ -14,6 +14,8 @@ let wrongCountries = []; // List of the wrong answers
 let isWaitingForSkip = false;
 let isGameRunning = false;
 
+let localStorageVersion = "fg_1_"
+
 let selectorOrder = {
     flagType: "country",
     flagUn: ["yesun"],
@@ -55,10 +57,10 @@ const backUpPage = document.querySelector('#backUpRound')
 //#region
 
 for (const [key, value] of Object.entries(selectorOrder)) {
-    if (localStorage.getItem("fg_" + key)) {
-        selectorOrder[key] = localStorage.getItem("fg_" + key)
+    if (localStorage.getItem(`${localStorageVersion}` + key)) {
+        selectorOrder[key] = localStorage.getItem(`${localStorageVersion}` + key)
     } else {
-        localStorage.setItem("fg_" + key, value)
+        localStorage.setItem(`${localStorageVersion}` + key, value)
     }
 }
 
@@ -508,7 +510,7 @@ function hideShowFlag(){
         selectorOrder.flagStyle = "hidden"
     }
 
-    localStorage.setItem("fg_flagStyle", selectorOrder.flagStyle)
+    localStorage.setItem(`${localStorageVersion}flagStyle`, selectorOrder.flagStyle)
 
     inputField.focus();
 }
@@ -587,7 +589,7 @@ let setting = {
     isAutoSkip: true
 }
 
-if(localStorage.getItem("fg_settingFlagGame") || localStorage.getItem("fg_selectorOrder")){
+if(localStorage.getItem(`${localStorageVersion}settingFlagGame`) || localStorage.getItem(`${localStorageVersion}selectorOrder`)){
     loadLocalStorage()
 } else{
     setLocalStorage()
@@ -598,8 +600,8 @@ if(localStorage.getItem("fg_settingFlagGame") || localStorage.getItem("fg_select
  */
 function loadLocalStorage(){
     // Set or load the Localstorage
-    setting = JSON.parse(localStorage.getItem("fg_settingFlagGame"))
-    selectorOrder = JSON.parse(localStorage.getItem("fg_selectorOrder"))
+    setting = JSON.parse(localStorage.getItem(`${localStorageVersion}settingFlagGame`))
+    selectorOrder = JSON.parse(localStorage.getItem(`${localStorageVersion}selectorOrder`))
 
     setting.hintKey = setting.hintKey || {key: "+", keyCode: 187}
     setting.skipKey = setting.skipKey || {key: "#", keyCode: 191}
@@ -617,8 +619,8 @@ function loadLocalStorage(){
  * sets the variables into the localStorage
  */
 function setLocalStorage(){
-    localStorage.setItem("fg_settingFlagGame", JSON.stringify(setting))
-    localStorage.setItem("fg_selectorOrder", JSON.stringify(selectorOrder))
+    localStorage.setItem(`${localStorageVersion}settingFlagGame`, JSON.stringify(setting))
+    localStorage.setItem(`${localStorageVersion}selectorOrder`, JSON.stringify(selectorOrder))
     updateSettings();
     generateHTML();
 }
