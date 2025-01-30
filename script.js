@@ -508,7 +508,7 @@ function hideShowFlag(){
         selectorOrder.flagStyle = "hidden"
     }
 
-    localStorage.setItem("flagStyle", selectorOrder.flagStyle)
+    localStorage.setItem("fg_flagStyle", selectorOrder.flagStyle)
 
     inputField.focus();
 }
@@ -587,7 +587,7 @@ let setting = {
     isAutoSkip: true
 }
 
-if(localStorage.getItem("settingFlagGame") || localStorage.getItem("selectorOrder")){
+if(localStorage.getItem("fg_settingFlagGame") || localStorage.getItem("fg_selectorOrder")){
     loadLocalStorage()
 } else{
     setLocalStorage()
@@ -598,8 +598,8 @@ if(localStorage.getItem("settingFlagGame") || localStorage.getItem("selectorOrde
  */
 function loadLocalStorage(){
     // Set or load the Localstorage
-    setting = JSON.parse(localStorage.getItem("settingFlagGame"))
-    selectorOrder = JSON.parse(localStorage.getItem("selectorOrder"))
+    setting = JSON.parse(localStorage.getItem("fg_settingFlagGame"))
+    selectorOrder = JSON.parse(localStorage.getItem("fg_selectorOrder"))
 
     setting.hintKey = setting.hintKey || {key: "+", keyCode: 187}
     setting.skipKey = setting.skipKey || {key: "#", keyCode: 191}
@@ -617,8 +617,8 @@ function loadLocalStorage(){
  * sets the variables into the localStorage
  */
 function setLocalStorage(){
-    localStorage.setItem("settingFlagGame", JSON.stringify(setting))
-    localStorage.setItem("selectorOrder", JSON.stringify(selectorOrder))
+    localStorage.setItem("fg_settingFlagGame", JSON.stringify(setting))
+    localStorage.setItem("fg_selectorOrder", JSON.stringify(selectorOrder))
     updateSettings();
     generateHTML();
 }
