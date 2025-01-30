@@ -981,7 +981,7 @@ let countries = [
         "un": true
     },
     {
-        "name": ["Saint-Martin", "Saint Martin"],
+        "name": ["Saint-Martin", "Saint Martin", "St Martin"],
         "capital": ["Marigot", "Marigot"],
         "continent": "Amerika",
         "code": "MF",

@@ -413,7 +413,6 @@ function skip(isCorrect, isSkipped) {
     // Richtige Eingabe
     if (isCorrect) {
         inputField.disabled = true
-        inputField.style.width = Math.max(this.scrollWidth, this.clientWidth) + 'px';
 
         // Accept Animation
         inputField.style.color = "green";
@@ -482,6 +481,7 @@ function swap() {
     shown.setAttribute("data-position", "hidden");
 
     inputField.disabled = false
+    inputField.style.width = "auto"
 }
 
 /**
