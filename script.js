@@ -322,6 +322,7 @@ function getCountry() {
 
     inputField.value = "";
     inputField.placeholder = "";
+    inputField.title = ""
 
     // Capital mode
     if (selectorOrder.flagType === "capital") {
@@ -388,6 +389,7 @@ function loadHint() {
         inputField.placeholder = currentCountry[1].substring(0, hintCount)
     }
 
+    inputField.title = inputField.placeholder
     inputField.focus();
 }
 
