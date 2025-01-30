@@ -55,7 +55,7 @@ const backUpPage = document.querySelector('#backUpRound')
 //#region
 
 for (const [key, value] of Object.entries(selectorOrder)) {
-    if (localStorage.getItem(key)) {
+    if (localStorage.getItem("fg_" + key)) {
         selectorOrder[key] = localStorage.getItem("fg_" + key)
     } else {
         localStorage.setItem("fg_" + key, value)
