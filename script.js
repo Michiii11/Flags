@@ -37,10 +37,8 @@ const capitalField = document.querySelector('div[data-position="hidden"] h3'); /
 const inputField = document.querySelector('#input'); // input Field of the page
 
 inputField.addEventListener('input', function() {
-    if(this.inputField.value.length > 0){
-        this.style.width = 'auto'; // Reset width to auto to calculate the new width
-        this.style.width = Math.max(this.scrollWidth, this.clientWidth) + 'px';
-    }
+    this.style.width = 'auto'; // Reset width to auto to calculate the new width
+    this.style.width = Math.max(this.scrollWidth, this.clientWidth) + 'px';
 });
 
 // Pages
