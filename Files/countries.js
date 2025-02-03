@@ -324,7 +324,7 @@ let countries = [
     },
     {
         "name": ["Kamerun", "Cameroon"],
-        "capital": ["Yaoundé", "Yaoundé"],
+        "capital": ["Yaoundé", "Yaoundé", "Yaounde"],
         "continent": "Afrika",
         "code": "CM",
         "un": true
@@ -345,7 +345,7 @@ let countries = [
     },
     {
         "name": ["Costa Rica", "Costa Rica"],
-        "capital": ["San José", "San José"],
+        "capital": ["San José", "San José", "San Jose"],
         "continent": "Nordamerika",
         "code": "CR",
         "un": true
@@ -981,7 +981,7 @@ let countries = [
         "un": true
     },
     {
-        "name": ["Saint-Martin", "Saint Martin", "St Martin"],
+        "name": ["Saint-Martin", "Saint Martin"],
         "capital": ["Marigot", "Marigot"],
         "continent": "Amerika",
         "code": "MF",
@@ -1080,7 +1080,7 @@ let countries = [
     },
     {
         "name": ["Malediven", "Maldives"],
-        "capital": ["Malé", "Malé"],
+        "capital": ["Malé", "Malé", "Male"],
         "continent": "Asien",
         "code": "MV",
         "un": true
@@ -1122,7 +1122,7 @@ let countries = [
     },
     {
         "name": ["Neukaledonien", "New Caledonia"],
-        "capital": ["Nouméa", "Nouméa"],
+        "capital": ["Nouméa", "Nouméa", "Noumea"],
         "continent": "Ozeanien",
         "code": "NC",
         "un": false
@@ -1514,7 +1514,7 @@ let countries = [
     },
     {
         "name": ["Togo", "Togo"],
-        "capital": ["Lomé", "Lomé"],
+        "capital": ["Lomé", "Lomé", "Lome"],
         "continent": "Afrika",
         "code": "TG",
         "un": true
