@@ -457,7 +457,7 @@ let countries = [
     },
     {
         "name": ["Westsahara", "Western Sahara"],
-        "capital": ["El Aaiún", "El Aaiún"],
+        "capital": ["El Aaiún", "El Aaiún", "El Aaiun"],
         "continent": "Afrika",
         "code": "EH",
         "un": false
@@ -513,7 +513,7 @@ let countries = [
     },
     {
         "name": ["Färöer", "Faroe Islands"],
-        "capital": ["Tórshavn", "Tórshavn"],
+        "capital": ["Tórshavn", "Tórshavn", "Torshavn"],
         "continent": "Europa",
         "code": "FO",
         "un": false
@@ -639,7 +639,7 @@ let countries = [
     },
     {
         "name": ["Guam", "Guam"],
-        "capital": ["Hagåtña", "Hagåtña"],
+        "capital": ["Hagåtña", "Hagåtña", "Hagatna"],
         "continent": "Ozeanien",
         "code": "GU",
         "un": false
@@ -1297,7 +1297,7 @@ let countries = [
     },
     {
         "name": ["Paraguay", "Paraguay"],
-        "capital": ["Asunción", "Asunción"],
+        "capital": ["Asunción", "Asunción", "Asuncion"],
         "continent": "Amerika",
         "code": "PY",
         "un": true
@@ -1507,7 +1507,7 @@ let countries = [
     },
     {
         "name": ["Französische Süd- und Antarktisgebiete", "French Southern Territories", "Französische Süd und Antarktisgebiete"],
-        "capital": ["Port-aux-Français", "Port-aux-Français"],
+        "capital": ["Port-aux-Français", "Port-aux-Français", "Port aux Francais"],
         "continent": "Antarktis",
         "code": "TF",
         "un": false

@@ -114,6 +114,11 @@ loadSide("mode")
  * it sets the html for the Game (Country / Capital Mode)
  */
 function startGame() {
+    if(selectorOrder.flagStyle === "show"){
+        let elem = document.querySelector('#content')
+        elem.classList.toggle("big")
+    }
+
     isGameRunning = true;
     if(isBackUp){
         isBackUp = false;
@@ -128,9 +133,6 @@ function startGame() {
             showBox().innerHTML += `<h3></h3>`
             hidBox().innerHTML += `<h3>${countryList[index].name[0]}</h3>`
 
-            if(selectorOrder.flagStyle === "show"){
-                hideShowFlag();
-            }
             document.querySelector('.hideButton').style.display = "block"
         } else{
             if(document.querySelector('#content').classList.contains("big")){
@@ -499,7 +501,7 @@ function finishedRound() {
 }
 
 /**
- * toogles the flag opacity
+ * toggles the flag opacity
  */
 function hideShowFlag(){
     let elem = document.querySelector('#content')

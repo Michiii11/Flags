@@ -104,6 +104,7 @@ main{
 #game #content h3{
     font-size: 1.3rem;
     height: fit-content;
+    min-width: 100%;
     margin-top: auto;
 }
 #game #content div img{
