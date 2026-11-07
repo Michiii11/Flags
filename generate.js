@@ -1,122 +1,96 @@
-let currentLanguage
+// Baut die vorhandene Oberfläche in der gewählten Sprache auf.
+let currentLanguage;
 
-/**
- * Generates the html with the right language
- */
-function generateHTML(newCountryList) {
-    // Get currentLanguage
-    if (setting.isGerman) {
-        currentLanguage = language.german
-    } else {
-        currentLanguage = language.english
+function generateHTML(newCountryList = false) {
+    currentLanguage = setting.isGerman ? language.german : language.english;
+
+    // Das Startmenue Einzelspieler/Mehrspieler wird nicht mehr gezeigt.
+    // Direkt zur vorhandenen Auswahl der Spieloptionen wechseln.
+    document.querySelector('#start').replaceChildren();
+
+    const type = document.createElement('div');
+    type.className = 'selector type';
+    type.innerHTML = `<p class="country" onclick="selector(this,'type')">${currentLanguage.mode.selectorType[0]}</p>
+                      <p class="capital" onclick="selector(this,'type')">${currentLanguage.mode.selectorType[1]}</p>`;
+
+    const un = document.createElement('div');
+    un.className = 'selector un';
+    const groups = ['yesun', 'noun'];
+    groups.forEach((group, i) => {
+        const p = document.createElement('p');
+        p.className = group;
+        p.textContent = currentLanguage.mode.selectorUN[i];
+        p.onclick = () => selector(p, 'un');
+        un.appendChild(p);
+    });
+
+    const continent = document.createElement('div');
+    continent.className = 'selector continent';
+    currentLanguage.mode.selectorContinent.forEach((label, i) => {
+        const p = document.createElement('p');
+        p.className = i === 0 ? 'all' : language.german.mode.selectorContinent[i];
+        p.textContent = label;
+        p.onclick = () => selector(p, 'continent');
+        continent.appendChild(p);
+    });
+
+    const play = document.createElement('div');
+    play.className = 'buttons';
+    play.innerHTML = `<p onclick="loadSide('game')">${currentLanguage.mode.modeButton}</p>`;
+    document.querySelector('#mode').replaceChildren(type, un, continent, play);
+
+    document.querySelector(`.selector.type .${selectorOrder.flagType}`)?.classList.add('selected');
+    selectContinents();
+
+    if (newCountryList) setCountryList(false);
+    updateScore();
+    const visibleHeading = showBox().querySelector('h3');
+    if (visibleHeading && countryList[index]) {
+        visibleHeading.textContent = countryList[index].name[setting.isGerman ? 0 : 1];
+        fitCountryHeading(visibleHeading);
     }
 
-    // Back Button
-    let backButton = document.createElement("div")
-    backButton.classList.add("back")
-    backButton.innerHTML = `<i class="fa-solid fa-arrow-left"></i>`
+    document.querySelector('#finishedRound h2').textContent = currentLanguage.game[1];
+    const backup = document.querySelector('#backUpRound');
+    backup.innerHTML = `<h2>${currentLanguage.backUp[0]}</h2><p>${currentLanguage.backUp[1]}</p>
+        <div class="buttons"><p onclick="newGame()">${currentLanguage.backUp[2]}</p>
+        <p onclick="resumeGame()">${currentLanguage.backUp[3]}</p></div>`;
 
-    //----------- Start Page -----------//
-    let divButton = document.createElement("div")
-    divButton.classList.add("buttons")
-    for (let i = 0; i < currentLanguage.start.length; i++) {
-        let div = document.createElement("div")
-        div.setAttribute("onclick", `loadSide("mode");toggleMode(${i})`)
-        div.innerHTML = `<p>${currentLanguage.start[i]}</p>`
-        divButton.appendChild(div);
-    }
+    document.querySelector('#settings .heading p').textContent = currentLanguage.settings.headlines[0];
+    const keySection = document.querySelector('#settings .hidden section:first-child');
+    keySection.innerHTML = `<h3>${currentLanguage.settings.headlines[1]}</h3>`;
+    ['hint', 'skip', 'guess'].forEach((kind, i) => {
+        const wrapper = document.createElement('div');
+        const title = document.createElement('p');
+        title.textContent = currentLanguage.settings.keybinds[i];
+        const input = document.createElement('input');
+        input.className = kind;
+        input.type = 'text';
+        input.autocomplete = 'off';
+        input.readOnly = true;
+        input.setAttribute('aria-label', currentLanguage.settings.keybinds[i]);
+        input.onclick = () => input.select();
+        wrapper.append(title, input);
+        keySection.appendChild(wrapper);
+    });
+    document.querySelectorAll('#settings .hidden section')[1].querySelector('h3').textContent = currentLanguage.settings.headlines[2];
 
-    document.querySelector('#start').innerHTML = ""
-    document.querySelector('#start').appendChild(divButton)
-
-
-    //----------- Mode Page -----------//
-    let selectorType = document.createElement("div")
-    selectorType.classList.add("selector", "type")
-    selectorType.innerHTML =
-    `<p class="country " onclick="selector(this, 'type')">${currentLanguage.mode.selectorType[0]}</p>
-    <p class="capital" onclick="selector(this, 'type')">${currentLanguage.mode.selectorType[1]}</p>`
-
-    let selectorUN = document.createElement("div")
-    selectorUN.classList.add("selector", "un")
-    selectorUN.innerHTML =
-    `<p class="yesun" onclick="selector(this, 'un')">${currentLanguage.mode.selectorUN[0]}</p>
-    <p class="noun" onclick="selector(this, 'un')">${currentLanguage.mode.selectorUN[1]}</p>`
-
-    let selectorContinent = document.createElement("div")
-    selectorContinent.classList.add("selector", "continent")
-    for (let i = 0; i < currentLanguage.mode.selectorContinent.length; i++) {
-        selectorContinent.innerHTML +=
-            `<p class="${i !== 0 ? language.german.mode.selectorContinent[i] :  "all"}" onclick="selector(this, 'continent')">${currentLanguage.mode.selectorContinent[i]}</p>`
-    }
-
-    let modeButton = document.createElement("div")
-    modeButton.classList.add("buttons")
-
-    modeButton.innerHTML = `<p onclick="loadSide('game');">${currentLanguage.mode.modeButton}</p>`
-
-    backButton.setAttribute("onclick", "loadSide('start')")
-
-    document.querySelector('#mode').innerHTML = ""
-    document.querySelector('#mode').append(selectorType, selectorUN, selectorContinent, modeButton, backButton)
-
-    document.querySelector(`.${selectorOrder.flagType}`).classList.add('selected')
-    selectContinents()
-
-    if (newCountryList) {
-        setCountryList();
-    }
-
-    //----------- Game Page -----------//
-    scoreField.innerHTML = `${currentLanguage.game[0]} ${index - wrongCountries.length} / ${index}`;
-    if (capitalField && countryList) {
-        capitalField.innerHTML = countryList[index].name[setting.isGerman ? 0 : 1]
-    }
-    document.querySelector('#finishedRound h2').innerHTML = currentLanguage.game[1]
-
-    let backUpPage = document.querySelector('#backUpRound')
-    backUpPage.innerHTML = `<h2>${currentLanguage.backUp[0]}</h2><p>${currentLanguage.backUp[1]}</p>
-                            <div class="buttons"><p onclick="setCountryList();loadSide('game')">${currentLanguage.backUp[2]}</p>
-                            <p onclick="loadSide('game')">${currentLanguage.backUp[3]}</p></div>`
-
-    //----------- Settings -----------//
-    document.querySelector('#settings .heading p').innerHTML = currentLanguage.settings.headlines[0]
-
-    let hiddenBox = document.createElement("div")
-    hiddenBox.classList.add("hidden")
-
-    let section1 = document.querySelectorAll('.hidden section')[0]
-    section1.innerHTML = `<h3>${currentLanguage.settings.headlines[1]}</h3>`
-    for (let i = 0; i < currentLanguage.settings.keybinds.length; i++) {
-        section1.innerHTML += `<div><p>${currentLanguage.settings.keybinds[i]}</p><input class="${language.english.settings.keybinds[i].toLowerCase()}" value="" type="text" autocomplete="off" onclick="this.select()"></div>`
-    }
-
-    document.querySelectorAll('.hidden section')[1].querySelectorAll('h3')[0].innerHTML = currentLanguage.settings.headlines[2]
-
-    document.querySelector('.clearInput').dataset.text = currentLanguage.settings.popup[0]
-    document.querySelector('.confirmSkip').dataset.text = currentLanguage.settings.popup[1]
-    document.querySelector('.confirmAutoSkip').dataset.text = currentLanguage.settings.popup[1]
-
-    //----------- Function calls and updates -----------//
-    activateKeybindsEventListener();
+    document.querySelector('.clearInput').dataset.text = currentLanguage.settings.popup[0];
+    document.querySelector('.confirmSkip').dataset.text = currentLanguage.settings.popup[1];
+    document.querySelector('.confirmAutoSkip').dataset.text = currentLanguage.settings.popup[2];
+    document.querySelector('.language').classList.toggle('on', !setting.isGerman);
+    document.querySelector('.inputClear').classList.toggle('on', setting.clearInput);
+    document.querySelector('.skipConfirm').classList.toggle('on', setting.confirmSkip);
+    document.querySelector('.autoSkip').classList.toggle('on', setting.isAutoSkip);
     updateSettingsInput();
-
-    if (!setting.isGerman) {
-        document.querySelector('.language').classList.add("on")
-    }
-    if (setting.clearInput) {
-        document.querySelector('.inputClear').classList.add("on")
-    }
-    if (setting.confirmSkip) {
-        document.querySelector('.skipConfirm').classList.add("on")
-    }
-    if (setting.isAutoSkip){
-        document.querySelector('.autoSkip').classList.add("on")
-    }
+    activateKeybindsEventListener();
+    updateSettings();
 }
 
 function updateSettingsInput() {
-    document.querySelector('.hint').value = setting.hintKey.key
-    document.querySelector('.skip').value = setting.skipKey.key
-    document.querySelector('.guess').value = setting.checkKey.key
+    const values = { hint: setting.hintKey.key, skip: setting.skipKey.key, guess: setting.checkKey.key };
+    Object.entries(values).forEach(([klass, value]) => {
+        const input = document.querySelector(`#settings input.${klass}`);
+        if (input) input.value = value;
+    });
 }

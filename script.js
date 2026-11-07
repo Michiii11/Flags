@@ -1,705 +1,523 @@
-//**************** Variables ****************//
-//#region
-let countryList = []; // List of all possible countries in current round - europe selected: all european countries
-let index = 0; // Index of the current flag
-let hintCount = 0; // Count of the shown letters
-let baseListLength;
-let isBackUp = false;
-let isSinglePlayer
-
-let colorContrast = getComputedStyle(document.documentElement).getPropertyValue('--color-contrast');
-
-let isWrongGuess = false;
-let wrongCountries = []; // List of the wrong answers
-let isWaitingForSkip = false;
-let isGameRunning = false;
-
-let localStorageVersion = "fg_1_"
-
-let selectorOrder = {
-    flagType: "country",
-    flagUn: ["yesun"],
-    flagContinent: ["all", "Europa", "Afrika", "Asien", "Nordamerika", "Südamerika", "Ozeanien"],
-    flagStyle: "show"
-}
-
-const completeCounter = document.querySelectorAll('#game h2')[0]; // e.g. 0/5
-
-function hidBox() {
-    return document.querySelector('#content div[data-position="hidden"]')
-} // return hidden Flag Box
-function showBox() {
-    return document.querySelector('#content div[data-position="show"]')
-} // return visible Flag Box
-
-const scoreField = document.querySelector('#score') // e.g. Richtig 2/2
-const capitalField = document.querySelector('div[data-position="hidden"] h3'); // Field for the capital city
-const inputField = document.querySelector('#input'); // input Field of the page
-
-inputField.addEventListener('input', function() {
-    this.style.width = 'auto'; // Reset width to auto to calculate the new width
-    this.style.width = Math.max(this.scrollWidth, this.clientWidth) + 'px';
-});
-
-// Pages
-const startPage = document.querySelector('#start')
-const modePage = document.querySelector('#mode')
-const gamePage = document.querySelector('#game')
-const multiPlayerPage = document.querySelector('#multiplayer')
-const finishPage = document.querySelector('#finishedRound')
-const backUpPage = document.querySelector('#backUpRound')
-
-//#endregion
-
-//**************** Loader ****************//
-//#region
-
-for (const [key, value] of Object.entries(selectorOrder)) {
-    if (localStorage.getItem(`${localStorageVersion}` + key)) {
-        selectorOrder[key] = localStorage.getItem(`${localStorageVersion}` + key)
-    } else {
-        localStorage.setItem(`${localStorageVersion}` + key, value)
-    }
-}
-
-loadSide('start');
-/**
- * Loads or deloads the current page
- * @param {*} type is the type of the page
- */
-function loadSide(type) {
-    // Reset the pages
-    startPage.style.display = "none"
-    modePage.style.display = "none"
-    gamePage.style.display = "none"
-    finishPage.style.display = "none"
-    backUpPage.style.display = "none"
-    isGameRunning = false;
-
-    // Load the current page
-    switch (type) {
-        case "start":
-            startPage.style.display = "flex";
-            break;
-        case "mode":
-            modePage.style.display = "flex";
-            break;
-        case "game":
-            gamePage.style.display = "block";
-            if(selectorOrder.flagContinent.length === 0){
-                loadSide('mode');
-                selectContinentsError()
-            } else if(selectorOrder.flagUn.length === 0){
-                loadSide('mode');
-                selectUnError()
-            }
-            else{
-                startGame();
-            }
-            break;
-        case "finished":
-            finishPage.style.display = "flex"
-            isBackUp = false;
-            finishedRound();
-            break;
-        case "backUp":
-            backUpPage.style.display = "block"
-            break;
-    }
-}
-loadSide("mode")
-
-/**
- * Start function
- * it sets the html for the Game (Country / Capital Mode)
- */
-function startGame() {
-    if(selectorOrder.flagStyle === "show"){
-        let elem = document.querySelector('#content')
-        elem.classList.toggle("big")
-    }
-
-    isGameRunning = true;
-    if(isBackUp){
-        isBackUp = false;
-        loadSide("backUp")
-    } else{
-        // Set start img
-        showBox().innerHTML = `<img src="">`
-        hidBox().innerHTML = `<img src="https://flagsapi.com/${countryList[index].code.toLowerCase()}/flat/64.png">`
-
-        // Capital Mode 
-        if (selectorOrder.flagType === "capital") {
-            showBox().innerHTML += `<h3></h3>`
-            hidBox().innerHTML += `<h3>${countryList[index].name[0]}</h3>`
-
-            document.querySelector('.hideButton').style.display = "block"
-        } else{
-            if(document.querySelector('#content').classList.contains("big")){
-                document.querySelector('#content').classList.remove("big")
-            }
-            document.querySelector('.hideButton').style.display = "none"
-        }
-
-        getCountry();
-        isBackUp = true;
-    }
-}
-
-function toggleMode(index){
-    isSinglePlayer = index === 0;
-}
-
-
-//#endregion
-
-//**************** PreGame Functions ****************//
-//#region
-
-/**
- * Selects the continent from the class
- * @param {*} elem
- * @param {*} type type of the selector (type | continent)
- */
-function selector(elem, type) {
-    if(type === "continent"){
-        multipleSelector(elem)
-    } else if(type === "un"){
-        if (selectorOrder.flagUn.includes(elem.classList[0])) {
-            selectorOrder.flagUn.splice(selectorOrder.flagUn.indexOf(elem.classList[0]), 1);
-        } else {
-            selectorOrder.flagUn.push(elem.classList[0]);
-        }
-    } else {
-        if(document.querySelector(`.${type} .selected`)){
-            document.querySelector(`.${type} .selected`).classList.remove("selected")
-        }
-        elem.classList.add("selected")
-    
-        selectorOrder.flagType = elem.classList[0]
-    }
-
-    setCountryList();
-    setLocalStorage();
-}
-
-function multipleSelector(elem){
-    if(!elem.classList.contains("all")){
-        
-        // Remove elem from list
-        if(selectorOrder.flagContinent.includes(elem.classList[0])){
-            selectorOrder.flagContinent.splice(selectorOrder.flagContinent.indexOf(elem.classList[0]), 1)
-
-            if(selectorOrder.flagContinent.includes("all")){
-                selectorOrder.flagContinent.splice(selectorOrder.flagContinent.indexOf("all"), 1)
-            }
-        } 
-        // Add elem to list
-        else{
-            selectorOrder.flagContinent.push(elem.classList[0])
-        }
-    }
-
-    // Toggle all on off
-    if(elem.classList.contains("all") || selectorOrder.flagContinent.length === 6){
-        if(selectorOrder.flagContinent.includes("all")){
-            selectorOrder.flagContinent = []
-        } else{
-            selectorOrder.flagContinent = []
-            for (let i = 0; i < language.german.mode.selectorContinent.length; i++) {
-                selectorOrder.flagContinent.push(i === 0 ? "all" : language.german.mode.selectorContinent[i])
-            }
-        }
-    }
-
-    selectContinents();
-}
-
-function selectContinents(){
-    for (let i = 0; i < selectorOrder.flagUn.length; i++) {
-        document.querySelector(`.${selectorOrder.flagUn[i]}`).classList.add("selected")
-    }
-
-    // select all selects
-    for (let i = 0; i < selectorOrder.flagContinent.length; i++) {
-        document.querySelector(`.${selectorOrder.flagContinent[i]}`).classList.add("selected")
-    }
-}
-
-function selectContinentsError(){
-    let selector = document.querySelector('.selector.continent')
-    selector.style.color = "red";
-    selector.style.animation = "shake .7s"
-    setTimeout(function () {
-        selector.style.color = colorContrast;
-        selector.style.animation = "none"
-
-        if(setting.clearInput){
-            selector.value = "";
-        }
-    }, 500);
-}
-
-function selectUnError(){
-    let selector = document.querySelector('.selector.un')
-    selector.style.color = "red";
-    selector.style.animation = "shake .7s"
-    setTimeout(function () {
-        selector.style.color = colorContrast;
-        selector.style.animation = "none"
-
-        if(setting.clearInput){
-            selector.value = "";
-        }
-    }, 500);
-}
-
-setCountryList(false)
-/**
- * Set the List dependend on the Type of Continent
- * @param {boolean} isNewRound true = next round with false answers
- */
-function setCountryList(isNewRound) {
-    isBackUp = false;
-    countryList = [];
-    if (isNewRound) { // Clone false answers into the country list
-        countryList = [...wrongCountries];
-    } else {
-        if (selectorOrder.flagContinent[0] === "all") { // Clone full list into the country list
-            for (let i = 0; i < countries.length; i++) {
-                if(selectorOrder.flagUn.includes("yesun") && countries[i].un === true){
-                    countryList.push(countries[i]); // Set the country into the country list
-                } else if(selectorOrder.flagUn.includes("noun") && countries[i].un === false) {
-                    countryList.push(countries[i]); // Set the country into the country list
-                }
-            }
-        } else {
-            for (let i = 0; i < countries.length; i++) {
-                for (let j = 0; j < selectorOrder.flagContinent.length; j++) {
-                    if (countries[i].continent === selectorOrder.flagContinent[j]) { // Filter the continent
-                        if(selectorOrder.flagUn.includes("yesun") && countries[i].un === true){
-                            countryList.push(countries[i]); // Set the country into the country list
-                        } else if(selectorOrder.flagUn.includes("noun") && countries[i].un === false) {
-                            countryList.push(countries[i]); // Set the country into the country list
-                        }
-                    }
-                }
-            }
-            baseListLength = countryList.length
-        }
-    }
-
-    // Shuffle the country List
-    countryList = countryList.sort(() => {
-        return Math.random() - 0.5
-    })
-
-    // Reset the game variables
-    index = 0;
-    wrongCountries = [];
-}
-
-//#endregion
-
-//**************** InGame Features ****************//
-//#region
-
-/**
- * Get the next flag from the api
- * updates the html
- */
-function getCountry() {
-    if (index >= countryList.length) { // Check if finished
-        if (wrongCountries.length === 0) { // Finished than go back to Menu
-            loadSide("finished")
-            return;
-        } else { // Next Round with the wrong answers
-            setCountryList(true);
-        }
-    }
-
-    completeCounter.innerHTML = `${index+1}/${countryList.length}`
-    // Load new flag
-    hidBox().querySelector('img').setAttribute("src", `https://flagcdn.com/h120/${countryList[index].code.toLowerCase()}.png`);
-
-    inputField.value = "";
-    inputField.placeholder = "";
-    inputField.title = ""
-
-    // Capital mode
-    if (selectorOrder.flagType === "capital") {
-        if(setting.isGerman === false){
-            hidBox().querySelector('h3').innerHTML = countryList[index].name[1]
-        } else{
-            hidBox().querySelector('h3').innerHTML = countryList[index].name[0]
-        }
-    }
-
-    swap(); // Call swap animation
-
-    hintCount = 0; // New country = reset hintCount
-
-    // Update score and focus to inputField
-    scoreField.innerHTML = `${currentLanguage.game[0]} ${index - wrongCountries.length} / ${index}`;
-    inputField.focus();
-}
-
-/**
- * Checks if the guess is correct
- * if it's true it goes into skip() 
- */
-function checkCountry() {
-    let guess = inputField.value.toLowerCase();
-
-    // set the answer either to country or to capital
-    let answer = getCurrentAnswer();
-
-    // Loop goes throw all names from current answer
-    for (let i = 0; i < answer.length; i++) {
-        if (guess.replace(/[^a-z]/gi, '') === answer[i].toLowerCase().replace(/[^a-z]/gi, '')) {
-            index++;
-            skip(true);
-            return;
-        }
-    }
-
-    if(!setting.isAutoSkip){
-        skip();
-    }
-}
-
-/**
- * Loads a hint for the flag
- */
-function loadHint() {
-    hintCount++;
-
-    // Wrong answer
-    if (hintCount === 1) {
-        isWrongGuess = true;
-        wrongCountries.push(countryList[index]);
-    }
-
-    inputField.value = ""
-
-    // Get current country or capital, then substring it to the amount of hints
-    let currentCountry = getCurrentAnswer();
-
-    if(setting.isGerman){
-        inputField.placeholder = currentCountry[0].substring(0, hintCount)
-    } else{
-        inputField.placeholder = currentCountry[1].substring(0, hintCount)
-    }
-
-    inputField.title = inputField.placeholder
-    inputField.focus();
-}
-
-/**
- * Skips the current flag
- * @param {*} isCorrect is the indicator if the guess was right or false
- * @param {*} isSkipped is the indicator if the guess was completely skipped or not
- * @returns 
- */
-function skip(isCorrect, isSkipped) {
-    if(isWaitingForSkip){
-        isWaitingForSkip = false
-
-        index++;
-        inputField.disabled = false;
-        inputField.style.color = colorContrast;
-        getCountry();
-        return;
-    }
-
-    // Richtige Eingabe
-    if (isCorrect) {
-        inputField.disabled = true
-
-        // Accept Animation
-        inputField.style.color = "green";
-        setTimeout(function () {
-            inputField.style.color = colorContrast;
-            getCountry();
-        }, 500);
-        isWrongGuess = false
-        return
-    }
-
-     // Geskippte Eingabe
-    if (isSkipped) {
-        if (!isWrongGuess) {
-            wrongCountries.push(countryList[index]);
-        }
-        isWrongGuess = false
-
-        // fill the input field with the answer
-        if(setting.isGerman){
-            inputField.value = getCurrentAnswer()[0]
-        } else{
-            inputField.value = getCurrentAnswer()[1]
-        }
-        inputField.disabled = true;
-
-        // Skip animation
-        inputField.style.color = "rgb(110, 110, 110)";
-
-        if(!setting.confirmSkip){
-            setTimeout(function () {    
-                index++;
-                inputField.disabled = false;
-                inputField.style.color = colorContrast;
-                getCountry();
-            }, 1000);
-        } else{
-            isWaitingForSkip = true
-        }
-
-        return
-    }
-
-    // Wrong Answer :  Fail Animation
-    inputField.style.color = "red";
-    inputField.style.animation = "shake 0.5s"
-    setTimeout(function () {
-        inputField.style.color = colorContrast;
-        inputField.style.animation = "none"
-
-        if(setting.clearInput){
-            inputField.value = "";
-        }
-    }, 500);
-}
-
-/**
- * Swaps the images for the animation
- */
-function swap() {
-    hidBox().style.display = "block";
-
-    let hidden = hidBox();
-    let shown = showBox();
-    hidden.setAttribute("data-position", "show");
-    shown.setAttribute("data-position", "hidden");
-
-    inputField.disabled = false
-    inputField.style.width = "auto"
-}
-
-/**
- * sets the html to the finishedRound page
- */
-function finishedRound() {
-    document.querySelector('#finishedRound p').innerHTML = `Du hast ${baseListLength - wrongCountries.length} von ${baseListLength} richtig`
-
-    let isNewRound = (wrongCountries.length !== 0)
-    let tempIndex = (!isNewRound ? 2 : 3)
-
-    document.querySelector('#finishedRound .buttons').innerHTML = 
-    `<p onclick="setCountryList(${isNewRound});loadSide('game');">${currentLanguage.game[tempIndex]}</p>
-    <p onclick="loadSide('mode');resetGame()">Home</p>`
-}
-
-/**
- * toggles the flag opacity
- */
-function hideShowFlag(){
-    let elem = document.querySelector('#content')
-    elem.classList.toggle("big")
-
-    document.querySelector(".fa-flag").classList.toggle("fa-solid")
-    document.querySelector(".fa-flag").classList.toggle("fa-regular")
-
-    if(elem.classList.contains("big")){
-        selectorOrder.flagStyle = "show"
-    } else{
-        selectorOrder.flagStyle = "hidden"
-    }
-
-    localStorage.setItem(`${localStorageVersion}flagStyle`, selectorOrder.flagStyle)
-
-    inputField.focus();
-}
-
-/**
- * @returns either the current country name or the capital name
- */
-function getCurrentAnswer(){
-    if(index < countryList.length){
-        return (selectorOrder.flagType === "country" ? countryList[index].name : countryList[index].capital);
-    }
-}
-
-function resetGame(){
-    setCountryList();
-    index = 0;
-}
-
-//#endregion
-
-//**************** Event Listener ****************//
-//#region
-
-let settingChange = false;
-addEventListener("keydown", (event) => {
-    if(!settingChange){
-        if (event.keyCode == setting.skipKey.keyCode) { // # --> Skip
-            if(isGameRunning){
-                event.preventDefault();
-                skip(false, true);
-            }
-        }
-        if (event.keyCode == setting.hintKey.keyCode) { // * --> Hint
-            if(isGameRunning){
-                event.preventDefault();
-                loadHint();
-            }
-        }
-        if (event.keyCode == setting.checkKey.keyCode) { // Enter --> Check
-            if(isGameRunning){
-                event.preventDefault();
-                checkCountry();
-            }
-        }
-    }
-});
-
-function activateKeybindsEventListener(){
-    document.querySelectorAll('.hidden input').forEach((elem)=>{
-        elem.addEventListener("keydown", function(event){
-            event.stopPropagation()
-            switch(elem.classList.value){
-                case "hint": setting.hintKey.keyCode = event.keyCode; setting.hintKey.key = event.key; break;
-                case "skip": setting.skipKey.keyCode = event.keyCode; setting.skipKey.key = event.key; break;
-                case "guess": setting.checkKey.keyCode = event.keyCode; setting.checkKey.key = event.key; break;
-            }
-
-            setLocalStorage()
-        })
-    })
-}
-
-//#endregion
-
-
-//**************** Settings ****************//
-//#region
-
-let setting = {
-    hintKey: {key: "+", keyCode: 187},
-    skipKey: {key: "#", keyCode: 191},
-    checkKey: {key: "Enter", keyCode: 13},
+// Flag Game – überarbeitete Spiellogik mit unveränderter Original-Oberfläche.
+const DEFAULT_SETTING = {
+    hintKey: { key: '+', code: 'Equal', keyCode: 187 },
+    skipKey: { key: '#', code: 'Slash', keyCode: 191 },
+    checkKey: { key: 'Enter', code: 'Enter', keyCode: 13 },
     clearInput: false,
     confirmSkip: false,
     isGerman: false,
     isAutoSkip: true
+};
+const DEFAULT_SELECTOR = {
+    flagType: 'country',
+    flagUn: ['yesun'],
+    flagContinent: ['all', 'Europa', 'Afrika', 'Asien', 'Nordamerika', 'Südamerika', 'Ozeanien'],
+    flagStyle: 'show'
+};
+const localStorageVersion = 'fg_1_';
+const ALL_CONTINENTS = DEFAULT_SELECTOR.flagContinent.slice(1);
+
+function readStored(key) {
+    try { return JSON.parse(localStorage.getItem(localStorageVersion + key)); }
+    catch (_) { return null; }
+}
+function saveStored() {
+    try {
+        localStorage.setItem(localStorageVersion + 'settingFlagGame', JSON.stringify(setting));
+        localStorage.setItem(localStorageVersion + 'selectorOrder', JSON.stringify(selectorOrder));
+    } catch (_) { /* Auch ohne verfügbaren Browser-Speicher nutzbar. */ }
 }
 
-if(localStorage.getItem(`${localStorageVersion}settingFlagGame`) || localStorage.getItem(`${localStorageVersion}selectorOrder`)){
-    loadLocalStorage()
-} else{
-    setLocalStorage()
+const storedSetting = readStored('settingFlagGame');
+let setting = { ...DEFAULT_SETTING, ...(storedSetting && typeof storedSetting === 'object' ? storedSetting : {}) };
+for (const key of ['hintKey', 'skipKey', 'checkKey']) {
+    setting[key] = { ...DEFAULT_SETTING[key], ...(setting[key] || {}) };
+}
+const storedSelector = readStored('selectorOrder');
+let selectorOrder = { ...DEFAULT_SELECTOR, ...(storedSelector && typeof storedSelector === 'object' ? storedSelector : {}) };
+if (!['country', 'capital'].includes(selectorOrder.flagType)) selectorOrder.flagType = 'country';
+// Alte Filterauswahl der vorherigen Version in zwei unabhängige Schalter umwandeln.
+// So bleiben bereits gespeicherte Einstellungen nach dem Update nutzbar.
+if (!Array.isArray(selectorOrder.flagUn)) selectorOrder.flagUn = ['yesun'];
+if (!Array.isArray(selectorOrder.flagContinent)) selectorOrder.flagContinent = [...DEFAULT_SELECTOR.flagContinent];
+const previouslySelectedUN = selectorOrder.flagUn;
+if (previouslySelectedUN.includes('allun') ||
+    (previouslySelectedUN.includes('yesun') && previouslySelectedUN.includes('noun'))) {
+    selectorOrder.flagUn = ['yesun', 'noun'];
+} else if (previouslySelectedUN.includes('noun')) {
+    selectorOrder.flagUn = ['noun'];
+} else {
+    // Bisheriges 'core196' sowie leere/ungültige Werte -> UN.
+    selectorOrder.flagUn = ['yesun'];
+}
+selectorOrder.flagContinent = selectorOrder.flagContinent.filter(x => x === 'all' || ALL_CONTINENTS.includes(x));
+if (selectorOrder.flagContinent.includes('all')) selectorOrder.flagContinent = [...DEFAULT_SELECTOR.flagContinent];
+
+let countryList = [];
+let index = 0;
+let hintCount = 0;
+let baseListLength = 0;
+let wrongCountries = [];
+let isWrongGuess = false;
+let isWaitingForSkip = false;
+let isGameRunning = false;
+let isBackUp = false;
+let isSinglePlayer = true;
+let hasStarted = false;
+let firstRound = true;
+let firstTryCorrect = 0;
+let totalResolved = 0;
+let totalWrongEntries = 0;
+let roundNumber = 1;
+let playerTurn = 0;
+let playerScores = [0, 0];
+let processing = false;
+let transitionTimer = null;
+
+const startPage = document.querySelector('#start');
+const modePage = document.querySelector('#mode');
+const gamePage = document.querySelector('#game');
+const finishPage = document.querySelector('#finishedRound');
+const backUpPage = document.querySelector('#backUpRound');
+const scoreField = document.querySelector('#score');
+const completeCounter = document.querySelector('#game h2');
+const inputField = document.querySelector('#input');
+const contentField = document.querySelector('#content');
+const colorContrast = getComputedStyle(document.documentElement).getPropertyValue('--color-contrast');
+
+
+// Funktioniert mit ä/ae, ß/ss, Akzenten, Bindestrichen, Apostrophen,
+// unterschiedlichen Leerzeichen sowie St./Saint.
+function normalizeAnswer(value) {
+    if (typeof value !== 'string') return '';
+    return value.toLowerCase().trim()
+        .replace(/ß/g, 'ss').replace(/æ/g, 'ae').replace(/œ/g, 'oe')
+        .replace(/ø/g, 'o').replace(/ł/g, 'l').replace(/ı/g, 'i')
+        .normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/\bsaint\b/g, 'st').replace(/\bsankt\b/g, 'st')
+        .replace(/&/g, 'and')
+        .replace(/[^a-z0-9]/g, '');
+}
+function getCurrentAnswer() {
+    const country = countryList[index];
+    if (!country) return [];
+    // Varianten werden nur noch in Files/countries.js gepflegt.
+    // Dadurch lassen sich neue richtige Antworten direkt dort hinzufuegen.
+    return selectorOrder.flagType === 'country' ? country.name : country.capital;
+}
+function answerVariants(value) {
+    if (typeof value !== 'string') return new Set();
+    const umlautForm = value.toLowerCase()
+        .replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue');
+    return new Set([normalizeAnswer(value), normalizeAnswer(umlautForm)]);
+}
+function isCorrectAnswer(value) {
+    const guesses = answerVariants(value);
+    if (![...guesses].some(Boolean)) return false;
+    return getCurrentAnswer().some(answer =>
+        [...answerVariants(answer)].some(variant => guesses.has(variant)));
 }
 
-/**
- * loads the variables from the localStorage
- */
-function loadLocalStorage(){
-    // Set or load the Localstorage
-    setting = JSON.parse(localStorage.getItem(`${localStorageVersion}settingFlagGame`))
-    selectorOrder = JSON.parse(localStorage.getItem(`${localStorageVersion}selectorOrder`))
-
-    setting.hintKey = setting.hintKey || {key: "+", keyCode: 187}
-    setting.skipKey = setting.skipKey || {key: "#", keyCode: 191}
-    setting.checkKey = setting.checkKey || {key: "Enter", keyCode: 13}
-    setting.clearInput = setting.clearInput || false
-    setting.confirmSkip = setting.confirmSkip || false
-    setting.isGerman = setting.isGerman || false
-    setting.isAutoSkip = setting.isAutoSkip || false
-
+function shuffle(array) {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+}
+function setCountryList(isNewRound = false) {
+    clearTimeout(transitionTimer);
+    transitionTimer = null;
+    if (isNewRound) {
+        countryList = shuffle(wrongCountries);
+        wrongCountries = [];
+        roundNumber++;
+        firstRound = false;
+    } else {
+        const all = selectorOrder.flagContinent.includes('all');
+        const includeUN = selectorOrder.flagUn.includes('yesun');
+        const includeNonUN = selectorOrder.flagUn.includes('noun');
+        countryList = shuffle(countries.filter(c =>
+            (all || selectorOrder.flagContinent.includes(c.continent)) &&
+            ((includeUN && c.un === true) || (includeNonUN && c.un === false)) &&
+            (selectorOrder.flagType !== 'capital' || (c.capital[0] && !['N/A', '-'].includes(c.capital[0])))
+        ));
+        baseListLength = countryList.length;
+        firstRound = true;
+        firstTryCorrect = 0;
+        totalResolved = 0;
+        totalWrongEntries = 0;
+        roundNumber = 1;
+        playerScores = [0, 0];
+        playerTurn = 0;
+        wrongCountries = [];
+        hasStarted = false;
+        isBackUp = false;
+    }
+    index = 0;
+    hintCount = 0;
+    isWrongGuess = false;
+    isWaitingForSkip = false;
+    processing = false;
+    updateScore();
+}
+function selectContinents() {
+    document.querySelectorAll('.selector.continent p, .selector.un p').forEach(e => e.classList.remove('selected'));
+    selectorOrder.flagUn.forEach(value => document.querySelector(`.selector.un .${value}`)?.classList.add('selected'));
+    selectorOrder.flagContinent.forEach(value => document.querySelector(`.selector.continent .${value}`)?.classList.add('selected'));
+}
+function multipleSelector(elem) {
+    const item = elem.classList[0];
+    let selected = selectorOrder.flagContinent.filter(x => x !== 'all');
+    if (item === 'all') {
+        selected = selected.length === ALL_CONTINENTS.length ? [] : [...ALL_CONTINENTS];
+    } else if (selected.includes(item)) {
+        selected = selected.filter(x => x !== item);
+    } else {
+        selected.push(item);
+    }
+    selectorOrder.flagContinent = selected.length === ALL_CONTINENTS.length ? ['all', ...ALL_CONTINENTS] : selected;
+}
+function selector(elem, type) {
+    const value = elem.classList[0];
+    if (type === 'continent') multipleSelector(elem);
+    if (type === 'un') {
+        if (selectorOrder.flagUn.includes(value)) {
+            // Immer mindestens eine der beiden Gruppen aktiviert lassen.
+            if (selectorOrder.flagUn.length > 1) {
+                selectorOrder.flagUn = selectorOrder.flagUn.filter(group => group !== value);
+            }
+        } else {
+            selectorOrder.flagUn.push(value);
+        }
+    }
+    if (type === 'type') selectorOrder.flagType = value;
+    saveStored();
+    setCountryList(false);
     generateHTML(false);
-    updateSettings();
+}
+function selectContinentsError() { flagSelectError('.selector.continent'); }
+function selectUnError() { flagSelectError('.selector.un'); }
+function flagSelectError(query) {
+    const element = document.querySelector(query);
+    if (!element) return;
+    element.style.animation = 'shake .7s';
+    setTimeout(() => { element.style.animation = ''; }, 700);
 }
 
-/**
- * sets the variables into the localStorage
- */
-function setLocalStorage(){
-    localStorage.setItem(`${localStorageVersion}settingFlagGame`, JSON.stringify(setting))
-    localStorage.setItem(`${localStorageVersion}selectorOrder`, JSON.stringify(selectorOrder))
-    updateSettings();
-    generateHTML();
-}
-
-function updateSettings(){
-    document.querySelectorAll('.buttons i')[0].title = setting.hintKey.key;
-    document.querySelectorAll('.buttons i')[1].title = setting.checkKey.key;
-    document.querySelectorAll('.buttons i')[2].title = setting.skipKey.key;
-
-    if(setting.isAutoSkip){
-        inputField.addEventListener("keyup", checkCountry)
-    } else{
-        inputField.removeEventListener("keyup", checkCountry);
+function loadSide(type) {
+    if (type === 'mode' && gamePage.style.display === 'block' && hasStarted) {
+        isBackUp = true;
+        // Eine abgeschlossene Antwort auch beim Zurückgehen sauber übernehmen.
+        if (processing && transitionTimer !== null) {
+            clearTimeout(transitionTimer);
+            transitionTimer = null;
+            index++;
+            processing = false;
+        }
+    }
+    [startPage, modePage, gamePage, finishPage, backUpPage].forEach(elem => elem.style.display = 'none');
+    isGameRunning = false;
+    switch (type) {
+        case 'start': modePage.style.display = 'flex'; break;
+        case 'mode': modePage.style.display = 'flex'; break;
+        case 'game':
+            if (selectorOrder.flagContinent.length === 0 || selectorOrder.flagUn.length === 0 || countryList.length === 0) {
+                modePage.style.display = 'flex';
+                flagSelectError(selectorOrder.flagContinent.length === 0 ? '.selector.continent' : '.selector.un');
+                return;
+            }
+            if (isBackUp && hasStarted) {
+                backUpPage.style.display = 'block';
+            } else {
+                gamePage.style.display = 'block';
+                startGame();
+            }
+            break;
+        case 'finished':
+            hasStarted = false;
+            isBackUp = false;
+            finishPage.style.display = 'flex';
+            finishedRound();
+            break;
+        case 'backUp': backUpPage.style.display = 'block'; break;
     }
 }
+function toggleMode(number) { isSinglePlayer = number === 0; }
+function newGame() {
+    setCountryList(false);
+    loadSide('game');
+}
+function resumeGame() {
+    isBackUp = false;
+    backUpPage.style.display = 'none';
+    gamePage.style.display = 'block';
+    isGameRunning = true;
+    getCountry();
+}
+function startGame() {
+    clearTimeout(transitionTimer);
+    isGameRunning = true;
+    hasStarted = true;
+    isBackUp = false;
+    processing = false;
+    isWaitingForSkip = false;
+    document.querySelector('.hideButton').style.display = selectorOrder.flagType === 'capital' ? 'block' : 'none';
+    contentField.classList.toggle('big', selectorOrder.flagType === 'capital' && selectorOrder.flagStyle === 'show');
+    const boxes = contentField.querySelectorAll('div[data-position]');
+    // Kein leeres <img>: Sonst zeigt der Browser links einen defekten Bildplatzhalter.
+    boxes[0].replaceChildren();
+    boxes[1].replaceChildren();
+    boxes[0].setAttribute('data-position', 'show');
+    boxes[1].setAttribute('data-position', 'hidden');
+    getCountry();
+}
+function hidBox() { return contentField.querySelector('div[data-position="hidden"]'); }
+function showBox() { return contentField.querySelector('div[data-position="show"]'); }
+function swap() {
+    const hidden = hidBox();
+    const shown = showBox();
+    if (!hidden || !shown) return;
+    // Vorherige Flagge entfernen, damit links nie ein zweites Bild zu sehen ist.
+    shown.replaceChildren();
+    hidden.setAttribute('data-position', 'show');
+    shown.setAttribute('data-position', 'hidden');
+}
+function fitCountryHeading(heading) {
+    if (!heading) return;
+    heading.style.fontSize = '';
+    const width = Math.max(180, contentField.clientWidth - 26);
+    const text = heading.textContent;
+    const isLarge = contentField.classList.contains('big');
+    const maxFont = isLarge ? 48 : 21;
+    const minFont = 12;
+    const canvas = fitCountryHeading.canvas || (fitCountryHeading.canvas = document.createElement('canvas'));
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    let size = maxFont;
+    while (size > minFont) {
+        ctx.font = `${size}px sans-serif`;
+        if (ctx.measureText(text).width <= width) break;
+        size -= 1;
+    }
+    heading.style.fontSize = `${size}px`;
+}
+function updateScore() {
+    const total = countryList.length || 0;
+    completeCounter.textContent = total ? `${Math.min(index + 1, total)}/${total}` : '0/0';
+    if (isSinglePlayer) {
+        scoreField.textContent = `${(currentLanguage || language.english).game[0]} ${firstTryCorrect} / ${firstRound ? index + (processing ? 1 : 0) : baseListLength}`;
+    } else {
+        const label = setting.isGerman ? 'Spieler' : 'Player';
+        scoreField.textContent = `${label} 1: ${playerScores[0]}  |  ${label} 2: ${playerScores[1]}`;
+    }
+}
+function getCountry() {
+    if (!isGameRunning) return;
+    if (index >= countryList.length) {
+        if (isSinglePlayer && wrongCountries.length > 0) {
+            setCountryList(true);
+        } else {
+            loadSide('finished');
+            return;
+        }
+    }
+    const country = countryList[index];
+    if (!country) { loadSide('finished'); return; }
+    isWrongGuess = false;
+    isWaitingForSkip = false;
+    processing = false;
+    hintCount = 0;
+    inputField.disabled = false;
+    inputField.value = '';
+    inputField.placeholder = '';
+    inputField.title = '';
+    inputField.style.color = colorContrast;
+    inputField.style.animation = 'none';
 
-generateHTML(true);
-
-/**
- * toggles the sidebar between open and close state
- * @param {*} elem 
- */
+    const next = hidBox();
+    next.replaceChildren();
+    const img = document.createElement('img');
+    img.alt = country.name[setting.isGerman ? 0 : 1];
+    img.src = `https://flagcdn.com/h120/${country.code.toLowerCase()}.png`;
+    next.appendChild(img);
+    if (selectorOrder.flagType === 'capital') {
+        const h3 = document.createElement('h3');
+        h3.textContent = country.name[setting.isGerman ? 0 : 1];
+        next.appendChild(h3);
+        fitCountryHeading(h3);
+    }
+    swap();
+    updateScore();
+    inputField.focus();
+}
+function markWrong() { isWrongGuess = true; }
+function finishQuestion(isCorrect) {
+    if (processing || !isGameRunning) return;
+    processing = true;
+    totalResolved++;
+    if (isWrongGuess || !isCorrect) {
+        totalWrongEntries++;
+        if (isSinglePlayer) wrongCountries.push(countryList[index]);
+    } else {
+        if (firstRound) firstTryCorrect++;
+        if (!isSinglePlayer) playerScores[playerTurn]++;
+    }
+    if (!isSinglePlayer) playerTurn = 1 - playerTurn;
+    inputField.disabled = true;
+    inputField.style.color = isCorrect ? '#5ac47a' : 'rgb(170,170,170)';
+    updateScore();
+    transitionTimer = setTimeout(() => {
+        index++;
+        getCountry();
+    }, isCorrect ? 420 : 1000);
+}
+function checkCountry(auto = false) {
+    if (!isGameRunning || processing || isWaitingForSkip || inputField.disabled) return;
+    if (isCorrectAnswer(inputField.value)) {
+        finishQuestion(true);
+        return;
+    }
+    // Auto-Check löst bei noch unvollständigen Eingaben keine Fehler aus.
+    if (auto || !inputField.value.trim()) return;
+    markWrong();
+    inputField.style.color = '#ff675b';
+    inputField.style.animation = 'shake 0.5s';
+    setTimeout(() => {
+        inputField.style.animation = 'none';
+        inputField.style.color = colorContrast;
+        if (setting.clearInput && !processing) inputField.value = '';
+    }, 500);
+}
+function loadHint() {
+    if (!isGameRunning || processing || isWaitingForSkip || inputField.disabled) return;
+    markWrong();
+    const answers = getCurrentAnswer();
+    const preferred = answers[setting.isGerman ? 0 : 1] || answers[0] || '';
+    hintCount = Math.min(hintCount + 1, preferred.length);
+    inputField.value = '';
+    inputField.placeholder = preferred.slice(0, hintCount);
+    inputField.title = inputField.placeholder;
+    inputField.focus();
+}
+function skip(isCorrect = false, isSkipped = false) {
+    if (!isGameRunning) return;
+    if (isWaitingForSkip) {
+        isWaitingForSkip = false;
+        finishQuestion(false);
+        return;
+    }
+    if (processing) return;
+    if (isCorrect) { finishQuestion(true); return; }
+    if (!isSkipped) { checkCountry(); return; }
+    markWrong();
+    const answer = getCurrentAnswer();
+    inputField.value = answer[setting.isGerman ? 0 : 1] || answer[0] || '';
+    if (setting.confirmSkip) {
+        isWaitingForSkip = true;
+        inputField.disabled = true;
+        inputField.style.color = 'rgb(170,170,170)';
+    } else {
+        finishQuestion(false);
+    }
+}
+function finishedRound() {
+    const finishText = document.querySelector('#finishedRound p');
+    const buttons = document.querySelector('#finishedRound .buttons');
+    const denominator = baseListLength;
+    const percentage = denominator ? Math.round(firstTryCorrect * 100 / denominator) : 0;
+    document.querySelector('#finishedRound h2').textContent = currentLanguage.game[1];
+    if (isSinglePlayer) {
+        finishText.textContent = setting.isGerman
+            ? `${firstTryCorrect} / ${denominator} direkt richtig (${percentage} %) · ${totalResolved} gespielt`
+            : `${firstTryCorrect} / ${denominator} correct first try (${percentage}%) · ${totalResolved} played`;
+    } else {
+        const winner = playerScores[0] === playerScores[1]
+            ? (setting.isGerman ? 'Unentschieden' : 'Draw')
+            : `${setting.isGerman ? 'Spieler' : 'Player'} ${playerScores[0] > playerScores[1] ? 1 : 2} ${setting.isGerman ? 'gewinnt' : 'wins'}`;
+        finishText.textContent = `${setting.isGerman ? 'Spieler' : 'Player'} 1: ${playerScores[0]} | ${setting.isGerman ? 'Spieler' : 'Player'} 2: ${playerScores[1]} – ${winner}`;
+    }
+    buttons.innerHTML = `<p onclick="newGame()">${currentLanguage.game[2]}</p><p onclick="loadSide('mode');setCountryList(false)">Home</p>`;
+}
+function hideShowFlag() {
+    if (selectorOrder.flagType !== 'capital') return;
+    contentField.classList.toggle('big');
+    selectorOrder.flagStyle = contentField.classList.contains('big') ? 'show' : 'hidden';
+    const icon = document.querySelector('.hideButton .fa-flag');
+    icon.classList.toggle('fa-solid', contentField.classList.contains('big'));
+    icon.classList.toggle('fa-regular', !contentField.classList.contains('big'));
+    saveStored();
+    fitCountryHeading(showBox().querySelector('h3'));
+    inputField.focus();
+}
+function resetGame() { setCountryList(false); }
+function setLocalStorage() { saveStored(); generateHTML(false); }
+function updateSettings() {
+    const icons = document.querySelectorAll('#game .buttons i');
+    if (icons[0]) icons[0].title = setting.hintKey.key;
+    if (icons[1]) icons[1].title = setting.checkKey.key;
+    if (icons[2]) icons[2].title = setting.skipKey.key;
+}
+function activateKeybindsEventListener() {
+    for (const [klass, settingKey] of [['hint','hintKey'], ['skip','skipKey'], ['guess','checkKey']]) {
+        const elem = document.querySelector(`#settings input.${klass}`);
+        if (!elem) continue;
+        elem.onkeydown = event => {
+            event.preventDefault();
+            event.stopPropagation();
+            if (event.key === 'Tab' || event.key === 'Escape') { elem.blur(); return; }
+            setting[settingKey] = { key: event.key, code: event.code, keyCode: event.keyCode };
+            elem.value = event.key;
+            saveStored();
+            updateSettings();
+        };
+    }
+}
+function shortcutMatches(event, shortcut) {
+    return (shortcut.code && event.code === shortcut.code) ||
+        (!shortcut.code && shortcut.keyCode === event.keyCode);
+}
+document.addEventListener('keydown', event => {
+    if (!isGameRunning || event.target.closest('#settings')) return;
+    if (shortcutMatches(event, setting.checkKey)) {
+        event.preventDefault();
+        if (isWaitingForSkip) skip(false, true);
+        else checkCountry();
+    } else if (shortcutMatches(event, setting.skipKey)) {
+        event.preventDefault(); skip(false, true);
+    } else if (shortcutMatches(event, setting.hintKey)) {
+        event.preventDefault(); loadHint();
+    }
+});
+inputField.addEventListener('input', () => {
+    if (setting.isAutoSkip && isGameRunning && !processing && isCorrectAnswer(inputField.value)) {
+        checkCountry(true);
+    }
+});
 function toggleSidebar(elem) {
-    // Close Sidebar
-    if (elem.dataset.state === "open") {
-        elem.dataset.state = "close"
-
-        setTimeout(function () {
-            // Set the close function onclick to the full field
-            elem.querySelector(".heading").setAttribute("onclick", "")
-            elem.setAttribute("onclick", "toggleSidebar(this)")
-        }, 10)
-
-    } 
-
-    // Open Sidebar
-    else {
-        elem.dataset.state = "open"
-        updateSettingsInput();
-
-        // Set the close function onclick to the heading attribute
-        elem.querySelector(".heading").setAttribute("onclick", "toggleSidebar(this.parentNode)")
-        elem.setAttribute("onclick", "")
-    }
+    const sidebar = elem.closest('#settings') || elem;
+    const open = sidebar.dataset.state !== 'open';
+    sidebar.dataset.state = open ? 'open' : 'close';
+    if (open) updateSettingsInput();
+    sidebar.onclick = e => {
+        if (sidebar.dataset.state === 'close' && e.target.closest('#settings')) toggleSidebar(sidebar);
+        else if (e.target.closest('.heading')) toggleSidebar(sidebar);
+    };
 }
-
-//----------- toggle buttons -----------//
-document.querySelectorAll('.toggle').forEach((elem)=>{
-    elem.addEventListener("click", function(){
-        elem.classList.toggle("on")
-
-        if(elem.classList.contains("language")){
-            setting.isGerman = !setting.isGerman;
-            setLocalStorage();
-        }
-
-        if(elem.classList.contains("inputClear")){
-            setting.clearInput = !setting.clearInput
-            setLocalStorage();
-        }
-
-        if(elem.classList.contains("skipConfirm")){
-            setting.confirmSkip = !setting.confirmSkip
-            setLocalStorage();
-        }
-
-        if(elem.classList.contains("autoSkip")){
-            setting.isAutoSkip = !setting.isAutoSkip
-            setLocalStorage();
-        }
-    })
-})
-
-
-
-//#endregion
+for (const [className, settingName] of [
+    ['language', 'isGerman'], ['inputClear','clearInput'],
+    ['skipConfirm','confirmSkip'], ['autoSkip','isAutoSkip']
+]) {
+    document.querySelector(`.toggle.${className}`).addEventListener('click', e => {
+        e.stopPropagation();
+        setting[settingName] = !setting[settingName];
+        saveStored();
+        generateHTML(false);
+    });
+}
+window.addEventListener('resize', () => fitCountryHeading(showBox().querySelector('h3')));
+// Initialisierung erst nach dem Laden von Sprache, Daten und Einstellungen.
+setCountryList(false);
+generateHTML(false);
+loadSide('mode');

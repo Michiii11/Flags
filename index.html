@@ -6,82 +6,82 @@
     <title>Flag Game</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="Files/logo.png">
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./style.css?v=3">
 
-    <script src="./Files/countries.js"></script>
-    <script src="./generate.js" defer></script>
-    <script src='./script.js' defer></script>
-    <script src="language.js"></script>
+    <script src="./Files/countries.js?v=3"></script>
+    <script src="./generate.js?v=3" defer></script>
+    <script src='./script.js?v=3' defer></script>
+    <script src="language.js?v=3"></script>
     <script src="https://kit.fontawesome.com/557f0c19d3.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
-    <main>
-        <section id="start"></section>
+<main>
+    <section id="start"></section>
 
-        <section id="mode"></section>
+    <section id="mode"></section>
 
-        <section id="game">
-            <div>
-                <h2></h2>
-                
-                <div id="content">
-                    <div data-position='show'></div>
-                    <div data-position='hidden'></div>
-                </div>
-                <input id="input" type="text" autocomplete="off" autofocus>
+    <section id="game">
+        <div>
+            <h2></h2>
 
-                <div class="buttons">
-                    <i title="+" class="fa-solid fa-lightbulb" onclick="loadHint()"></i>
-                    <i title="Enter" class="fa-solid fa-check" onclick="checkCountry()"></i>
-                    <i title="#" class="fa-solid fa-forward" onclick="skip(false, true)"></i></div>
-                <div id="score"></div>
-                <div class="hideButton" onclick="hideShowFlag()"><i class="fa-regular fa-flag"></i></div>
-                <div class="back" onclick="loadSide('mode')"><i class="fa-solid fa-arrow-left"></i></div>
+            <div id="content">
+                <div data-position='show'></div>
+                <div data-position='hidden'></div>
+            </div>
+            <input id="input" type="text" autocomplete="off" autofocus>
+
+            <div class="buttons">
+                <i title="+" class="fa-solid fa-lightbulb" onclick="loadHint()"></i>
+                <i title="Enter" class="fa-solid fa-check" onclick="checkCountry()"></i>
+                <i title="#" class="fa-solid fa-forward" onclick="skip(false, true)"></i></div>
+            <div id="score"></div>
+            <div class="hideButton" onclick="hideShowFlag()"><i class="fa-regular fa-flag"></i></div>
+            <div class="back" onclick="loadSide('mode')"><i class="fa-solid fa-arrow-left"></i></div>
+        </div>
+    </section>
+
+    <section class="inRoundWindow" id="finishedRound">
+        <h2></h2>
+        <p></p>
+        <div class="buttons"></div>
+    </section>
+
+    <section class="inRoundWindow" id="backUpRound"></section>
+</main>
+
+<aside id="settings" onclick="toggleSidebar(this)" data-state="close">
+    <div class="heading">
+        <p></p>
+    </div>
+
+    <div class="hidden">
+        <section>
+            <h3>Test</h3>
+        </section>
+        <section>
+            <h3></h3>
+            <div class="settingLanguage">
+                <p>English Version</p>
+                <div class="toggle language"></div>
             </div>
         </section>
-        
-        <section class="inRoundWindow" id="finishedRound">
-            <h2></h2>
-            <p></p>
-            <div class="buttons"></div>
+        <section>
+            <h3>Gameplay</h3>
+            <div class="clearInput info-popup" data-text="Decides whether or not the input field is cleared after a wrong guess was submited">
+                <p>Clear Input</p>
+                <div class="toggle inputClear"></div>
+            </div>
+            <div class="confirmSkip info-popup" data-text="If you have to press the skip button a second time to skip so you can read">
+                <p>Confirm skip</p>
+                <div class="toggle skipConfirm"></div>
+            </div>
+            <div class="confirmAutoSkip" data-text="If you have typed in the right answer it automatically skips to the next country">
+                <p>Autoskip</p>
+                <div class="toggle autoSkip"></div>
+            </div>
         </section>
-
-        <section class="inRoundWindow" id="backUpRound"></section>
-    </main>
-
-    <aside id="settings" onclick="toggleSidebar(this)" data-state="close">
-        <div class="heading">
-            <p></p>
-        </div>
-
-        <div class="hidden">
-            <section>
-                <h3>Test</h3>
-            </section>
-            <section>
-                <h3></h3>
-                <div class="settingLanguage">
-                    <p>English Version</p>
-                    <div class="toggle language"></div>
-                </div>
-            </section>
-            <section>
-                <h3>Gameplay</h3>
-                <div class="clearInput info-popup" data-text="Decides whether or not the input field is cleared after a wrong guess was submited">
-                    <p>Clear Input</p>
-                    <div class="toggle inputClear"></div>
-                </div>
-                <div class="confirmSkip info-popup" data-text="If you have to press the skip button a second time to skip so you can read">
-                    <p>Confirm skip</p>
-                    <div class="toggle skipConfirm"></div>
-                </div>
-                <div class="confirmAutoSkip" data-text="If you have typed in the right answer it automatically skips to the next country">
-                    <p>Autoskip</p>
-                    <div class="toggle autoSkip"></div>
-                </div>
-            </section>
-        </div>
-    </aside>
+    </div>
+</aside>
 </body>
 </html>
