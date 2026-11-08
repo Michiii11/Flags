@@ -73,6 +73,9 @@ let playerTurn = 0;
 let playerScores = [0, 0];
 let processing = false;
 let transitionTimer = null;
+// Entspricht der vorhandenen 1,3-s-Animation in style.css.
+const FLAG_SLIDE_DURATION = 1300;
+let lastFlagSlideStarted = -FLAG_SLIDE_DURATION;
 
 const startPage = document.querySelector('#start');
 const modePage = document.querySelector('#mode');
@@ -263,6 +266,7 @@ function startGame() {
     isBackUp = false;
     processing = false;
     isWaitingForSkip = false;
+    lastFlagSlideStarted = -FLAG_SLIDE_DURATION;
     document.querySelector('.hideButton').style.display = selectorOrder.flagType === 'capital' ? 'block' : 'none';
     contentField.classList.toggle('big', selectorOrder.flagType === 'capital' && selectorOrder.flagStyle === 'show');
     const boxes = contentField.querySelectorAll('div[data-position]');
@@ -279,10 +283,12 @@ function swap() {
     const hidden = hidBox();
     const shown = showBox();
     if (!hidden || !shown) return;
-    // Vorherige Flagge entfernen, damit links nie ein zweites Bild zu sehen ist.
-    shown.replaceChildren();
+    // Die alte Flagge bleibt im DOM, während sie mit der bestehenden
+    // CSS-Animation nach links hinausgleitet. Die neue kommt von rechts.
+    // Erst bei der übernächsten Frage wird der unsichtbare Container geleert.
     hidden.setAttribute('data-position', 'show');
     shown.setAttribute('data-position', 'hidden');
+    lastFlagSlideStarted = performance.now();
 }
 function fitCountryHeading(heading) {
     if (!heading) return;
@@ -339,9 +345,32 @@ function getCountry() {
     const next = hidBox();
     next.replaceChildren();
     const img = document.createElement('img');
-    img.alt = country.name[setting.isGerman ? 0 : 1];
-    img.src = `https://flagcdn.com/h120/${country.code.toLowerCase()}.png`;
+    // Ein fehlendes Bild darf weder ein kaputtes Symbol noch einen
+    // Ländernamen als Alternativtext auf der linken Seite anzeigen.
+    img.alt = '';
+    img.setAttribute('aria-hidden', 'true');
+    img.style.visibility = 'hidden';
+    img.addEventListener('load', () => {
+        img.style.visibility = 'visible';
+    });
+    const code = country.code.toLowerCase();
+    const imageSources = [
+        `https://flagcdn.com/h120/${code}.png`,
+        `https://flagsapi.com/${code.toUpperCase()}/flat/64.png`
+    ];
+    let sourceIndex = 0;
+    img.addEventListener('error', () => {
+        if (!img.isConnected) return;
+        sourceIndex++;
+        if (sourceIndex < imageSources.length) {
+            img.src = imageSources[sourceIndex];
+        } else {
+            // Bei zwei fehlgeschlagenen Quellen überhaupt kein Bild anzeigen.
+            img.remove();
+        }
+    });
     next.appendChild(img);
+    img.src = imageSources[0];
     if (selectorOrder.flagType === 'capital') {
         const h3 = document.createElement('h3');
         h3.textContent = country.name[setting.isGerman ? 0 : 1];
@@ -368,10 +397,16 @@ function finishQuestion(isCorrect) {
     inputField.disabled = true;
     inputField.style.color = isCorrect ? '#5ac47a' : 'rgb(170,170,170)';
     updateScore();
+    // Schnelle Antworten dürfen den vorherigen Slide nicht mittendrin
+    // abbrechen: erst nach der laufenden Animation zur nächsten Flagge.
+    const slideRemaining = Math.max(0,
+        FLAG_SLIDE_DURATION - (performance.now() - lastFlagSlideStarted));
+    const answerDelay = isCorrect ? 420 : 1000;
     transitionTimer = setTimeout(() => {
+        transitionTimer = null;
         index++;
         getCountry();
-    }, isCorrect ? 420 : 1000);
+    }, Math.max(answerDelay, slideRemaining));
 }
 function checkCountry(auto = false) {
     if (!isGameRunning || processing || isWaitingForSkip || inputField.disabled) return;
